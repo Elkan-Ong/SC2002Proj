@@ -5,8 +5,38 @@ import java.util.ArrayList;
 
 
 public class Flat {
-    private ArrayList<Unit> units;
+    private ArrayList<Unit> units = new ArrayList<Unit>();
     private int price;
     private RoomType type;
     private int noOfUnitsAvailable;
+
+    public Flat(String type, int price, int noOfUnitsAvailable) {
+        this.type = getRoomType(type);
+        this.price = price;
+        this.noOfUnitsAvailable = noOfUnitsAvailable;
+        for (int i=1; i <= this.noOfUnitsAvailable; i++) {
+            units.add(new Unit(i));
+        }
+    }
+
+    public ArrayList<Unit> getUnits() {
+        return units;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public RoomType getType() {
+        return type;
+    }
+
+    private static RoomType getRoomType(String type) {
+        return switch (type) {
+            case ("2-Room") -> RoomType.TWO_ROOM;
+            case ("3-Room") -> RoomType.THREE_ROOM;
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
+    }
+
 }

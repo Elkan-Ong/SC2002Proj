@@ -1,5 +1,7 @@
 package Users;
 
+import Misc.UserFilter;
+
 public abstract class User {
     private String name;
     private String nric;
@@ -14,7 +16,7 @@ public abstract class User {
         this.age = age;
         this.maritalStatus = maritalStatus;
         this.password = password;
-        // create default UserFilter object when created
+        // create default Misc.UserFilter object when created
         // can create a method to ask user if they want to have a custom filter
         // method should also be callable later on
     }

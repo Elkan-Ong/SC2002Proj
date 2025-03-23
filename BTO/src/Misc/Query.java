@@ -1,3 +1,5 @@
+package Misc;
+
 import Users.Applicant;
 
 public class Query {

@@ -1,10 +1,8 @@
 package Enums;
 
+// possible room for expansion
+// Requirements state only 2 and 3 room
 public enum RoomType {
-    ONE_ROOM,
     TWO_ROOM,
     THREE_ROOM,
-    FOUR_ROOM,
-    FIVE_ROOM,
-    EXECUTIVE,
 }

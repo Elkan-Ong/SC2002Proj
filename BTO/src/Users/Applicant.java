@@ -8,7 +8,7 @@ public class Applicant extends User {
     }
 
     public void viewProjects() {
-        // get UserFilter then filter out data
+        // get Misc.UserFilter then filter out data
         return;
     }
 

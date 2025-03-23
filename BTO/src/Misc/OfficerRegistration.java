@@ -1,3 +1,5 @@
+package Misc;
+
 import Enums.RegistrationStatus;
 import Users.Applicant;
 import Users.HDBManager;
