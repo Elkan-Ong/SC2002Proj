@@ -32,10 +32,5 @@ public class HDBProject {
         this.closingDate = format.parse(values[9]);
     }
 
-    private static Flat getFlatType(String type, int price, int noOfUnitsAvailable) {
-
-    }
-
-
 
 }
