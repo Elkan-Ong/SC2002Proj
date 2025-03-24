@@ -111,7 +111,7 @@ public class BTOApp {
         return result;
     }
 
-
+    // We need to specially handle readProjects since we need to pass in all HDBManager and HDBOfficer
     public static ArrayList<HDBProject> readProjects(ArrayList<HDBManager> managers, ArrayList<HDBOfficer> officers) throws IOException, ParseException {
         ArrayList<HDBProject> result = new ArrayList<HDBProject>();
         ArrayList<String[]> fileData = readFile("ProjectList.csv");
@@ -119,22 +119,26 @@ public class BTOApp {
         for (String[] value : fileData) {
             ArrayList<HDBOfficer> projectOfficers = new ArrayList<HDBOfficer>();
             HDBManager projectManager = null;
+
+            // Identify the manager object that is managing the project
             for (HDBManager manager : managers) {
                 if (manager.getName().compareTo(value[10]) == 0) {
                     projectManager = manager;
                 }
             }
-            System.out.println(Arrays.toString(value));
+
+            // Identify the officers that are assigned to the project
+            // We split the values since each officer in value[12] is separated by commas
             String[] officerNames = value[12].split(",");
-            System.out.println(Arrays.toString(officerNames));
             for (HDBOfficer officer : officers) {
-                for (String assigned : value[12].split(",")) {
+                for (String assigned : officerNames) {
                     if (officer.getName().compareTo(assigned) == 0) {
-                        System.out.println(officer.getName());
+                        // If the officer in officers list is the name of the office assigned, we add them to the list of assigned officers
                         projectOfficers.add(officer);
                     }
                 }
             }
+
             result.add(new HDBProject(value, projectManager, projectOfficers));
         }
         return result;
