@@ -2,6 +2,7 @@ package Project;
 
 import Enums.RoomType;
 import Users.HDBManager;
+import Users.HDBOfficer;
 
 import java.util.ArrayList;
 import java.text.ParseException;
@@ -16,11 +17,12 @@ public class HDBProject {
     private int units = 0;
     private Date openingDate;
     private Date closingDate;
-    private int availableOfficerSlots = 10;
+    private ArrayList<HDBOfficer> assignedOfficers = new ArrayList<HDBOfficer>();
+    private int availableOfficerSlots;
     private SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
 
     // TODO
-    public HDBProject(String[] values) throws ParseException {
+    public HDBProject(String[] values, HDBManager projectManager, ArrayList<HDBOfficer> projectOfficers) throws ParseException {
         this.name = values[0];
         this.neighbourhood = values[1];
         this.flatType.add(new Flat(values[2], Integer.parseInt(values[4]), Integer.parseInt(values[3])));
@@ -35,7 +37,14 @@ public class HDBProject {
             System.err.println("Parse error in file ProjectList.csv with data: " + String.join(",", values));
             pe.printStackTrace();
         }
-
+        this.manager = projectManager;
+        this.assignedOfficers = projectOfficers;
+        this.availableOfficerSlots = 10 - this.assignedOfficers.size();
+//        System.out.println("HDB Project Info:");
+//        System.out.println("Officers:");
+//        System.out.println(assignedOfficers);
+//        System.out.println("Manager:");
+//        System.out.println(manager + manager.getName());
     }
 
 

@@ -9,6 +9,7 @@ import Users.HDBOfficer;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 // The throws exception might change at a later date, idk what to do with the throw
 // We could also consider since the files should exist that it's not necessary
@@ -29,7 +30,7 @@ public class BTOApp {
         applicants = readObjects("ApplicantList.csv", Applicant::new);
         officers = readObjects("OfficerList.csv", HDBOfficer::new);
         managers = readObjects("ManagerList.csv", HDBManager::new);
-        projects = readObjects("ProjectList.csv", HDBProject::new);
+        projects = readProjects(managers, officers);
 
 //        System.out.println("Applicants: ");
 //        System.out.println(applicants.toString());
@@ -52,13 +53,43 @@ public class BTOApp {
                     firstLine = false;
                     continue;
                 }
-                result.add(line.split(","));
+                result.add(parseCSVLine(line));
             }
             return result;
         } catch (IOException e) {
             e.printStackTrace();
             throw new IOException("File not found " + fileName);
         }
+    }
+
+    // This function is primarily for ProjectList
+    // The Officer column will be the assigned officers names, in quotations, separated by commas
+    // this causes a problem when using .split(","), therefore we need to create a way to keep it as 1 string
+    // we have to parse the column value, identify quotations and keeping the string whole
+    private static String[] parseCSVLine(String line) {
+        // Token represents each value in a cell
+        ArrayList<String> tokens = new ArrayList<>();
+        // We use StringBuilder as it allows us to create a String (since String objects are normally immutable)
+        StringBuilder sb = new StringBuilder();
+        boolean inQuotes = false;
+
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+
+            // If we see quotes, we toggle state
+            // If inQuotes is true, it ignores commas until the string is closed with another set of quotations
+            // If inQuotes is false, when we encounter a comma, we know that is the end of the token
+            if (c == '\"') {
+                inQuotes = !inQuotes; // toggle quote state
+            } else if (c == ',' && !inQuotes) {
+                tokens.add(sb.toString().trim());
+                sb.setLength(0); // reset StringBuilder
+            } else {
+                sb.append(c);
+            }
+        }
+        tokens.add(sb.toString().trim()); // add the last field
+        return tokens.toArray(new String[0]);
     }
 
     // We want the return type to be of type T
@@ -79,49 +110,34 @@ public class BTOApp {
 
         return result;
     }
-//    public static ArrayList<HDBManager> readManagers() throws IOException {
-//        return readObjects("ManagerList.csv", HDBManager::new);
-//    }
-//    public static ArrayList<HDBManager> readManagers() throws IOException {
-//        ArrayList<HDBManager> result = new ArrayList<HDBManager>();
-//        ArrayList<String[]> fileData = readFile("ManagerList.csv");
-//        for (String[] value : fileData) {
-//            result.add(new HDBManager(value));
-//        }
-//
-//        return result;
-//    }
-
-//    public static ArrayList<HDBOfficer> readOfficer() throws IOException {
-//        ArrayList<HDBOfficer> result = new ArrayList<HDBOfficer>();
-//        ArrayList<String[]> fileData = readFile("OfficerList.csv");
-//        for (String[] value : fileData) {
-//            result.add(new HDBOfficer(value));
-//        }
-//
-//        return result;
-//    }
-
-//    public static ArrayList<Applicant> readApplicant() throws IOException {
-//        ArrayList<Applicant> result = new ArrayList<Applicant>();
-//        ArrayList<String[]> fileData = readFile("ApplicantList.csv");
-//        for (String[] value : fileData) {
-//            result.add(new Applicant(value));
-//        }
-//
-//        return result;
-//    }
-//
-//    public static ArrayList<HDBProject> readProjects() throws IOException, ParseException {
-//        ArrayList<HDBProject> result = new ArrayList<HDBProject>();
-//        ArrayList<String[]> fileData = readFile("ProjectList.csv");
-//        for (String[] value : fileData) {
-//            result.add(new HDBProject(value));
-//        }
-//        return result;
-//    }
 
 
+    public static ArrayList<HDBProject> readProjects(ArrayList<HDBManager> managers, ArrayList<HDBOfficer> officers) throws IOException, ParseException {
+        ArrayList<HDBProject> result = new ArrayList<HDBProject>();
+        ArrayList<String[]> fileData = readFile("ProjectList.csv");
 
+        for (String[] value : fileData) {
+            ArrayList<HDBOfficer> projectOfficers = new ArrayList<HDBOfficer>();
+            HDBManager projectManager = null;
+            for (HDBManager manager : managers) {
+                if (manager.getName().compareTo(value[10]) == 0) {
+                    projectManager = manager;
+                }
+            }
+            System.out.println(Arrays.toString(value));
+            String[] officerNames = value[12].split(",");
+            System.out.println(Arrays.toString(officerNames));
+            for (HDBOfficer officer : officers) {
+                for (String assigned : value[12].split(",")) {
+                    if (officer.getName().compareTo(assigned) == 0) {
+                        System.out.println(officer.getName());
+                        projectOfficers.add(officer);
+                    }
+                }
+            }
+            result.add(new HDBProject(value, projectManager, projectOfficers));
+        }
+        return result;
+    }
 
 }
