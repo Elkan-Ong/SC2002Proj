@@ -1,5 +1,4 @@
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 import Project.HDBProject;
@@ -26,10 +25,11 @@ public class BTOApp {
     private static ArrayList<HDBProject> projects = new ArrayList<HDBProject>();
 
     public static void main(String[] args) throws IOException, ParseException {
-        applicants = readApplicant();
-        officers = readOfficer();
-        managers = readManagers();
-        projects = readProjects();
+        // Class::new is a method reference to the constructor
+        applicants = readObjects("ApplicantList.csv", Applicant::new);
+        officers = readObjects("OfficerList.csv", HDBOfficer::new);
+        managers = readObjects("ManagerList.csv", HDBManager::new);
+        projects = readObjects("ProjectList.csv", HDBProject::new);
 
 //        System.out.println("Applicants: ");
 //        System.out.println(applicants.toString());
@@ -61,44 +61,65 @@ public class BTOApp {
         }
     }
 
-    public static ArrayList<HDBManager> readManagers() throws IOException {
-        ArrayList<HDBManager> result = new ArrayList<HDBManager>();
-        ArrayList<String[]> fileData = readFile("ManagerList.csv");
+    // We want the return type to be of type T
+    // We pass in the fileName as well as the constructor of the Class we want to create
+    public static <T> ArrayList<T> readObjects(String fileName, ThrowingFunction<T> constructor) throws IOException {
+        ArrayList<T> result = new ArrayList<>();
+        ArrayList<String[]> fileData = readFile(fileName);
+
         for (String[] value : fileData) {
-            result.add(new HDBManager(value));
+            try {
+                // We create the objects with the values for each row of data in fileData
+                result.add(constructor.apply(value));
+            } catch (Exception e) {
+                System.err.println("Error parsing data from file '" + fileName + "': " + String.join(",", value));
+                e.printStackTrace();
+            }
         }
 
         return result;
     }
+//    public static ArrayList<HDBManager> readManagers() throws IOException {
+//        return readObjects("ManagerList.csv", HDBManager::new);
+//    }
+//    public static ArrayList<HDBManager> readManagers() throws IOException {
+//        ArrayList<HDBManager> result = new ArrayList<HDBManager>();
+//        ArrayList<String[]> fileData = readFile("ManagerList.csv");
+//        for (String[] value : fileData) {
+//            result.add(new HDBManager(value));
+//        }
+//
+//        return result;
+//    }
 
-    public static ArrayList<HDBOfficer> readOfficer() throws IOException {
-        ArrayList<HDBOfficer> result = new ArrayList<HDBOfficer>();
-        ArrayList<String[]> fileData = readFile("OfficerList.csv");
-        for (String[] value : fileData) {
-            result.add(new HDBOfficer(value));
-        }
+//    public static ArrayList<HDBOfficer> readOfficer() throws IOException {
+//        ArrayList<HDBOfficer> result = new ArrayList<HDBOfficer>();
+//        ArrayList<String[]> fileData = readFile("OfficerList.csv");
+//        for (String[] value : fileData) {
+//            result.add(new HDBOfficer(value));
+//        }
+//
+//        return result;
+//    }
 
-        return result;
-    }
-
-    public static ArrayList<Applicant> readApplicant() throws IOException {
-        ArrayList<Applicant> result = new ArrayList<Applicant>();
-        ArrayList<String[]> fileData = readFile("ApplicantList.csv");
-        for (String[] value : fileData) {
-            result.add(new Applicant(value));
-        }
-
-        return result;
-    }
-
-    public static ArrayList<HDBProject> readProjects() throws IOException, ParseException {
-        ArrayList<HDBProject> result = new ArrayList<HDBProject>();
-        ArrayList<String[]> fileData = readFile("ProjectList.csv");
-        for (String[] value : fileData) {
-            result.add(new HDBProject(value));
-        }
-        return result;
-    }
+//    public static ArrayList<Applicant> readApplicant() throws IOException {
+//        ArrayList<Applicant> result = new ArrayList<Applicant>();
+//        ArrayList<String[]> fileData = readFile("ApplicantList.csv");
+//        for (String[] value : fileData) {
+//            result.add(new Applicant(value));
+//        }
+//
+//        return result;
+//    }
+//
+//    public static ArrayList<HDBProject> readProjects() throws IOException, ParseException {
+//        ArrayList<HDBProject> result = new ArrayList<HDBProject>();
+//        ArrayList<String[]> fileData = readFile("ProjectList.csv");
+//        for (String[] value : fileData) {
+//            result.add(new HDBProject(value));
+//        }
+//        return result;
+//    }
 
 
 

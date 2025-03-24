@@ -28,8 +28,14 @@ public class HDBProject {
         for (Flat flat : flatType) {
             this.units += flat.getUnits().size();
         }
-        this.openingDate = format.parse(values[8]);
-        this.closingDate = format.parse(values[9]);
+        try {
+            this.openingDate = format.parse(values[8]);
+            this.closingDate = format.parse(values[9]);
+        } catch (ParseException pe) {
+            System.err.println("Parse error in file ProjectList.csv with data: " + String.join(",", values));
+            pe.printStackTrace();
+        }
+
     }
 
 
