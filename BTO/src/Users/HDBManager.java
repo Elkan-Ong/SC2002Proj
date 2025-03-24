@@ -2,8 +2,8 @@ package Users;
 
 public class HDBManager extends User implements HDBStaff {
 
-    public HDBManager(String name, String nric, int age, String maritalStatus, String password) {
-        super(name, nric, age, maritalStatus, password);
+    public HDBManager(String[] values) {
+        super(values[0], values[1], Integer.parseInt(values[2]), values[3], values[4]);
     }
 
     @Override
