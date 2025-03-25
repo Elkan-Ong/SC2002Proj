@@ -1,5 +1,7 @@
 package Users;
 
+import Users.UserInterfaces.HDBStaff;
+
 public class HDBManager extends User implements HDBStaff {
 
     public HDBManager(String[] values) {

@@ -1,5 +1,7 @@
 package Users;
 
+import Users.UserInterfaces.HDBStaff;
+
 public class HDBOfficer extends Applicant implements HDBStaff {
 
     public HDBOfficer(String[] values) {

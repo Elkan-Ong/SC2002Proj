@@ -1,4 +1,4 @@
-package Users;
+package Users.UserInterfaces;
 
 public interface HDBStaff {
     default void viewInquiries() {

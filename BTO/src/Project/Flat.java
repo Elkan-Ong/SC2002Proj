@@ -7,11 +7,11 @@ import java.util.ArrayList;
 public class Flat {
     private ArrayList<Unit> units = new ArrayList<Unit>();
     private int price;
-    private RoomType type;
+    private String type;
     private int noOfUnitsAvailable;
 
     public Flat(String type, int price, int noOfUnitsAvailable) {
-        this.type = getRoomType(type);
+        this.type = type;
         this.price = price;
         this.noOfUnitsAvailable = noOfUnitsAvailable;
         for (int i=1; i <= this.noOfUnitsAvailable; i++) {
@@ -27,7 +27,7 @@ public class Flat {
         return price;
     }
 
-    public RoomType getType() {
+    public String getType() {
         return type;
     }
 
