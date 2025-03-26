@@ -8,4 +8,14 @@ public class HDBOfficer extends Applicant implements HDBStaff {
         super(values);
     }
 
+    @Override
+    public void viewProjects() {
+        // Display all projects
+    }
+
+    @Override
+    public void displayMenu() {
+
+    }
+
 }

@@ -12,4 +12,14 @@ public class HDBManager extends User implements HDBStaff {
     public void viewProjects() {
         // Display all projects
     }
+
+    @Override
+    public void displayMenu() {
+
+    }
+
+    @Override
+    public void handleChoice(int choice) {
+
+    }
 }
