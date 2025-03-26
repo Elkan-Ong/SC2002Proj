@@ -1,8 +1,10 @@
 package Users;
 
+import Enums.ApplicationStatus;
 import Misc.UserFilter;
 import Misc.Query;
 import Project.HDBProject;
+import Project.ProjectApplication;
 import Project.Unit;
 import Users.UserInterfaces.Application;
 import Users.UserInterfaces.CreateFilter;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Applicant extends User implements Application, QueryInterface, CreateFilter {
-    private HDBProject appliedProject = null;
+    private ProjectApplication application = null;
     private Unit bookedUnit = null;
     private UserFilter filter = null;
     // Since we don't have a query file, just take note this will reset everytime
@@ -32,22 +34,36 @@ public class Applicant extends User implements Application, QueryInterface, Crea
 
     @Override
     public void applyForProject() {
-
+        viewProjects();
+        // select project
+        // set application
     }
 
     @Override
     public void viewApplication() {
-
+        application.getProjectInfo();
     }
 
     @Override
-    public boolean requestWithdrawal() {
-        return false;
+    public void requestWithdrawal() {
+        if (application == null) {
+            System.out.println("You have not applied for any project!");
+            return;
+        }
+        // TODO when implementation closer to complete, might need to check if need to change unit to available if can withdraw after booking
+        application = null;
+        System.out.println("Successfully withdrawn from project");
     }
 
     @Override
     public void bookFlat() {
-
+        if (application.getApplicationStatus() != ApplicationStatus.SUCCESSFUL) {
+            System.out.println("Your application has not been approved yet!");
+        }
+        if (application.getApplicationStatus() == ApplicationStatus.BOOKED) {
+            System.out.println("You have already booked a flat!");
+        }
+        // TODO booking implementation
     }
 
     @Override

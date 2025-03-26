@@ -45,5 +45,12 @@ public class HDBProject {
 //        System.out.println(manager + manager.getName());
     }
 
+    public void displayProject() {
+        System.out.println("Project Information: ");
+        System.out.println("Name: " + name);
+        System.out.println("Neighbourhood: " + neighbourhood);
+        // TODO other info
+    }
+
 
 }
