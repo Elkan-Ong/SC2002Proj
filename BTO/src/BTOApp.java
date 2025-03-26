@@ -10,6 +10,7 @@ import Users.HDBManager;
 import Users.HDBOfficer;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 // The throws exception might change at a later date, idk what to do with the throw
 // We could also consider since the files should exist that it's not necessary
@@ -20,7 +21,7 @@ import java.io.IOException;
 // Possible to find work around but tentatively we keep as is (just minor scalability problem, if you want to read more files for some reason)
 
 public class BTOApp implements ImportFiles {
-    private static AllUsers allUsers;
+    private static AllUsers allUsers = new AllUsers();
     private static ArrayList<HDBProject> projects = new ArrayList<HDBProject>();
     // might need query data file? (probably good idea)
     // for time now, as long as program doesn't close, login as user -> submit query -> logout -> login as officer -> should be able to view
@@ -34,16 +35,8 @@ public class BTOApp implements ImportFiles {
         ImportFiles.readObjects(allUsers,"OfficerList.csv", HDBOfficer::new);
         ImportFiles.readObjects(allUsers,"ManagerList.csv", HDBManager::new);
         projects = ImportFiles.readProjects(allUsers);
-
-//        System.out.println("Applicants: ");
-//        System.out.println(applicants.toString());
-//        System.out.println("Officers: ");
-//        System.out.println(officers.toString());
-//        System.out.println("Managers: ");
-//        System.out.println(managers.toString());
-//        System.out.println("Projects: ");
-//        System.out.println(projects.toString());
-
+        System.out.println(Arrays.toString(allUsers.getUsers().toArray()));
+        System.out.println(projects);
     }
 
 
