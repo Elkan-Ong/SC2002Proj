@@ -1,6 +1,5 @@
 package Project;
 
-import Enums.RoomType;
 import java.util.ArrayList;
 
 
@@ -29,14 +28,6 @@ public class Flat {
 
     public String getType() {
         return type;
-    }
-
-    private static RoomType getRoomType(String type) {
-        return switch (type) {
-            case ("2-Room") -> RoomType.TWO_ROOM;
-            case ("3-Room") -> RoomType.THREE_ROOM;
-            default -> throw new IllegalStateException("Unexpected value: " + type);
-        };
     }
 
 }

@@ -1,8 +1,9 @@
 package Users;
 
 import Misc.UserFilter;
+import Users.UserInterfaces.UserAction;
 
-public abstract class User {
+public abstract class User implements UserAction {
     private String name;
     private String nric;
     private int age;

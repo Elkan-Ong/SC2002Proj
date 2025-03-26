@@ -51,4 +51,19 @@ public class Applicant extends User implements Application, Query {
     public void editQuery() {
 
     }
+
+    @Override
+    public void displayMenu() {
+        System.out.println("What would you like to do?");
+        System.out.println("1) ...");
+        System.out.println("2) ...");
+        System.out.println("3) ...");
+        System.out.println("4) ...");
+        System.out.println("5) ...");
+    }
+
+    @Override
+    public void handleChoice(int choice) {
+        // implement switch case based on user input
+    }
 }
