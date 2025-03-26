@@ -34,9 +34,12 @@ public abstract class User implements UserAction {
         return maritalStatus;
     }
 
-    public void changePassword(String nric) {
+    public void changePassword(String old_password, String new_password) {
         // TODO
-        return;
+        if (this.password.equals(old_password)) {
+            this.password = new_password;
+        }
+        // else throw exception for incorrect password?
     }
 
     public abstract void viewProjects();

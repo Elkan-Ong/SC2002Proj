@@ -1,6 +1,15 @@
 package Misc;
 
 public class UserFilter {
-    // Users.User should be able to filter location, flat types, etc.
-    // Might need more classes for these?
+    // Can add more variables to filter
+    // Ordering by ???
+    // also could potentially put all filtered projects here for better runtime
+    private String neighbourhood = null;
+    private String type = null;
+
+    public UserFilter(String neighbourhood, String type) {
+        this.neighbourhood = neighbourhood;
+        this.type = type;
+    }
+
 }

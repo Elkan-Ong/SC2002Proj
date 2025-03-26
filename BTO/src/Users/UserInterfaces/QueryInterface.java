@@ -1,8 +1,11 @@
 package Users.UserInterfaces;
 
-public interface Query {
+import Misc.Query;
+
+public interface QueryInterface {
     // likely use default
-    void createQuery();
+    Query createQuery();
+    void viewQuery();
     void deleteQuery();
     void editQuery();
 }

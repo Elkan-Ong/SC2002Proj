@@ -2,6 +2,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import AppInterfaces.ImportFiles;
+import Misc.Query;
 import Project.HDBProject;
 import Users.AllUsers;
 import Users.Applicant;
@@ -21,13 +22,18 @@ import java.io.IOException;
 public class BTOApp implements ImportFiles {
     private static AllUsers allUsers;
     private static ArrayList<HDBProject> projects = new ArrayList<HDBProject>();
+    // might need query data file? (probably good idea)
+    // for time now, as long as program doesn't close, login as user -> submit query -> logout -> login as officer -> should be able to view
+    private static ArrayList<Query> allQueries = new ArrayList<Query>();
 
     public static void main(String[] args) throws IOException, ParseException {
         // Class::new is a method reference to the constructor
+        // This part can be improved for scalability (if we need to add more file/user types)
+        // While it violates OCP, I will leave for now, kind of difficult to implement
         ImportFiles.readObjects(allUsers,"ApplicantList.csv", Applicant::new);
         ImportFiles.readObjects(allUsers,"OfficerList.csv", HDBOfficer::new);
         ImportFiles.readObjects(allUsers,"ManagerList.csv", HDBManager::new);
-        ImportFiles.readProjects(allUsers);
+        projects = ImportFiles.readProjects(allUsers);
 
 //        System.out.println("Applicants: ");
 //        System.out.println(applicants.toString());
