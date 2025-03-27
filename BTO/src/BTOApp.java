@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import AppInterfaces.ImportFiles;
 import Misc.Query;
+import Misc.UserFilter;
 import Project.HDBProject;
 import Users.AllUsers;
 import Users.Applicant;
@@ -20,7 +21,7 @@ import java.io.IOException;
 // Possible to find work around but tentatively we keep as is (just minor scalability problem, if you want to read more files for some reason)
 
 public class BTOApp implements ImportFiles {
-    private static AllUsers allUsers;
+    private static AllUsers allUsers = new AllUsers();
     private static ArrayList<HDBProject> projects = new ArrayList<HDBProject>();
     // might need query data file? (probably good idea)
     // for time now, as long as program doesn't close, login as user -> submit query -> logout -> login as officer -> should be able to view
@@ -34,6 +35,8 @@ public class BTOApp implements ImportFiles {
         ImportFiles.readObjects(allUsers,"OfficerList.csv", HDBOfficer::new);
         ImportFiles.readObjects(allUsers,"ManagerList.csv", HDBManager::new);
         projects = ImportFiles.readProjects(allUsers);
+        HDBManager test = new HDBManager("test", "fuck u", 69, "single", "password");
+        test.test();
 
 //        System.out.println("Applicants: ");
 //        System.out.println(applicants.toString());

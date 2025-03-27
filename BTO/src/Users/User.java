@@ -1,7 +1,12 @@
 package Users;
 
+import Misc.OfficerRegistration;
+import Misc.Query;
 import Misc.UserFilter;
+import Project.HDBProject;
 import Users.UserInterfaces.UserAction;
+
+import java.util.ArrayList;
 
 public abstract class User implements UserAction {
     private String name;
@@ -42,6 +47,6 @@ public abstract class User implements UserAction {
         // else throw exception for incorrect password?
     }
 
-    public abstract void viewProjects();
+    public abstract void viewProjects(ArrayList<HDBProject> allProjects);
 
 }

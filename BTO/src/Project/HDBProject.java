@@ -18,8 +18,10 @@ public class HDBProject {
     private Date closingDate;
     private ArrayList<HDBOfficer> assignedOfficers = new ArrayList<HDBOfficer>();
     private int availableOfficerSlots;
-    private SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
+    private boolean visible = false;
+    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
 
+    // Constructor for file reading
     public HDBProject(String[] values, HDBManager projectManager, ArrayList<HDBOfficer> projectOfficers) throws ParseException {
         this.name = values[0];
         this.neighbourhood = values[1];
@@ -38,18 +40,78 @@ public class HDBProject {
         this.manager = projectManager;
         this.assignedOfficers = projectOfficers;
         this.availableOfficerSlots = Integer.parseInt(values[11]) - this.assignedOfficers.size();
-//        System.out.println("HDB Project Info:");
-//        System.out.println("Officers:");
-//        System.out.println(assignedOfficers);
-//        System.out.println("Manager:");
-//        System.out.println(manager + manager.getName());
+    }
+
+    // Constructor for new project creation
+    public HDBProject(String projectName, String neighbourhood,
+                      String type1, int units1, long price1,
+                      String type2, int units2, long price2,
+                      Date openingDate, Date closingDate,
+                      HDBManager manager, int officerSlots) {
+        this.name = projectName;
+        this.neighbourhood = neighbourhood;
+        this.flatType.add(new Flat(type1, units1, price1));
+        this.flatType.add(new Flat(type2, units2, price2));
+        this.openingDate = openingDate;
+        this.closingDate = closingDate;
+        this.manager = manager;
+        this.availableOfficerSlots = officerSlots;
     }
 
     public void displayProject() {
         System.out.println("Project Information: ");
         System.out.println("Name: " + name);
         System.out.println("Neighbourhood: " + neighbourhood);
-        // TODO other info
+        for (Flat flat : flatType) {
+            flat.displayFlat();
+        }
+        System.out.println("Opening Date: " + openingDate);
+        System.out.println("Closing Date: " + closingDate);
+        System.out.println("Manager: " + manager.getName());
+        System.out.println("Officer Slots: " + availableOfficerSlots);
+        // TODO
+//        System.out.println("Assigned Officers: ");
+//        for (HDBOfficer officer : assignedOfficers) {
+//            officer.getName();
+//        }
+
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setNeighbourhood(String neighbourhood) {
+        this.neighbourhood = neighbourhood;
+    }
+
+    public ArrayList<Flat> getFlatType() {
+        return this.flatType;
+    }
+
+    public Date getOpeningDate() {
+        return openingDate;
+    }
+
+    public void setOpeningDate(Date openingDate) {
+        this.openingDate = openingDate;
+    }
+
+    public Date getClosingDate() {
+        return closingDate;
+    }
+
+    public void setClosingDate(Date closingDate) {
+        this.closingDate = closingDate;
+    }
+
+    public void toggleVisibility() {
+        this.visible = !this.visible;
+        System.out.println("Project is now " + (this.visible ? "visible" : "invisible"));
     }
 
 

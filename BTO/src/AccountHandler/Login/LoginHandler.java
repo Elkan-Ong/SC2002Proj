@@ -15,8 +15,8 @@ public class LoginHandler {
         this.allUsers = allUsers;
     }
 
-    public User login(String username, String password) {
-        Optional<User> user = allUsers.findUser(username);
-    }
+//    public User login(String username, String password) {
+//        Optional<User> user = allUsers.findUser(username);
+//    }
 
 }

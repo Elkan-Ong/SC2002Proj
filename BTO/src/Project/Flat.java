@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 public class Flat {
     private ArrayList<Unit> units = new ArrayList<Unit>();
-    private int price;
+    private long price;
     private String type;
     private int noOfUnitsAvailable;
 
-    public Flat(String type, int price, int noOfUnitsAvailable) {
+    public Flat(String type, int noOfUnitsAvailable, long price) {
         this.type = type;
         this.price = price;
         this.noOfUnitsAvailable = noOfUnitsAvailable;
@@ -22,7 +22,7 @@ public class Flat {
         return units;
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 
@@ -30,4 +30,10 @@ public class Flat {
         return type;
     }
 
+    public void displayFlat() {
+        System.out.println(type + " Flat information;");
+        System.out.println("Total no. of units: " + units.size());
+        System.out.println("Price of unit: " + price);
+        System.out.println("Current no. of available units: " + noOfUnitsAvailable);
+    }
 }
