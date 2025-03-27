@@ -1,6 +1,7 @@
 package Users;
 
 import Enums.ApplicationStatus;
+import Misc.OfficerRegistration;
 import Misc.UserFilter;
 import Misc.Query;
 import Project.HDBProject;
@@ -141,7 +142,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     @Override
-    public void handleChoice(int choice) {
+    public void handleChoice(ArrayList<HDBProject> allProjects,
+                             ArrayList<Query> allQueries,
+                             ArrayList<OfficerRegistration> allRegistrations,
+                             int choice) {
         // implement switch case based on user input
         switch (choice) {
             case 1: viewProjects(); break;
