@@ -2,16 +2,14 @@ package Users;
 
 import Misc.OfficerRegistration;
 import Misc.Query;
-import Misc.UserFilter;
+import Misc.WithdrawApplication;
 import Project.HDBProject;
+import Project.ProjectApplication;
 import Users.UserInterfaces.HDBStaff;
 import Users.UserInterfaces.ManagerInterfaces.ManagerProject;
-import Validation.BasicValidation;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 
 public class HDBManager extends User implements HDBStaff, ManagerProject {
     private HDBProject project;
@@ -45,27 +43,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
 
     @Override
     public void viewProjects(ArrayList<HDBProject> allProjects) {
-        if (allProjects.isEmpty()) {
-            System.out.println("No projects have been created.");
-            return;
-        }
-        System.out.println("List of projects:");
-        for (int i=0; i < allProjects.size(); i++) {
-            System.out.println((i+1) + ") " + allProjects.get(i).getName());
-        }
-        System.out.println("Select project to view:");
-        int choice;
-        while (true) {
-            try {
-                choice = sc.nextInt();
-                if (choice > 0 && choice <= allProjects.size()) {
-                    break;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Please enter a valid project number!");
-            }
-        }
-        allProjects.get(choice-1).displayProject();
+        displayProjects(allProjects, sc);
     }
 
     @Override
@@ -87,7 +65,8 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
     public void handleChoice(ArrayList<HDBProject> allProjects,
                              ArrayList<Query> allQueries,
                              ArrayList<OfficerRegistration> allRegistrations,
-                             int choice) throws ParseException {
+                             ArrayList<ProjectApplication> allProjectApplications,
+                             ArrayList<WithdrawApplication> allWithdrawals, int choice) throws ParseException {
         switch (choice) {
             case 1:
                 viewCurrentProject();
@@ -105,6 +84,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 viewProjects(allProjects);
                 break;
             case 6:
+                // Requires Officer class to be completed
                 break;
             case 7:
                 break;

@@ -4,6 +4,7 @@ import Enums.ApplicationStatus;
 import Misc.OfficerRegistration;
 import Misc.UserFilter;
 import Misc.Query;
+import Misc.WithdrawApplication;
 import Project.HDBProject;
 import Project.ProjectApplication;
 import Project.Unit;
@@ -11,8 +12,8 @@ import Users.UserInterfaces.Application;
 import Users.UserInterfaces.CreateFilter;
 import Users.UserInterfaces.QueryInterface;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Applicant extends User implements Application, QueryInterface, CreateFilter {
@@ -21,39 +22,51 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     private UserFilter filter = null;
     // Since we don't have a query file, just take note this will reset everytime
     private ArrayList<Query> userQueries = new ArrayList<Query>();
+    private WithdrawApplication withdrawApplication;
 
     public Applicant(String[] values) {
         super(values[0], values[1], Integer.parseInt(values[2]), values[3], values[4]);
     }
 
     @Override
-    public void viewProjects() {
-        // get Misc.UserFilter then filter out data
-        return;
-    }
-//
+    public ProjectApplication applyForProject(ArrayList<HDBProject> filteredProjects) {
+        Scanner sc = new Scanner(System.in);
+        viewProjects(filteredProjects);
+        System.out.println("Select Project to apply for:");
+        int choice;
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                if (choice > 1 && choice <= filteredProjects.size()) {
+                    break;
+                }
+                System.out.println("Invalid Selection!");
 
-    @Override
-    public void applyForProject() {
-        viewProjects();
-        // select project
-        // set application
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid Selection!");
+            }
+        }
+        application = new ProjectApplication(this, filteredProjects.get(choice-1));
+        application.displayApplication();
+        System.out.println("Application Successfully Created!");
+        return application;
     }
 
     @Override
     public void viewApplication() {
-        application.getProjectInfo();
+        application.displayApplication();
     }
 
     @Override
-    public void requestWithdrawal() {
+    public void requestWithdrawal(ArrayList<WithdrawApplication> allWithdrawals) {
         if (application == null) {
             System.out.println("You have not applied for any project!");
             return;
         }
-        // TODO when implementation closer to complete, might need to check if need to change unit to available if can withdraw after booking
-        application = null;
-        System.out.println("Successfully withdrawn from project");
+        withdrawApplication = new WithdrawApplication(this, application);
+        allWithdrawals.add(withdrawApplication);
+        System.out.println("Withdraw application has been successfully submitted for the following project:");
+        application.displayApplication();
     }
 
     @Override
@@ -89,14 +102,29 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         }
     }
 
-    // TODO for viewQuery, editQuery, and deleteQuery, do validation for choice
-    // TODO can probably abstract the choice thing also, new function getQueryChoice or smth
+
+    private int validateQueryChoice() {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                if (choice > 0 && choice <= userQueries.size()) {
+                    break;
+                }
+                System.out.println("Invalid Selection!");
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid Selection!");
+            }
+        }
+        return choice;
+    }
 
     @Override
     public void viewQuery() {
-        Scanner sc = new Scanner(System.in);
         displayQueries();
-        int choice = sc.nextInt();
+        int choice = validateQueryChoice();
+
         System.out.println("Title:");
         System.out.println(userQueries.get(choice-1).getTitle());
         System.out.println("\nQuery:");
@@ -107,9 +135,8 @@ public class Applicant extends User implements Application, QueryInterface, Crea
 
     @Override
     public void deleteQuery() {
-        Scanner sc = new Scanner(System.in);
         displayQueries();
-        int choice = sc.nextInt();
+        int choice = validateQueryChoice();
         userQueries.remove(choice-1);
         System.out.println("Query removed!");
     }
@@ -118,7 +145,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     public void editQuery() {
         Scanner sc = new Scanner(System.in);
         displayQueries();
-        int choice = sc.nextInt();
+        int choice = validateQueryChoice();
         System.out.println("Query:");
         System.out.println(userQueries.get(choice-1).getQuery());
         System.out.println("\nEnter edited query:");
@@ -134,33 +161,47 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         System.out.println("2) Apply for a project");
         System.out.println("3) View project application");
         System.out.println("4) Request Application Withdrawal");
-        System.out.println("5) Create Enquiry");
-        System.out.println("6) View Enquiry");
-        System.out.println("7) Edit Enquiry");
-        System.out.println("8) Delete Enquiry");
-        System.out.println("9) Create Filter for Projects");
+        System.out.println("5) View Application Withdrawal Status");
+        System.out.println("6) Create Enquiry");
+        System.out.println("7) View Enquiry");
+        System.out.println("8) Edit Enquiry");
+        System.out.println("9) Delete Enquiry");
+        System.out.println("10) Create Filter for Projects");
     }
 
     @Override
     public void handleChoice(ArrayList<HDBProject> allProjects,
                              ArrayList<Query> allQueries,
                              ArrayList<OfficerRegistration> allRegistrations,
-                             int choice) {
-        // implement switch case based on user input
+                             ArrayList<ProjectApplication> allProjectApplications,
+                             ArrayList<WithdrawApplication> allWithdrawals, int choice) {
+        // TODO apply user filter
+        ArrayList<HDBProject> filteredProjects = allProjects;
+
         switch (choice) {
-            case 1: viewProjects(); break;
-            case 2: applyForProject(); break;
-            case 3: viewApplication(); break;
-            case 4: requestWithdrawal(); break;
-            case 5: createQuery(); break;
-            case 6: viewQuery(); break;
-            case 7: editQuery(); break;
-            case 8: deleteQuery(); break;
-            case 9: this.filter = createFilter(); break;
+            case 1: viewProjects(filteredProjects); break; //done
+            case 2: allProjectApplications.add(applyForProject(filteredProjects)); break; //done
+            case 3: viewApplication(); break; //done
+            case 4: requestWithdrawal(allWithdrawals); break; //done
+            case 5: withdrawApplication.displayWithdrawal(); break; //done
+            case 6: createQuery(); break; //done
+            case 7: viewQuery(); break; //done
+            case 8: editQuery(); break; //done
+            case 9: deleteQuery(); break; //done
+            case 10: this.filter = createFilter(); break;
             default:
                 // can change to throw exception
                 System.out.println("Invalid choice");
                 break;
         }
     }
+
+
+    @Override
+    public void viewProjects(ArrayList<HDBProject> filteredProjects) {
+        Scanner sc = new Scanner(System.in);
+        displayProjects(filteredProjects, sc);
+    }
+
+
 }
