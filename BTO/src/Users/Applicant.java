@@ -46,7 +46,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 System.out.println("Invalid Selection!");
             }
         }
-        application = new ProjectApplication(this, filteredProjects.get(choice-1));
+        HDBProject selectedProject = filteredProjects.get(choice - 1);
+        String selectedType = selectedProject.selectAvailableFlats();
+        application = new ProjectApplication(this, selectedProject, selectedType);
         application.displayApplication();
         System.out.println("Application Successfully Created!");
         return application;
@@ -97,8 +99,8 @@ public class Applicant extends User implements Application, QueryInterface, Crea
 
     public void displayQueries() {
         System.out.println("Select Query to View:");
-        for (int i=0; i < userQueries.size(); i++) {
-            System.out.println((i+1) + ") " + userQueries.get(i).getTitle());
+        for (int i = 0; i < userQueries.size(); i++) {
+            System.out.println((i + 1) + ") " + userQueries.get(i).getTitle());
         }
     }
 
@@ -126,18 +128,18 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         int choice = validateQueryChoice();
 
         System.out.println("Title:");
-        System.out.println(userQueries.get(choice-1).getTitle());
+        System.out.println(userQueries.get(choice - 1).getTitle());
         System.out.println("\nQuery:");
-        System.out.println(userQueries.get(choice-1).getQuery());
+        System.out.println(userQueries.get(choice - 1).getQuery());
         System.out.println("\nResponse:");
-        System.out.println(userQueries.get(choice-1).getReply());
+        System.out.println(userQueries.get(choice - 1).getReply());
     }
 
     @Override
     public void deleteQuery() {
         displayQueries();
         int choice = validateQueryChoice();
-        userQueries.remove(choice-1);
+        userQueries.remove(choice - 1);
         System.out.println("Query removed!");
     }
 
@@ -147,10 +149,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         displayQueries();
         int choice = validateQueryChoice();
         System.out.println("Query:");
-        System.out.println(userQueries.get(choice-1).getQuery());
+        System.out.println(userQueries.get(choice - 1).getQuery());
         System.out.println("\nEnter edited query:");
         String newQuery = sc.nextLine();
-        userQueries.get(choice-1).setQuery(newQuery);
+        userQueries.get(choice - 1).setQuery(newQuery);
         System.out.println("Query successfully edited!");
     }
 
@@ -179,16 +181,36 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         ArrayList<HDBProject> filteredProjects = allProjects;
 
         switch (choice) {
-            case 1: viewProjects(filteredProjects); break; //done
-            case 2: allProjectApplications.add(applyForProject(filteredProjects)); break; //done
-            case 3: viewApplication(); break; //done
-            case 4: requestWithdrawal(allWithdrawals); break; //done
-            case 5: withdrawApplication.displayWithdrawal(); break; //done
-            case 6: createQuery(); break; //done
-            case 7: viewQuery(); break; //done
-            case 8: editQuery(); break; //done
-            case 9: deleteQuery(); break; //done
-            case 10: this.filter = createFilter(); break;
+            case 1:
+                viewProjects(filteredProjects);
+                break; //done
+            case 2:
+                allProjectApplications.add(applyForProject(filteredProjects));
+                break; //done
+            case 3:
+                viewApplication();
+                break; //done
+            case 4:
+                requestWithdrawal(allWithdrawals);
+                break; //done
+            case 5:
+                withdrawApplication.displayWithdrawal();
+                break; //done
+            case 6:
+                createQuery();
+                break; //done
+            case 7:
+                viewQuery();
+                break; //done
+            case 8:
+                editQuery();
+                break; //done
+            case 9:
+                deleteQuery();
+                break; //done
+            case 10:
+                this.filter = createFilter();
+                break;
             default:
                 // can change to throw exception
                 System.out.println("Invalid choice");

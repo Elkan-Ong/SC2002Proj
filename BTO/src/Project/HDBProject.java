@@ -3,10 +3,13 @@ package Project;
 import Users.HDBManager;
 import Users.HDBOfficer;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class HDBProject {
     private HDBManager manager;
@@ -112,6 +115,39 @@ public class HDBProject {
     public void toggleVisibility() {
         this.visible = !this.visible;
         System.out.println("Project is now " + (this.visible ? "visible" : "invisible"));
+    }
+
+    public String selectAvailableFlats() {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Flat> availableFlats = new ArrayList<Flat>();
+        for (Flat flat : flatType) {
+            if (flat.getNoOfUnitsAvailable() >= 1) {
+                availableFlats.add(flat);
+            }
+        }
+        if (availableFlats.isEmpty()) {
+            System.out.println("No units are available");
+            return null;
+        }
+        System.out.println("Select Flat Type:");
+        for (int i=0; i < availableFlats.size(); i++) {
+            System.out.println((i+1) + ") " + flatType.get(i).getType() + ": " + flatType.get(i).getUnits() + " available");
+        }
+        int choice;
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                if (choice < 1 || choice > availableFlats.size()) {
+                    System.out.println("Invalid Selection!");
+                    continue;
+                }
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid Selection!");
+            }
+        }
+        availableFlats.get(choice-1).reserveUnit();
+        return availableFlats.get(choice-1).getType();
     }
 
 

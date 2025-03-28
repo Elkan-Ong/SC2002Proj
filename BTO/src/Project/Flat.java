@@ -30,6 +30,13 @@ public class Flat {
         return type;
     }
 
+    public int getNoOfUnitsAvailable() { return noOfUnitsAvailable; }
+
+    // When Applicant applies for BTO we reserve for them first
+    // Could result in a lot of clash if too many people try to apply
+    // In other words, first come, first served.
+    public void reserveUnit() { this.noOfUnitsAvailable--; }
+
     public void displayFlat() {
         System.out.println(type + " Flat information;");
         System.out.println("Total no. of units: " + units.size());

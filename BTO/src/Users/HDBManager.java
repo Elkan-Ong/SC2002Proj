@@ -87,6 +87,12 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 // Requires Officer class to be completed
                 break;
             case 7:
+                // TODO
+                // Should display all
+                // When one is selected, give option to approve, deny, do nothing
+                // update application then update accordingly.
+                // If application rejected re-add available unit
+                viewBTOApplication();
                 break;
             case 8:
                 break;
