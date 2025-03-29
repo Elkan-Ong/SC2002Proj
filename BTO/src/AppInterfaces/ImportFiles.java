@@ -82,6 +82,7 @@ public interface ImportFiles {
             for (User manager : allUsers.getUsers()) {
                 if (manager.getName().compareTo(value[10]) == 0) {
                     projectManager = (HDBManager) manager;
+                    break;
                 }
             }
 
@@ -96,8 +97,9 @@ public interface ImportFiles {
                     }
                 }
             }
-
-            result.add(new HDBProject(value, projectManager, projectOfficers));
+            HDBProject temp = new HDBProject(value, projectManager, projectOfficers);
+            projectManager.addOldProject(temp);
+            result.add(temp);
         }
         return result;
     }

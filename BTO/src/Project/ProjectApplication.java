@@ -28,6 +28,8 @@ public class ProjectApplication {
 
     public Flat getSelectedType() { return selectedType; }
 
+    public Applicant getApplicant() { return applicant; }
+
     public void displayApplication() {
         System.out.println("Project Application:");
         System.out.println("Project Name: " + appliedProject.getName());

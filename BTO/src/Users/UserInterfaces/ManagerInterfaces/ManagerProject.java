@@ -92,18 +92,6 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation {
         }
         sc.nextLine(); // clear input buffer in case
 
-        return createProjectObject(projectName, neighbourhood,
-                type1, units1, price1,
-                type2, units2, price2,
-                openingDate, closingDate,
-                manager, officerSlots);
-    }
-
-    default HDBProject createProjectObject(String projectName, String neighbourhood,
-                                     String type1, int units1, long price1,
-                                     String type2, int units2, long price2,
-                                     Date openingDate, Date closingDate,
-                                     HDBManager manager, int officerSlots) {
         return new HDBProject(projectName, neighbourhood,
                 type1, units1, price1,
                 type2, units2, price2,

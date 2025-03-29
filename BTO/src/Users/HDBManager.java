@@ -2,6 +2,7 @@ package Users;
 
 import Enums.ApplicationStatus;
 import Enums.RegistrationStatus;
+import Misc.ApplicantReportFilter;
 import Misc.OfficerRegistration;
 import Misc.Query;
 import Misc.WithdrawApplication;
@@ -10,13 +11,17 @@ import Project.ProjectApplication;
 import Users.UserInterfaces.HDBStaff;
 import Users.UserInterfaces.ManagerInterfaces.ManagerProject;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class HDBManager extends User implements HDBStaff, ManagerProject {
     private HDBProject project;
+    private ArrayList<HDBProject> allPastProjects = new ArrayList<>();
 
     public HDBManager(String[] values) {
         super(values[0], values[1], Integer.parseInt(values[2]), values[3], values[4]);
@@ -24,6 +29,10 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
 
     public HDBManager(String name, String nric, int age, String maritalStatus, String password) {
         super(name, nric, age, maritalStatus, password);
+    }
+
+    public void addOldProject(HDBProject project) {
+        allPastProjects.add(project);
     }
 
     @Override
@@ -75,7 +84,12 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 viewCurrentProject();
                 break;
             case 2:
-                getProjectDetailsAndCreate(this);
+                Date date = new Date();
+                if (project == null || project.getClosingDate().before(date)) {
+                    allPastProjects.add(getProjectDetailsAndCreate(this));
+                } else {
+                    System.out.println("You are currently managing a project and the closing date has not passed.");
+                }
                 break;
             case 3:
                 editProject(this.project);
@@ -96,6 +110,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 viewBTOWithdrawal();
                 break;
             case 9:
+                getApplicantReport();
                 break;
             case 10:
                 break;
@@ -104,6 +119,76 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 break;
         }
     }
+
+    public ApplicantReportFilter createReportFilter() {
+        ApplicantReportFilter filter = new ApplicantReportFilter();
+        filter.createFilter(allPastProjects);
+        return filter;
+    }
+
+    public void filterApplicants(ArrayList<ProjectApplication> filteredApplications, ApplicantReportFilter applicantFilter) {
+        boolean exit;
+        for (ProjectApplication application : project.getAllProjectApplications()) {
+            exit = true;
+            if (!applicantFilter.getFilteredFlatTypes().isEmpty()) {
+                for (String flatType : applicantFilter.getFilteredFlatTypes()) {
+                    if (application.getSelectedType().getType().equals(flatType)) {
+                        exit = false;
+                        break;
+                    }
+                }
+                if (exit) {
+                    continue;
+                }
+            }
+
+            exit = true;
+            if (!applicantFilter.getFilteredProjectNames().isEmpty()) {
+                for (String projectName : applicantFilter.getFilteredProjectNames()) {
+                    if (application.getProjectName().equals(projectName)) {
+                        exit = false;
+                        break;
+                    }
+                }
+                if (exit) {
+                    continue;
+                }
+            }
+
+
+            exit = true;
+            if (!applicantFilter.getFilteredMaritalStatus().isEmpty()) {
+                for (String maritalStatus : applicantFilter.getFilteredMaritalStatus()) {
+                    if (application.getApplicant().getMaritalStatus().equals(maritalStatus)) {
+                        exit = false;
+                        break;
+                    }
+                }
+                if (exit) {
+                    continue;
+                }
+            }
+
+
+            int applicantAge = application.getApplicant().getAge();
+            if (applicantAge > applicantFilter.getMaxAge() || applicantAge < applicantFilter.getMinAge()) {
+                continue;
+            }
+
+            filteredApplications.add(application);
+        }
+    }
+
+    public void getApplicantReport(){
+        ArrayList<ProjectApplication> filteredApplications = new ArrayList<>();
+        ApplicantReportFilter applicantFilter = createReportFilter();
+        filterApplicants(filteredApplications, applicantFilter);
+
+        // might want to create a new class to store project filtered information
+        // need a new method or edit old to store no. of applicants, for each flat type how many single/married applicants, min max age of applicants for a project
+        // probably edit >:c
+    }
+
 
     public void viewBTOApplication() {
         Scanner sc = new Scanner(System.in);
