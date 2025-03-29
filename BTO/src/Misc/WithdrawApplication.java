@@ -23,6 +23,7 @@ public class WithdrawApplication {
     }
 
     public void approveWithdrawal() {
+        // TODO need update noOfUnitsAvailable if application status is SUCCESSFUL
         this.status = RegistrationStatus.SUCCESSFUL;
         applicant.deleteApplication();
         System.out.println("The following application has been withdrawn.");

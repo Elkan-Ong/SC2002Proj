@@ -2,9 +2,7 @@ package Users;
 
 import Misc.OfficerRegistration;
 import Misc.Query;
-import Misc.WithdrawApplication;
 import Project.HDBProject;
-import Project.ProjectApplication;
 import Users.UserInterfaces.HDBStaff;
 import Users.UserInterfaces.ManagerInterfaces.ManagerProject;
 
@@ -65,8 +63,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
     public void handleChoice(ArrayList<HDBProject> allProjects,
                              ArrayList<Query> allQueries,
                              ArrayList<OfficerRegistration> allRegistrations,
-                             ArrayList<ProjectApplication> allProjectApplications,
-                             ArrayList<WithdrawApplication> allWithdrawals, int choice) throws ParseException {
+                             int choice) throws ParseException {
         switch (choice) {
             case 1:
                 viewCurrentProject();

@@ -22,6 +22,8 @@ public class ProjectApplication {
         return status;
     }
 
+    public HDBProject getAppliedProject() { return appliedProject; }
+
     public void displayApplication() {
         System.out.println("Project Application:");
         System.out.println("Project Name: " + appliedProject.getName());

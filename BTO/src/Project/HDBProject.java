@@ -1,8 +1,10 @@
 package Project;
 
+import Misc.WithdrawApplication;
 import Users.HDBManager;
 import Users.HDBOfficer;
 
+import java.sql.Array;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.text.ParseException;
@@ -22,6 +24,9 @@ public class HDBProject {
     private ArrayList<HDBOfficer> assignedOfficers = new ArrayList<HDBOfficer>();
     private int availableOfficerSlots;
     private boolean visible = false;
+    ArrayList<ProjectApplication> allProjectApplications = new ArrayList<ProjectApplication>();
+    ArrayList<WithdrawApplication> allWithdrawals = new ArrayList<WithdrawApplication>();
+
     private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
 
     // Constructor for file reading
@@ -59,6 +64,14 @@ public class HDBProject {
         this.closingDate = closingDate;
         this.manager = manager;
         this.availableOfficerSlots = officerSlots;
+    }
+
+    public void addApplication(ProjectApplication application) {
+        allProjectApplications.add(application);
+    }
+
+    public void addWithdrawal(WithdrawApplication withdrawal) {
+        allWithdrawals.add(withdrawal);
     }
 
     public void displayProject() {

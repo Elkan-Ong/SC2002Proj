@@ -29,7 +29,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     @Override
-    public ProjectApplication applyForProject(ArrayList<HDBProject> filteredProjects) {
+    public void applyForProject(ArrayList<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
         viewProjects(filteredProjects);
         System.out.println("Select Project to apply for:");
@@ -50,8 +50,8 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         String selectedType = selectedProject.selectAvailableFlats();
         application = new ProjectApplication(this, selectedProject, selectedType);
         application.displayApplication();
+        selectedProject.addApplication(application);
         System.out.println("Application Successfully Created!");
-        return application;
     }
 
     @Override
@@ -60,13 +60,13 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     @Override
-    public void requestWithdrawal(ArrayList<WithdrawApplication> allWithdrawals) {
+    public void requestWithdrawal() {
         if (application == null) {
             System.out.println("You have not applied for any project!");
             return;
         }
         withdrawApplication = new WithdrawApplication(this, application);
-        allWithdrawals.add(withdrawApplication);
+        application.getAppliedProject().addWithdrawal(withdrawApplication);
         System.out.println("Withdraw application has been successfully submitted for the following project:");
         application.displayApplication();
     }
@@ -175,8 +175,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     public void handleChoice(ArrayList<HDBProject> allProjects,
                              ArrayList<Query> allQueries,
                              ArrayList<OfficerRegistration> allRegistrations,
-                             ArrayList<ProjectApplication> allProjectApplications,
-                             ArrayList<WithdrawApplication> allWithdrawals, int choice) {
+                             int choice) {
         // TODO apply user filter
         ArrayList<HDBProject> filteredProjects = allProjects;
 
@@ -185,13 +184,13 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 viewProjects(filteredProjects);
                 break; //done
             case 2:
-                allProjectApplications.add(applyForProject(filteredProjects));
+                applyForProject(filteredProjects);
                 break; //done
             case 3:
                 viewApplication();
                 break; //done
             case 4:
-                requestWithdrawal(allWithdrawals);
+                requestWithdrawal();
                 break; //done
             case 5:
                 withdrawApplication.displayWithdrawal();
@@ -226,4 +225,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
 
+    public void deleteApplication() {
+        this.application = null;
+    }
 }
