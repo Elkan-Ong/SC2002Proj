@@ -4,8 +4,6 @@ import Misc.WithdrawApplication;
 import Users.HDBManager;
 import Users.HDBOfficer;
 
-import java.sql.Array;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,8 +22,8 @@ public class HDBProject {
     private ArrayList<HDBOfficer> assignedOfficers = new ArrayList<HDBOfficer>();
     private int availableOfficerSlots;
     private boolean visible = false;
-    ArrayList<ProjectApplication> allProjectApplications = new ArrayList<ProjectApplication>();
-    ArrayList<WithdrawApplication> allWithdrawals = new ArrayList<WithdrawApplication>();
+    ArrayList<ProjectApplication> projectApplications = new ArrayList<ProjectApplication>();
+    ArrayList<WithdrawApplication> withdrawals = new ArrayList<WithdrawApplication>();
 
     private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
 
@@ -66,15 +64,7 @@ public class HDBProject {
         this.availableOfficerSlots = officerSlots;
     }
 
-    public void addApplication(ProjectApplication application) {
-        allProjectApplications.add(application);
-    }
-
-    public void addWithdrawal(WithdrawApplication withdrawal) {
-        allWithdrawals.add(withdrawal);
-    }
-
-    public void displayProject() {
+    public void displayProjectApplicant() {
         System.out.println("Project Information: ");
         System.out.println("Name: " + name);
         System.out.println("Neighbourhood: " + neighbourhood);
@@ -85,12 +75,11 @@ public class HDBProject {
         System.out.println("Closing Date: " + closingDate);
         System.out.println("Manager: " + manager.getName());
         System.out.println("Officer Slots: " + availableOfficerSlots);
-        // TODO
-//        System.out.println("Assigned Officers: ");
-//        for (HDBOfficer officer : assignedOfficers) {
-//            officer.getName();
-//        }
+    }
 
+    public void displayProjectStaff() {
+        displayProjectApplicant();
+        // TODO display officer when implemented
     }
 
     public String getName() {
@@ -125,12 +114,26 @@ public class HDBProject {
         this.closingDate = closingDate;
     }
 
+    public boolean getVisibility() { return visible; }
+
+    public ArrayList<ProjectApplication> getAllProjectApplications() { return projectApplications; }
+
+    public ArrayList<WithdrawApplication> getWithdrawals() { return withdrawals; }
+
+    public void addApplication(ProjectApplication application) {
+        projectApplications.add(application);
+    }
+
+    public void addWithdrawal(WithdrawApplication withdrawal) {
+        withdrawals.add(withdrawal);
+    }
+
     public void toggleVisibility() {
         this.visible = !this.visible;
         System.out.println("Project is now " + (this.visible ? "visible" : "invisible"));
     }
 
-    public String selectAvailableFlats() {
+    public Flat selectAvailableFlats() {
         Scanner sc = new Scanner(System.in);
         ArrayList<Flat> availableFlats = new ArrayList<Flat>();
         for (Flat flat : flatType) {
@@ -159,8 +162,7 @@ public class HDBProject {
                 System.out.println("Invalid Selection!");
             }
         }
-        availableFlats.get(choice-1).reserveUnit();
-        return availableFlats.get(choice-1).getType();
+        return availableFlats.get(choice-1);
     }
 
 

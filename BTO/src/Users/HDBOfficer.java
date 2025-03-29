@@ -12,7 +12,7 @@ public class HDBOfficer extends Applicant implements HDBStaff {
     }
 
     @Override
-    public void viewProjects() {
+    public void viewProjects(ArrayList<HDBProject> allProjects) {
         // Display all projects
     }
 
@@ -22,7 +22,7 @@ public class HDBOfficer extends Applicant implements HDBStaff {
     }
 
     @Override
-    public void viewProjects(ArrayList<HDBProject> allProjects) {
-
+    public void displayProjects(ArrayList<HDBProject> filteredProjects) {
+        HDBStaff.super.displayProjects(filteredProjects);
     }
 }

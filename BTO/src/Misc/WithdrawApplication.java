@@ -15,6 +15,16 @@ public class WithdrawApplication {
         this.status = RegistrationStatus.PENDING;
     }
 
+    public RegistrationStatus getStatus() { return status; }
+
+    public void setStatus(RegistrationStatus status) { this.status = status; }
+
+    public Applicant getApplicant() { return applicant; }
+
+    public ProjectApplication getProjectApplication() { return projectApplication; }
+
+
+
     public void displayWithdrawal() {
         System.out.println("Withdrawal Application: ");
         System.out.println("Applicant: " + applicant.getName());

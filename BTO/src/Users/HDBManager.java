@@ -1,13 +1,19 @@
 package Users;
 
+import Enums.ApplicationStatus;
+import Enums.RegistrationStatus;
 import Misc.OfficerRegistration;
 import Misc.Query;
+import Misc.WithdrawApplication;
 import Project.HDBProject;
+import Project.ProjectApplication;
 import Users.UserInterfaces.HDBStaff;
 import Users.UserInterfaces.ManagerInterfaces.ManagerProject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class HDBManager extends User implements HDBStaff, ManagerProject {
     private HDBProject project;
@@ -20,9 +26,9 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
         super(name, nric, age, maritalStatus, password);
     }
 
-    public void test() throws ParseException {
-        project = this.getProjectDetailsAndCreate(this);
-        this.project.displayProject();
+    @Override
+    public void displayProjects(ArrayList<HDBProject> filteredProjects) {
+        HDBStaff.super.displayProjects(filteredProjects);
     }
 
     @Override
@@ -30,7 +36,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
         if (project == null) {
             System.out.println("You are not currently managing a project!");
         } else {
-            project.displayProject();
+            project.displayProjectApplicant();
         }
     }
 
@@ -41,7 +47,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
 
     @Override
     public void viewProjects(ArrayList<HDBProject> allProjects) {
-        displayProjects(allProjects, sc);
+        displayProjects(allProjects);
     }
 
     @Override
@@ -84,14 +90,10 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 // Requires Officer class to be completed
                 break;
             case 7:
-                // TODO
-                // Should display all
-                // When one is selected, give option to approve, deny, do nothing
-                // update application then update accordingly.
-                // If application rejected re-add available unit
                 viewBTOApplication();
                 break;
             case 8:
+                viewBTOWithdrawal();
                 break;
             case 9:
                 break;
@@ -102,4 +104,158 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 break;
         }
     }
+
+    public void viewBTOApplication() {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<ProjectApplication> projectApplications = new ArrayList<>();
+        // We will display only pending applications to be approved/rejected
+        // Applications that have already been "answered" won't be changed, unless withdrawn by Applicant
+        for (ProjectApplication application : project.getAllProjectApplications()) {
+            if (application.getApplicationStatus() == ApplicationStatus.PENDING) {
+                projectApplications.add(application);
+            }
+        }
+
+        int choice;
+        while (true) {
+            System.out.println("Select Project Application for " + project.getName() + " to view: (input non-number to exit");
+            for (int i=0; i<projectApplications.size(); i++) {
+                System.out.println((i+1) + ") " + projectApplications.get(i).getApplicationInfo());
+            }
+            try {
+                choice = sc.nextInt();
+                if (choice < 1 || choice > projectApplications.size()) {
+                    System.out.println("Invalid Selection!");
+                    continue;
+                }
+            } catch (InputMismatchException e) {
+                break;
+            }
+            System.out.println("Selected Application Information:");
+            ProjectApplication selectedApplication = projectApplications.get(choice-1);
+            selectedApplication.displayApplication();
+            manageApplication(selectedApplication);
+        }
+    }
+
+    public void manageApplication(ProjectApplication application) {
+        System.out.println("Would you like to approve or reject this application? (enter non-number to exit)");
+        System.out.println("1) Approve");
+        System.out.println("2) Reject");
+        int choice;
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                if (choice < 1 || choice > 2) {
+                    System.out.println("Invalid Selection!");
+                    continue;
+                }
+                break;
+            } catch (InputMismatchException e) {
+                choice = 0;
+                break;
+            }
+        }
+        if (choice == 1) {
+            approveApplication(application);
+            System.out.println("Application successfully approved");
+        } else if (choice == 2){
+            rejectApplication(application);
+            System.out.println("Application successfully rejected.");
+        }
+    }
+
+    public void approveApplication(ProjectApplication application) {
+        application.setStatus(ApplicationStatus.SUCCESSFUL);
+        application.getSelectedType().reserveUnit();
+    }
+
+    public void rejectApplication(ProjectApplication application) {
+        application.setStatus(ApplicationStatus.UNSUCCESSFUL);
+    }
+
+    public void viewBTOWithdrawal() {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<WithdrawApplication> withdrawApplications = new ArrayList<>();
+        // We will display only pending applications to be approved/rejected
+        // Applications that have already been "answered" won't be changed, unless withdrawn by Applicant
+        for (WithdrawApplication application : project.getWithdrawals()) {
+            if (application.getStatus() == RegistrationStatus.PENDING) {
+                withdrawApplications.add(application);
+            }
+        }
+        int choice;
+        while (true) {
+            System.out.println("Select Project Application for " + project.getName() + " to view: (input non-number to exit");
+            for (int i=0; i<withdrawApplications.size(); i++) {
+                System.out.println((i+1) + ") " + withdrawApplications.get(i).getApplicant().getName() + "'s Withdrawal");
+            }
+            try {
+                choice = sc.nextInt();
+                if (choice < 1 || choice > withdrawApplications.size()) {
+                    System.out.println("Invalid Selection!");
+                    continue;
+                }
+            } catch (InputMismatchException e) {
+                break;
+            }
+            System.out.println("Selected Withdrawal Information:");
+            WithdrawApplication selectedWithdrawal = withdrawApplications.get(choice-1);
+            selectedWithdrawal.displayWithdrawal();
+            manageWithdrawal(selectedWithdrawal);
+        }
+
+    }
+
+    public void manageWithdrawal(WithdrawApplication application) {
+        System.out.println("Would you like to approve or reject this withdrawal? (enter non-number to exit)");
+        System.out.println("1) Approve");
+        System.out.println("2) Reject");
+        int choice;
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                if (choice < 1 || choice > 2) {
+                    System.out.println("Invalid Selection!");
+                    continue;
+                }
+                break;
+            } catch (InputMismatchException e) {
+                choice = 0;
+                break;
+            }
+        }
+        if (choice == 1) {
+            approveApplication(application);
+            System.out.println("Application successfully approved");
+        } else if (choice == 2){
+            rejectApplication(application);
+            System.out.println("Application successfully rejected.");
+        }
+    }
+
+    public void approveApplication(WithdrawApplication application) {
+        application.setStatus(RegistrationStatus.SUCCESSFUL);
+        ProjectApplication projectApplication = application.getProjectApplication();
+        // If a unit has been booked, we need to return that to the pool of available units
+        if (projectApplication.getApplicationStatus() == ApplicationStatus.SUCCESSFUL || projectApplication.getApplicationStatus() == ApplicationStatus.BOOKED) {
+            projectApplication.getSelectedType().returnUnit();
+        }
+        // We need to delete the application
+        project.getAllProjectApplications().remove(application.getProjectApplication());
+    }
+
+    public void rejectApplication(WithdrawApplication application) {
+        application.setStatus(RegistrationStatus.UNSUCCESSFUL);
+    }
+
 }
+
+
+
+
+
+
+
+
+

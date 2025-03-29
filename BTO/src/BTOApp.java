@@ -35,9 +35,6 @@ public class BTOApp implements ImportFiles {
         ImportFiles.readObjects(allUsers,"OfficerList.csv", HDBOfficer::new);
         ImportFiles.readObjects(allUsers,"ManagerList.csv", HDBManager::new);
         projects = ImportFiles.readProjects(allUsers);
-        HDBManager test = new HDBManager("test", "fuck u", 69, "single", "password");
-        test.test();
-
 //        System.out.println("Applicants: ");
 //        System.out.println(applicants.toString());
 //        System.out.println("Officers: ");
