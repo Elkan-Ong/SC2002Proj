@@ -1,4 +1,4 @@
-package Users.UserInterfaces;
+package Users.UserInterfaces.StaffInterfaces;
 
 import Misc.Query;
 import Project.HDBProject;

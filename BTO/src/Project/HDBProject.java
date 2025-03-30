@@ -81,6 +81,7 @@ public class HDBProject {
 
     public void displayProjectStaff() {
         displayProjectApplicant();
+        System.out.println("Visibility: " + (visible ? "Visible" : "Invisible"));
         // TODO display officer when implemented
     }
 
@@ -137,7 +138,7 @@ public class HDBProject {
 
     public Flat selectAvailableFlats() {
         Scanner sc = new Scanner(System.in);
-        ArrayList<Flat> availableFlats = new ArrayList<Flat>();
+        ArrayList<Flat> availableFlats = new ArrayList<>();
         for (Flat flat : flatType) {
             if (flat.getNoOfUnitsAvailable() >= 1) {
                 availableFlats.add(flat);

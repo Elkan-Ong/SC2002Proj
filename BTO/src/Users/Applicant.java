@@ -188,14 +188,24 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         System.out.println("10) Create Filter for Projects");
     }
 
+    public ArrayList<HDBProject> getVisibleProjects(ArrayList<HDBProject> projects) {
+        ArrayList<HDBProject> result = new ArrayList<>();
+        for (HDBProject project : projects) {
+            if (project.getVisibility()) {
+                result.add(project);
+            }
+        }
+        return result;
+    }
+
     @Override
     public void handleChoice(ArrayList<HDBProject> allProjects,
                              ArrayList<Query> allQueries,
                              ArrayList<OfficerRegistration> allRegistrations,
                              int choice) {
         // TODO apply user filter
-        ArrayList<HDBProject> filteredProjects = allProjects;
-        // TODO remove non visible projects
+        ArrayList<HDBProject> filteredAllProjects = allProjects;
+        ArrayList<HDBProject> filteredProjects = getVisibleProjects(filteredAllProjects);
 
         switch (choice) {
             case 1:

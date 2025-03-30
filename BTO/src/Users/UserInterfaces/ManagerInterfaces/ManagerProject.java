@@ -98,7 +98,6 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation {
                 openingDate, closingDate,
                 manager, officerSlots);
 
-        //for testing
         manager.addOldProject(newProject);
 
         return newProject;

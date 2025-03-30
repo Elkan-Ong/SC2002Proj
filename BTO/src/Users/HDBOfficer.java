@@ -1,7 +1,7 @@
 package Users;
 
 import Project.HDBProject;
-import Users.UserInterfaces.HDBStaff;
+import Users.UserInterfaces.StaffInterfaces.HDBStaff;
 
 import java.util.ArrayList;
 

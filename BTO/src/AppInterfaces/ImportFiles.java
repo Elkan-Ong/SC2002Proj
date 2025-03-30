@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public interface ImportFiles {
 
@@ -71,11 +72,11 @@ public interface ImportFiles {
     // Officers may be problematic if they revert back to Applicants however, if after a project ends
     // Unless for implementation we don't revert them but rather keep them idle until assigned a new project?
     static ArrayList<HDBProject> readProjects(AllUsers allUsers) throws IOException, ParseException {
-        ArrayList<HDBProject> result = new ArrayList<HDBProject>();
+        ArrayList<HDBProject> result = new ArrayList<>();
         ArrayList<String[]> fileData = readFile("ProjectList.csv");
 
         for (String[] value : fileData) {
-            ArrayList<HDBOfficer> projectOfficers = new ArrayList<HDBOfficer>();
+            ArrayList<HDBOfficer> projectOfficers = new ArrayList<>();
             HDBManager projectManager = null;
 
             // Identify the manager object that is managing the project
@@ -99,6 +100,10 @@ public interface ImportFiles {
             }
             HDBProject temp = new HDBProject(value, projectManager, projectOfficers);
             projectManager.addOldProject(temp);
+            Date date = new Date();
+            if (temp.getClosingDate().before(date)) {
+                projectManager.setProject(temp);
+            }
             result.add(temp);
         }
         return result;

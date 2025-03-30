@@ -1,22 +1,19 @@
 package Users;
 
-import Enums.ApplicationStatus;
-import Enums.RegistrationStatus;
 import Misc.*;
 import Project.HDBProject;
-import Project.ProjectApplication;
-import Users.UserInterfaces.HDBStaff;
+import Users.UserInterfaces.ManagerInterfaces.ApplicantReport;
+import Users.UserInterfaces.ManagerInterfaces.ManageProjectApplication;
+import Users.UserInterfaces.ManagerInterfaces.ManageWithdrawal;
+import Users.UserInterfaces.StaffInterfaces.HDBStaff;
 import Users.UserInterfaces.ManagerInterfaces.ManagerProject;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
-public class HDBManager extends User implements HDBStaff, ManagerProject {
+
+public class HDBManager extends User implements HDBStaff, ManagerProject, ApplicantReport, ManageProjectApplication, ManageWithdrawal {
     private HDBProject project;
     private ArrayList<HDBProject> allPastProjects = new ArrayList<>();
 
@@ -27,6 +24,8 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
     public HDBManager(String name, String nric, int age, String maritalStatus, String password) {
         super(name, nric, age, maritalStatus, password);
     }
+
+    public void setProject(HDBProject project) { this.project = project; }
 
     public void addOldProject(HDBProject project) {
         allPastProjects.add(project);
@@ -101,13 +100,13 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 // Requires Officer class to be completed
                 break;
             case 7:
-                viewBTOApplication();
+                viewBTOApplication(project);
                 break;
             case 8:
-                viewBTOWithdrawal();
+                viewBTOWithdrawal(project);
                 break;
             case 9:
-                getApplicantReport();
+                getApplicantReport(allPastProjects);
                 break;
             case 10:
                 viewEnquiries(allQueries);
@@ -116,214 +115,6 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 System.out.println("Invalid choice");
                 break;
         }
-    }
-
-
-
-    public ApplicantReportFilter createReportFilter() {
-        ApplicantReportFilter filter = new ApplicantReportFilter();
-        filter.createFilter(allPastProjects);
-        return filter;
-    }
-
-    public void filterApplicants(ArrayList<ProjectApplication> filteredApplications, ApplicantReportFilter applicantFilter) {
-        boolean exit;
-        for (HDBProject project : allPastProjects) {
-            for (ProjectApplication application : project.getAllProjectApplications()) {
-                exit = true;
-                if (!applicantFilter.getFilteredFlatTypes().isEmpty()) {
-                    for (String flatType : applicantFilter.getFilteredFlatTypes()) {
-                        if (application.getSelectedType().getType().equals(flatType)) {
-                            exit = false;
-                            break;
-                        }
-                    }
-                    if (exit) {
-                        continue;
-                    }
-                }
-
-                exit = true;
-                if (!applicantFilter.getFilteredProjectNames().isEmpty()) {
-                    for (String projectName : applicantFilter.getFilteredProjectNames()) {
-                        if (application.getProjectName().equals(projectName)) {
-                            exit = false;
-                            break;
-                        }
-                    }
-                    if (exit) {
-                        continue;
-                    }
-                }
-
-
-                exit = true;
-                if (!applicantFilter.getFilteredMaritalStatus().isEmpty()) {
-                    for (String maritalStatus : applicantFilter.getFilteredMaritalStatus()) {
-                        if (application.getApplicant().getMaritalStatus().equals(maritalStatus)) {
-                            exit = false;
-                            break;
-                        }
-                    }
-                    if (exit) {
-                        continue;
-                    }
-                }
-
-
-                int applicantAge = application.getApplicant().getAge();
-                if (applicantAge > applicantFilter.getMaxAge() || applicantAge < applicantFilter.getMinAge()) {
-                    continue;
-                }
-
-                filteredApplications.add(application);
-            }
-        }
-
-    }
-
-    public void getApplicantReport(){
-        ArrayList<ProjectApplication> filteredApplications = new ArrayList<>();
-        ApplicantReportFilter applicantFilter = createReportFilter();
-        filterApplicants(filteredApplications, applicantFilter);
-        ReportGenerator.generateReport(filteredApplications, applicantFilter);
-    }
-
-
-    public void viewBTOApplication() {
-        Scanner sc = new Scanner(System.in);
-        ArrayList<ProjectApplication> projectApplications = new ArrayList<>();
-        // We will display only pending applications to be approved/rejected
-        // Applications that have already been "answered" won't be changed, unless withdrawn by Applicant
-        for (ProjectApplication application : project.getAllProjectApplications()) {
-            if (application.getApplicationStatus() == ApplicationStatus.PENDING) {
-                projectApplications.add(application);
-            }
-        }
-
-        int choice;
-        while (true) {
-            System.out.println("Select Project Application for " + project.getName() + " to view: (input non-number to exit");
-            for (int i=0; i<projectApplications.size(); i++) {
-                System.out.println((i+1) + ") " + projectApplications.get(i).getApplicationInfo());
-            }
-            try {
-                choice = sc.nextInt();
-                if (choice < 1 || choice > projectApplications.size()) {
-                    System.out.println("Invalid Selection!");
-                    continue;
-                }
-            } catch (InputMismatchException e) {
-                break;
-            }
-            System.out.println("Selected Application Information:");
-            ProjectApplication selectedApplication = projectApplications.get(choice-1);
-            selectedApplication.displayApplication();
-            manageApplication(selectedApplication);
-        }
-    }
-
-    public void manageApplication(ProjectApplication application) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Would you like to approve or reject this application? (enter non-number to exit)");
-        System.out.println("1) Approve");
-        System.out.println("2) Reject");
-        int choice;
-        while (true) {
-            try {
-                choice = sc.nextInt();
-                if (choice < 1 || choice > 2) {
-                    System.out.println("Invalid Selection!");
-                    continue;
-                }
-                break;
-            } catch (InputMismatchException e) {
-                choice = 0;
-                break;
-            }
-        }
-        sc.nextLine();
-        if (choice == 1) {
-            approveApplication(application);
-            System.out.println("Application successfully approved");
-        } else if (choice == 2){
-            rejectApplication(application);
-            System.out.println("Application successfully rejected.");
-        }
-    }
-
-    public void approveApplication(ProjectApplication application) {
-        application.setStatus(ApplicationStatus.SUCCESSFUL);
-        application.getSelectedType().reserveUnit();
-    }
-
-    public void rejectApplication(ProjectApplication application) {
-        application.setStatus(ApplicationStatus.UNSUCCESSFUL);
-    }
-
-    public void viewBTOWithdrawal() {
-        Scanner sc = new Scanner(System.in);
-        ArrayList<WithdrawApplication> withdrawApplications = new ArrayList<>();
-        // We will display only pending applications to be approved/rejected
-        // Applications that have already been "answered" won't be changed, unless withdrawn by Applicant
-        for (WithdrawApplication application : project.getWithdrawals()) {
-            if (application.getStatus() == RegistrationStatus.PENDING) {
-                withdrawApplications.add(application);
-            }
-        }
-        int choice;
-        while (true) {
-            System.out.println("Select Project Application for " + project.getName() + " to view: (input non-number to exit");
-            for (int i=0; i<withdrawApplications.size(); i++) {
-                System.out.println((i+1) + ") " + withdrawApplications.get(i).getApplicant().getName() + "'s Withdrawal");
-            }
-            try {
-                choice = sc.nextInt();
-                if (choice < 1 || choice > withdrawApplications.size()) {
-                    System.out.println("Invalid Selection!");
-                    continue;
-                }
-            } catch (InputMismatchException e) {
-                break;
-            }
-            sc.nextLine();
-            System.out.println("Selected Withdrawal Information:");
-            WithdrawApplication selectedWithdrawal = withdrawApplications.get(choice-1);
-            selectedWithdrawal.displayWithdrawal();
-            manageWithdrawal(selectedWithdrawal);
-        }
-
-    }
-
-    public void manageWithdrawal(WithdrawApplication application) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Would you like to approve or reject this withdrawal? (enter non-number to exit)");
-        System.out.println("1) Approve");
-        System.out.println("2) Reject");
-        int choice = getChoice(1, 2);
-        sc.nextLine();
-        if (choice == 1) {
-            approveApplication(application);
-            System.out.println("Application successfully approved");
-        } else if (choice == 2){
-            rejectApplication(application);
-            System.out.println("Application successfully rejected.");
-        }
-    }
-
-    public void approveApplication(WithdrawApplication application) {
-        application.setStatus(RegistrationStatus.SUCCESSFUL);
-        ProjectApplication projectApplication = application.getProjectApplication();
-        // If a unit has been booked, we need to return that to the pool of available units
-        if (projectApplication.getApplicationStatus() == ApplicationStatus.SUCCESSFUL || projectApplication.getApplicationStatus() == ApplicationStatus.BOOKED) {
-            projectApplication.getSelectedType().returnUnit();
-        }
-        // We need to delete the application
-        project.getAllProjectApplications().remove(application.getProjectApplication());
-    }
-
-    public void rejectApplication(WithdrawApplication application) {
-        application.setStatus(RegistrationStatus.UNSUCCESSFUL);
     }
 
 }
