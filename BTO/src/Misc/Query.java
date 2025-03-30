@@ -2,10 +2,12 @@ package Misc;
 
 import Users.Applicant;
 
+import java.util.Objects;
+
 public class Query {
     private String title;
     private String query;
-    private String reply = "No reply yet!";
+    private String reply = null;
     private Applicant applicant;
 
     public Query(Applicant applicant, String title, String query) {
@@ -29,4 +31,14 @@ public class Query {
     public String getReply() {
         return reply;
     }
+
+    public void setReply(String reply) { this.reply = reply; }
+
+    public void displayQuery() {
+        System.out.println("Title: " + this.title);
+        System.out.println("Query: " + this.query);
+        System.out.print("Reply: ");
+        System.out.println(Objects.requireNonNullElse(this.reply, "No reply made yet."));
+    }
+
 }

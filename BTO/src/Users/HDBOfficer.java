@@ -1,6 +1,9 @@
 package Users;
 
+import Project.HDBProject;
 import Users.UserInterfaces.HDBStaff;
+
+import java.util.ArrayList;
 
 public class HDBOfficer extends Applicant implements HDBStaff {
 
@@ -9,7 +12,7 @@ public class HDBOfficer extends Applicant implements HDBStaff {
     }
 
     @Override
-    public void viewProjects() {
+    public void viewProjects(ArrayList<HDBProject> allProjects) {
         // Display all projects
     }
 
@@ -18,4 +21,8 @@ public class HDBOfficer extends Applicant implements HDBStaff {
 
     }
 
+    @Override
+    public void displayProjects(ArrayList<HDBProject> filteredProjects) {
+        HDBStaff.super.displayProjects(filteredProjects);
+    }
 }

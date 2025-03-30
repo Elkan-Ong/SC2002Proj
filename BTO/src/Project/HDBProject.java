@@ -1,5 +1,6 @@
 package Project;
 
+import Misc.WithdrawApplication;
 import Users.HDBManager;
 import Users.HDBOfficer;
 
@@ -7,6 +8,8 @@ import java.util.ArrayList;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class HDBProject {
     private HDBManager manager;
@@ -18,8 +21,13 @@ public class HDBProject {
     private Date closingDate;
     private ArrayList<HDBOfficer> assignedOfficers = new ArrayList<HDBOfficer>();
     private int availableOfficerSlots;
-    private SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
+    private boolean visible = true; // TODO change to false after testing
+    ArrayList<ProjectApplication> projectApplications = new ArrayList<ProjectApplication>();
+    ArrayList<WithdrawApplication> withdrawals = new ArrayList<WithdrawApplication>();
 
+    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
+
+    // Constructor for file reading
     public HDBProject(String[] values, HDBManager projectManager, ArrayList<HDBOfficer> projectOfficers) throws ParseException {
         this.name = values[0];
         this.neighbourhood = values[1];
@@ -38,18 +46,126 @@ public class HDBProject {
         this.manager = projectManager;
         this.assignedOfficers = projectOfficers;
         this.availableOfficerSlots = Integer.parseInt(values[11]) - this.assignedOfficers.size();
-//        System.out.println("HDB Project Info:");
-//        System.out.println("Officers:");
-//        System.out.println(assignedOfficers);
-//        System.out.println("Manager:");
-//        System.out.println(manager + manager.getName());
     }
 
-    public void displayProject() {
+    // Constructor for new project creation
+    public HDBProject(String projectName, String neighbourhood,
+                      String type1, int units1, long price1,
+                      String type2, int units2, long price2,
+                      Date openingDate, Date closingDate,
+                      HDBManager manager, int officerSlots) {
+        this.name = projectName;
+        this.neighbourhood = neighbourhood;
+        this.flatType.add(new Flat(type1, units1, price1));
+        this.flatType.add(new Flat(type2, units2, price2));
+        this.openingDate = openingDate;
+        this.closingDate = closingDate;
+        this.manager = manager;
+        this.availableOfficerSlots = officerSlots;
+    }
+
+    public void displayProjectApplicant() {
         System.out.println("Project Information: ");
         System.out.println("Name: " + name);
         System.out.println("Neighbourhood: " + neighbourhood);
-        // TODO other info
+        for (Flat flat : flatType) {
+            flat.displayFlat();
+        }
+        System.out.println("Opening Date: " + openingDate);
+        System.out.println("Closing Date: " + closingDate);
+        System.out.println("Manager: " + manager.getName());
+    }
+
+    // TODO displayProject for Officer/Manager should display officer slots also
+    // TODO can do manager special one with current officers also
+
+    public void displayProjectStaff() {
+        displayProjectApplicant();
+        // TODO display officer when implemented
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setNeighbourhood(String neighbourhood) {
+        this.neighbourhood = neighbourhood;
+    }
+
+    public ArrayList<Flat> getFlatType() {
+        return this.flatType;
+    }
+
+    public Date getOpeningDate() {
+        return openingDate;
+    }
+
+    public void setOpeningDate(Date openingDate) {
+        this.openingDate = openingDate;
+    }
+
+    public Date getClosingDate() {
+        return closingDate;
+    }
+
+    public void setClosingDate(Date closingDate) {
+        this.closingDate = closingDate;
+    }
+
+    public boolean getVisibility() { return visible; }
+
+    public ArrayList<ProjectApplication> getAllProjectApplications() { return projectApplications; }
+
+    public ArrayList<WithdrawApplication> getWithdrawals() { return withdrawals; }
+
+    public void addApplication(ProjectApplication application) {
+        projectApplications.add(application);
+    }
+
+    public void addWithdrawal(WithdrawApplication withdrawal) {
+        withdrawals.add(withdrawal);
+    }
+
+    public void toggleVisibility() {
+        this.visible = !this.visible;
+        System.out.println("Project is now " + (this.visible ? "visible" : "invisible"));
+    }
+
+    public Flat selectAvailableFlats() {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Flat> availableFlats = new ArrayList<Flat>();
+        for (Flat flat : flatType) {
+            if (flat.getNoOfUnitsAvailable() >= 1) {
+                availableFlats.add(flat);
+            }
+        }
+        if (availableFlats.isEmpty()) {
+            System.out.println("No units are available");
+            return null;
+        }
+        System.out.println("Select Flat Type:");
+        for (int i=0; i < availableFlats.size(); i++) {
+            System.out.println((i+1) + ") " + flatType.get(i).getType() + ": " + flatType.get(i).getNoOfUnitsAvailable() + " available");
+        }
+        int choice;
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                if (choice < 1 || choice > availableFlats.size()) {
+                    System.out.println("Invalid Selection!");
+                    continue;
+                }
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid Selection!");
+            }
+            sc.nextLine();
+        }
+        return availableFlats.get(choice-1);
     }
 
 

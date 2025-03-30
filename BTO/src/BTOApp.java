@@ -35,8 +35,15 @@ public class BTOApp implements ImportFiles {
         ImportFiles.readObjects(allUsers,"OfficerList.csv", HDBOfficer::new);
         ImportFiles.readObjects(allUsers,"ManagerList.csv", HDBManager::new);
         projects = ImportFiles.readProjects(allUsers);
-        System.out.println(Arrays.toString(allUsers.getUsers().toArray()));
-        System.out.println(projects);
+//        System.out.println("Applicants: ");
+//        System.out.println(applicants.toString());
+//        System.out.println("Officers: ");
+//        System.out.println(officers.toString());
+//        System.out.println("Managers: ");
+//        System.out.println(managers.toString());
+//        System.out.println("Projects: ");
+//        System.out.println(projects.toString());
+
     }
 
 
