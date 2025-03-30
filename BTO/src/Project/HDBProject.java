@@ -21,7 +21,7 @@ public class HDBProject {
     private Date closingDate;
     private ArrayList<HDBOfficer> assignedOfficers = new ArrayList<HDBOfficer>();
     private int availableOfficerSlots;
-    private boolean visible = false;
+    private boolean visible = true; // TODO change to false after testing
     ArrayList<ProjectApplication> projectApplications = new ArrayList<ProjectApplication>();
     ArrayList<WithdrawApplication> withdrawals = new ArrayList<WithdrawApplication>();
 
@@ -74,8 +74,10 @@ public class HDBProject {
         System.out.println("Opening Date: " + openingDate);
         System.out.println("Closing Date: " + closingDate);
         System.out.println("Manager: " + manager.getName());
-        System.out.println("Officer Slots: " + availableOfficerSlots);
     }
+
+    // TODO displayProject for Officer/Manager should display officer slots also
+    // TODO can do manager special one with current officers also
 
     public void displayProjectStaff() {
         displayProjectApplicant();
@@ -147,7 +149,7 @@ public class HDBProject {
         }
         System.out.println("Select Flat Type:");
         for (int i=0; i < availableFlats.size(); i++) {
-            System.out.println((i+1) + ") " + flatType.get(i).getType() + ": " + flatType.get(i).getUnits() + " available");
+            System.out.println((i+1) + ") " + flatType.get(i).getType() + ": " + flatType.get(i).getNoOfUnitsAvailable() + " available");
         }
         int choice;
         while (true) {
@@ -161,6 +163,7 @@ public class HDBProject {
             } catch (InputMismatchException e) {
                 System.out.println("Invalid Selection!");
             }
+            sc.nextLine();
         }
         return availableFlats.get(choice-1);
     }

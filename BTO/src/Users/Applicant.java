@@ -29,8 +29,16 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         super(values[0], values[1], Integer.parseInt(values[2]), values[3], values[4]);
     }
 
+    public Applicant(String name, String nric, int age, String maritalStatus, String password) {
+        super(name, nric, age, maritalStatus, password);
+    }
+
     @Override
     public void applyForProject(ArrayList<HDBProject> filteredProjects) {
+        if (application != null && application.getApplicationStatus() != ApplicationStatus.UNSUCCESSFUL) {
+            System.out.println("You have an ongoing application or your current application has already been approved");
+            return;
+        }
         Scanner sc = new Scanner(System.in);
         viewProjects(filteredProjects);
         System.out.println("Select Project to apply for:");
@@ -38,7 +46,8 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         while (true) {
             try {
                 choice = sc.nextInt();
-                if (choice > 1 && choice <= filteredProjects.size()) {
+                if (choice >= 1 && choice <= filteredProjects.size()) {
+                    filteredProjects.get(choice-1).displayProjectApplicant();
                     break;
                 }
                 System.out.println("Invalid Selection!");
@@ -47,6 +56,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 System.out.println("Invalid Selection!");
             }
         }
+        sc.nextLine();
         HDBProject selectedProject = filteredProjects.get(choice - 1);
         Flat selectedType = selectedProject.selectAvailableFlats();
         application = new ProjectApplication(this, selectedProject, selectedType);
@@ -125,6 +135,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 System.out.println("Invalid Selection!");
             }
         }
+        sc.nextLine();
         return choice;
     }
 
@@ -228,7 +239,13 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     @Override
     public void viewProjects(ArrayList<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
-        displayProjects(filteredProjects);
+        ArrayList<HDBProject> displayableProjects = new ArrayList<>();
+        for (HDBProject project : filteredProjects) {
+            if (project.getVisibility()) {
+                displayableProjects.add(project);
+            }
+        }
+        displayProjects(displayableProjects);
     }
 
     @Override
@@ -249,16 +266,14 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 choice = sc.nextInt();
                 if (choice > 0 && choice <= filteredProjects.size()) {
                     HDBProject current = filteredProjects.get(choice-1);
-                    if (current.getVisibility()) {
-                        current.displayProjectApplicant();
-                    }
+                    current.displayProjectApplicant();
                     continue;
                 }
                 System.out.println("Please enter a valid project number!");
-
             } catch (InputMismatchException e) {
                 break;
             }
+            sc.nextLine();
         }
     }
 

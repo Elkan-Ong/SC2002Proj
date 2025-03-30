@@ -68,7 +68,6 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation {
 
         System.out.println("Enter price of "+ type2 + " flat:");
         long price2 = getLong();
-        sc.nextLine(); // clear input buffer to read date
 
         System.out.println("Enter opening date:");
         Date openingDate = validateDate();
@@ -90,13 +89,19 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation {
             System.out.println("Enter number of officer slots:");
             officerSlots = getInt();
         }
-        sc.nextLine(); // clear input buffer in case
 
-        return new HDBProject(projectName, neighbourhood,
+
+
+        HDBProject newProject = new HDBProject(projectName, neighbourhood,
                 type1, units1, price1,
                 type2, units2, price2,
                 openingDate, closingDate,
                 manager, officerSlots);
+
+        //for testing
+        manager.addOldProject(newProject);
+
+        return newProject;
     }
 
     void viewCurrentProject();

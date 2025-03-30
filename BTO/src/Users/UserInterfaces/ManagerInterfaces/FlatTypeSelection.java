@@ -17,6 +17,7 @@ public interface FlatTypeSelection {
             System.out.println("Enter Flat Type:");
             choice = sc.nextInt();
         }
+        sc.nextLine();
         return validTypes[choice-1];
     }
 }

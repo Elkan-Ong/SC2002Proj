@@ -15,6 +15,7 @@ public interface BasicValidation {
                 System.out.println("Invalid Input!");
             }
         }
+        sc.nextLine();
         return result;
     }
 
@@ -28,6 +29,27 @@ public interface BasicValidation {
                 System.out.println("Invalid Input!");
             }
         }
+        sc.nextLine();
         return result;
     }
+
+    default int getChoice(int min, int max) {
+        int choice;
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                sc.nextLine();
+                if (choice < min || choice > max) {
+                    System.out.println("Invalid Selection!");
+                    continue;
+                }
+                break;
+            } catch (InputMismatchException e) {
+                sc.nextLine();
+                System.out.println("Invalid Selection!");
+            }
+        }
+        return choice;
+    }
+
 }

@@ -54,8 +54,10 @@ public class ApplicantReportFilter implements BasicValidation {
                 addToList.add(masterList.get(choice-1));
                 masterList.remove(choice-1);
             } catch (InputMismatchException e) {
+                sc.nextLine();
                 break;
             }
+            sc.nextLine();
         }
     }
 

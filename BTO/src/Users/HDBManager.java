@@ -2,10 +2,7 @@ package Users;
 
 import Enums.ApplicationStatus;
 import Enums.RegistrationStatus;
-import Misc.ApplicantReportFilter;
-import Misc.OfficerRegistration;
-import Misc.Query;
-import Misc.WithdrawApplication;
+import Misc.*;
 import Project.HDBProject;
 import Project.ProjectApplication;
 import Users.UserInterfaces.HDBStaff;
@@ -113,12 +110,15 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 getApplicantReport();
                 break;
             case 10:
+                viewEnquiries(allQueries);
                 break;
             default:
                 System.out.println("Invalid choice");
                 break;
         }
     }
+
+
 
     public ApplicantReportFilter createReportFilter() {
         ApplicantReportFilter filter = new ApplicantReportFilter();
@@ -128,65 +128,65 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
 
     public void filterApplicants(ArrayList<ProjectApplication> filteredApplications, ApplicantReportFilter applicantFilter) {
         boolean exit;
-        for (ProjectApplication application : project.getAllProjectApplications()) {
-            exit = true;
-            if (!applicantFilter.getFilteredFlatTypes().isEmpty()) {
-                for (String flatType : applicantFilter.getFilteredFlatTypes()) {
-                    if (application.getSelectedType().getType().equals(flatType)) {
-                        exit = false;
-                        break;
+        for (HDBProject project : allPastProjects) {
+            for (ProjectApplication application : project.getAllProjectApplications()) {
+                exit = true;
+                if (!applicantFilter.getFilteredFlatTypes().isEmpty()) {
+                    for (String flatType : applicantFilter.getFilteredFlatTypes()) {
+                        if (application.getSelectedType().getType().equals(flatType)) {
+                            exit = false;
+                            break;
+                        }
+                    }
+                    if (exit) {
+                        continue;
                     }
                 }
-                if (exit) {
-                    continue;
-                }
-            }
 
-            exit = true;
-            if (!applicantFilter.getFilteredProjectNames().isEmpty()) {
-                for (String projectName : applicantFilter.getFilteredProjectNames()) {
-                    if (application.getProjectName().equals(projectName)) {
-                        exit = false;
-                        break;
+                exit = true;
+                if (!applicantFilter.getFilteredProjectNames().isEmpty()) {
+                    for (String projectName : applicantFilter.getFilteredProjectNames()) {
+                        if (application.getProjectName().equals(projectName)) {
+                            exit = false;
+                            break;
+                        }
+                    }
+                    if (exit) {
+                        continue;
                     }
                 }
-                if (exit) {
-                    continue;
-                }
-            }
 
 
-            exit = true;
-            if (!applicantFilter.getFilteredMaritalStatus().isEmpty()) {
-                for (String maritalStatus : applicantFilter.getFilteredMaritalStatus()) {
-                    if (application.getApplicant().getMaritalStatus().equals(maritalStatus)) {
-                        exit = false;
-                        break;
+                exit = true;
+                if (!applicantFilter.getFilteredMaritalStatus().isEmpty()) {
+                    for (String maritalStatus : applicantFilter.getFilteredMaritalStatus()) {
+                        if (application.getApplicant().getMaritalStatus().equals(maritalStatus)) {
+                            exit = false;
+                            break;
+                        }
+                    }
+                    if (exit) {
+                        continue;
                     }
                 }
-                if (exit) {
+
+
+                int applicantAge = application.getApplicant().getAge();
+                if (applicantAge > applicantFilter.getMaxAge() || applicantAge < applicantFilter.getMinAge()) {
                     continue;
                 }
+
+                filteredApplications.add(application);
             }
-
-
-            int applicantAge = application.getApplicant().getAge();
-            if (applicantAge > applicantFilter.getMaxAge() || applicantAge < applicantFilter.getMinAge()) {
-                continue;
-            }
-
-            filteredApplications.add(application);
         }
+
     }
 
     public void getApplicantReport(){
         ArrayList<ProjectApplication> filteredApplications = new ArrayList<>();
         ApplicantReportFilter applicantFilter = createReportFilter();
         filterApplicants(filteredApplications, applicantFilter);
-
-        // might want to create a new class to store project filtered information
-        // need a new method or edit old to store no. of applicants, for each flat type how many single/married applicants, min max age of applicants for a project
-        // probably edit >:c
+        ReportGenerator.generateReport(filteredApplications, applicantFilter);
     }
 
 
@@ -224,6 +224,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
     }
 
     public void manageApplication(ProjectApplication application) {
+        Scanner sc = new Scanner(System.in);
         System.out.println("Would you like to approve or reject this application? (enter non-number to exit)");
         System.out.println("1) Approve");
         System.out.println("2) Reject");
@@ -241,6 +242,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
                 break;
             }
         }
+        sc.nextLine();
         if (choice == 1) {
             approveApplication(application);
             System.out.println("Application successfully approved");
@@ -284,6 +286,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
             } catch (InputMismatchException e) {
                 break;
             }
+            sc.nextLine();
             System.out.println("Selected Withdrawal Information:");
             WithdrawApplication selectedWithdrawal = withdrawApplications.get(choice-1);
             selectedWithdrawal.displayWithdrawal();
@@ -293,23 +296,12 @@ public class HDBManager extends User implements HDBStaff, ManagerProject {
     }
 
     public void manageWithdrawal(WithdrawApplication application) {
+        Scanner sc = new Scanner(System.in);
         System.out.println("Would you like to approve or reject this withdrawal? (enter non-number to exit)");
         System.out.println("1) Approve");
         System.out.println("2) Reject");
-        int choice;
-        while (true) {
-            try {
-                choice = sc.nextInt();
-                if (choice < 1 || choice > 2) {
-                    System.out.println("Invalid Selection!");
-                    continue;
-                }
-                break;
-            } catch (InputMismatchException e) {
-                choice = 0;
-                break;
-            }
-        }
+        int choice = getChoice(1, 2);
+        sc.nextLine();
         if (choice == 1) {
             approveApplication(application);
             System.out.println("Application successfully approved");
