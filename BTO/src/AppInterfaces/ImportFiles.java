@@ -101,7 +101,7 @@ public interface ImportFiles {
             HDBProject temp = new HDBProject(value, projectManager, projectOfficers);
             projectManager.addOldProject(temp);
             Date date = new Date();
-            if (temp.getClosingDate().before(date)) {
+            if (temp.getClosingDate().after(date)) {
                 projectManager.setProject(temp);
             }
             result.add(temp);
