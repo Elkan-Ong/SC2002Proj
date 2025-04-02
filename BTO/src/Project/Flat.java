@@ -1,10 +1,11 @@
 package Project;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Flat {
-    private ArrayList<Unit> units = new ArrayList<Unit>();
+    private List<Unit> units = new ArrayList<Unit>();
     private long price;
     private String type;
     private int noOfUnitsAvailable;
@@ -18,7 +19,7 @@ public class Flat {
         }
     }
 
-    public ArrayList<Unit> getUnits() {
+    public List<Unit> getUnits() {
         return units;
     }
 

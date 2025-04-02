@@ -1,7 +1,9 @@
 package Misc;
 
+import Project.HDBProject;
 import Users.Applicant;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class Query {
@@ -9,11 +11,15 @@ public class Query {
     private String query;
     private String reply = null;
     private Applicant applicant;
+    private HDBProject project;
+    private Date timestamp;
 
-    public Query(Applicant applicant, String title, String query) {
+    public Query(Applicant applicant, HDBProject project, String title, String query) {
         this.applicant = applicant;
+        this.project = project;
         this.title = title;
         this.query = query;
+        this.timestamp = new Date();
     }
 
     public String getTitle() {
@@ -39,6 +45,7 @@ public class Query {
         System.out.println("Query: " + this.query);
         System.out.print("Reply: ");
         System.out.println(Objects.requireNonNullElse(this.reply, "No reply made yet."));
+        System.out.println("Created on: " + timestamp);
     }
 
 }

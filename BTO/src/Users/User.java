@@ -5,6 +5,7 @@ import Project.HDBProject;
 import Users.UserInterfaces.UserAction;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class User implements UserAction {
     private String name;
@@ -47,8 +48,8 @@ public abstract class User implements UserAction {
         // else throw exception for incorrect password?
     }
 
-    public abstract void viewProjects(ArrayList<HDBProject> allProjects);
+    public abstract void viewProjects(List<HDBProject> allProjects);
 
-    abstract void displayProjects(ArrayList<HDBProject> filteredProjects);
+    abstract void displayProjects(List<HDBProject> filteredProjects);
 
 }

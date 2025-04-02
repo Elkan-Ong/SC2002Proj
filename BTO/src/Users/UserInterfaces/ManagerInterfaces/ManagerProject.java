@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public interface ManagerProject extends FlatTypeSelection, BasicValidation {
@@ -35,9 +36,22 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation {
         return dateObj;
     }
 
-    default String getProjectName() {
+    default String getProjectName(List<HDBProject> allProjects) {
         System.out.println("Enter project name:");
-        return sc.nextLine();
+        String name;
+        boolean sameName = false;
+        do {
+            name = sc.nextLine();
+            for (HDBProject project : allProjects) {
+                if (name.equals(project.getName())) {
+                    System.out.println("Project name cannot be same as existing project!");
+                    System.out.println("Please enter a new name:");
+                    sameName = true;
+                    break;
+                }
+            }
+        } while (sameName);
+        return name;
     }
 
     default String getNeighbourhood() {
@@ -45,8 +59,8 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation {
         return sc.nextLine();
     }
 
-    default HDBProject getProjectDetailsAndCreate(HDBManager manager) throws ParseException {
-        String projectName = getProjectName();
+    default HDBProject getProjectDetailsAndCreate(HDBManager manager, List<HDBProject> allProjects) throws ParseException {
+        String projectName = getProjectName(allProjects);
         String neighbourhood = getNeighbourhood();
 
         System.out.println("Select First Type of Flat:");
@@ -120,7 +134,7 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation {
             choice = sc.nextInt();
             while (choice < 1 || choice > 3) {
                 System.out.println("Invalid selection!");
-                System.out.println("Enter selection: ");
+                System.out.println("Enter selection:");
                 choice = sc.nextInt();
             }
             sc.nextLine(); // clear buffer in case

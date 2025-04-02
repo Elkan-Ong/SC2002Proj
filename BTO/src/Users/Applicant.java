@@ -12,12 +12,14 @@ import Project.Unit;
 import Users.UserInterfaces.Application;
 import Users.UserInterfaces.CreateFilter;
 import Users.UserInterfaces.QueryInterface;
+import Validation.BasicValidation;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
-public class Applicant extends User implements Application, QueryInterface, CreateFilter {
+public class Applicant extends User implements Application, QueryInterface, CreateFilter, BasicValidation {
     private ProjectApplication application = null;
     private Unit bookedUnit = null;
     private UserFilter filter = null;
@@ -34,7 +36,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     @Override
-    public void applyForProject(ArrayList<HDBProject> filteredProjects) {
+    public void applyForProject(List<HDBProject> filteredProjects) {
         if (application != null && application.getApplicationStatus() != ApplicationStatus.UNSUCCESSFUL) {
             System.out.println("You have an ongoing application or your current application has already been approved");
             return;
@@ -99,14 +101,27 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     @Override
-    public Query createQuery() {
+    public HDBProject selectProjectForQuery(List<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
+        System.out.println("Select which project you would like to submit a query for:");
+        for (int i=0; i < filteredProjects.size(); i++) {
+            System.out.println((i+1) + ") " + filteredProjects.get(i).getName());
+        }
+        int choice = getChoice(1, filteredProjects.size());
+        return filteredProjects.get(choice-1);
+    }
+
+    @Override
+    public Query createQuery(List<HDBProject> filteredProjects) {
+        Scanner sc = new Scanner(System.in);
+        HDBProject project = selectProjectForQuery(filteredProjects);
         System.out.println("Enter query title:");
         String title = sc.nextLine();
         System.out.println("Enter your query:");
         String query = sc.nextLine();
-        Query newQuery = new Query(this, title, query);
+        Query newQuery = new Query(this, project, title, query);
         userQueries.add(newQuery);
+        project.addQuery(newQuery);
         System.out.println("Query Submitted!");
         // need to return so the program can remember the query
         // we still need officers/managers to be able to view and reply
@@ -156,8 +171,13 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     public void deleteQuery() {
         displayQueries();
         int choice = validateQueryChoice();
-        userQueries.remove(choice - 1);
-        System.out.println("Query removed!");
+        if (userQueries.get(choice-1).getReply() == null) {
+            userQueries.remove(choice - 1);
+            System.out.println("Query removed!");
+        } else {
+            System.out.println("Your query has been answered. It can no longer be deleted!");
+        }
+
     }
 
     @Override
@@ -165,12 +185,16 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         Scanner sc = new Scanner(System.in);
         displayQueries();
         int choice = validateQueryChoice();
-        System.out.println("Query:");
-        System.out.println(userQueries.get(choice - 1).getQuery());
-        System.out.println("\nEnter edited query:");
-        String newQuery = sc.nextLine();
-        userQueries.get(choice - 1).setQuery(newQuery);
-        System.out.println("Query successfully edited!");
+        if (userQueries.get(choice-1).getReply() == null) {
+            System.out.println("Query:");
+            System.out.println(userQueries.get(choice - 1).getQuery());
+            System.out.println("\nEnter edited query:");
+            String newQuery = sc.nextLine();
+            userQueries.get(choice - 1).setQuery(newQuery);
+            System.out.println("Query successfully edited!");
+        } else {
+            System.out.println("Your query has been answered. It can no longer be deleted!");
+        }
     }
 
     @Override
@@ -188,8 +212,8 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         System.out.println("10) Create Filter for Projects");
     }
 
-    public ArrayList<HDBProject> getVisibleProjects(ArrayList<HDBProject> projects) {
-        ArrayList<HDBProject> result = new ArrayList<>();
+    public List<HDBProject> getVisibleProjects(List<HDBProject> projects) {
+        List<HDBProject> result = new ArrayList<>();
         for (HDBProject project : projects) {
             if (project.getVisibility()) {
                 result.add(project);
@@ -199,13 +223,13 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     @Override
-    public void handleChoice(ArrayList<HDBProject> allProjects,
-                             ArrayList<Query> allQueries,
-                             ArrayList<OfficerRegistration> allRegistrations,
+    public void handleChoice(List<HDBProject> allProjects,
+                             List<OfficerRegistration> allRegistrations,
                              int choice) {
         // TODO apply user filter
-        ArrayList<HDBProject> filteredAllProjects = allProjects;
-        ArrayList<HDBProject> filteredProjects = getVisibleProjects(filteredAllProjects);
+        // TODO viewProjects should be redundant; can jump to displayProjects, when filterProjects is applied for Users, it should also remove invisible projects as well as those they are not eligible to apply for
+        List<HDBProject> filteredAllProjects = allProjects;
+        List<HDBProject> filteredProjects = getVisibleProjects(filteredAllProjects);
 
         switch (choice) {
             case 1:
@@ -224,7 +248,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 withdrawApplication.displayWithdrawal();
                 break; //done
             case 6:
-                createQuery();
+                createQuery(filteredProjects);
                 break; //done
             case 7:
                 viewQuery();
@@ -245,9 +269,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         }
     }
 
-
+    // TODO delete when filter done
     @Override
-    public void viewProjects(ArrayList<HDBProject> filteredProjects) {
+    public void viewProjects(List<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
         ArrayList<HDBProject> displayableProjects = new ArrayList<>();
         for (HDBProject project : filteredProjects) {
@@ -259,7 +283,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     @Override
-    void displayProjects(ArrayList<HDBProject> filteredProjects)  {
+    void displayProjects(List<HDBProject> filteredProjects)  {
         Scanner sc = new Scanner(System.in);
         if (filteredProjects.isEmpty()) {
             System.out.println("No projects have been created.");
@@ -288,7 +312,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
 
-    public void deleteApplication() {
-        this.application = null;
+    public void confirmWithdrawApplication() {
+        this.application.setStatus(ApplicationStatus.UNSUCCESSFUL);
     }
 }
