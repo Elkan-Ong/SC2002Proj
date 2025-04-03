@@ -11,6 +11,10 @@ public class Unit {
         this.unitID = unitID;
     }
 
+    public boolean getBooked() {
+        return booked;
+    }
+
     public void setBooked(Applicant applicant) {
         this.booked = true;
         this.bookedBy = applicant;

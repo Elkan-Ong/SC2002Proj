@@ -1,7 +1,9 @@
 package Users.UserInterfaces.ManagerInterfaces;
 
+import Project.AvailableFlatTypes;
 import Project.Flat;
 import Project.HDBProject;
+import Project.ProjectApplication;
 import Users.HDBManager;
 import Validation.BasicValidation;
 
@@ -12,7 +14,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-public interface ManagerProject extends FlatTypeSelection, BasicValidation {
+public interface ManagerProject extends FlatTypeSelection, BasicValidation, AvailableFlatTypes {
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
     Scanner sc = new Scanner(System.in);
 
@@ -122,8 +124,11 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation {
     default void editMenu() {
         System.out.println("What would you like to edit?");
         System.out.println("1) Project Name");
-        System.out.println("2) Opening Date");
-        System.out.println("3) Closing Date");
+        System.out.println("2) Neighbourhood");
+        System.out.println("3) Flat Type/Units");
+        System.out.println("4) Opening Date");
+        System.out.println("5) Closing Date");
+        System.out.println("6) Officer slots");
         System.out.println("To cancel, enter a non-number character");
     }
 
@@ -132,7 +137,7 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation {
         int choice;
         try {
             choice = sc.nextInt();
-            while (choice < 1 || choice > 3) {
+            while (choice < 1 || choice > 6) {
                 System.out.println("Invalid selection!");
                 System.out.println("Enter selection:");
                 choice = sc.nextInt();
@@ -146,12 +151,81 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation {
                 editProjectName(project);
                 break;
             case 2:
-                editOpeningDate(project);
+                editNeighbourhood(project);
                 break;
             case 3:
+                editFlat(project);
+                break;
+            case 4:
+                editOpeningDate(project);
+                break;
+            case 5:
                 editClosingDate(project);
                 break;
+            case 6:
+                editOfficerSlots(project);
+                break;
         }
+        project.displayProjectStaff();
+    }
+
+    default void editFlat(HDBProject project) {
+        for (int i=0; i < project.getFlatType().size(); i++) {
+            System.out.println((i+1) + ") " + project.getFlatType().get(i).getType());
+        }
+        System.out.println("Which flat would you like to edit?");
+        int choice = getChoice(1, project.getFlatType().size());
+        Flat selectedFlat = project.getFlatType().get(choice-1);
+        System.out.println("Do you want to edit flat type or the number of units?");
+        System.out.println("1) Flat Type");
+        System.out.println("2) Units");
+        choice = getChoice(1, 2);
+        if (choice == 1) {
+            editFlatType(selectedFlat);
+        } else {
+            editUnits(selectedFlat);
+        }
+    }
+
+    default void editUnits(Flat flat) {
+        System.out.println("Enter no. of units: ");
+        int minUnits = flat.getBookedUnits();
+        System.out.println("Note: " + minUnits + " units have been booked");
+        int newUnits = getChoice(minUnits, Integer.MAX_VALUE);
+        if (newUnits > flat.getNoOfUnits()) {
+            flat.addUnits(newUnits - flat.getNoOfUnits());
+            flat.setNoOfUnits(newUnits);
+        } else {
+            flat.removeUnits(flat.getNoOfUnits() - newUnits);
+            flat.setNoOfUnits(newUnits);
+        }
+        System.out.println("Successfully updated units for " + flat.getType());
+    }
+
+    default void editFlatType(Flat flat) {
+        System.out.println("Select flat type to change to:");
+        for (int i=0; i < availableTypes.length; i++) {
+            System.out.println((i+1) + ") " + availableTypes[i]);
+        }
+        int choice = getChoice(1, availableTypes.length);
+        flat.setType(availableTypes[choice-1]);
+    }
+
+    default void editNeighbourhood(HDBProject project) {
+        System.out.println("Enter new neighbourhood name:");
+        String newNeighbourhood = sc.nextLine();
+        project.setNeighbourhood(newNeighbourhood);
+        System.out.println("Successfully updated neighbourhood.");
+    }
+
+
+    default void editOfficerSlots(HDBProject project) {
+        System.out.println("Enter new number of officer slots:");
+        if (!project.getAssignedOfficers().isEmpty()) {
+            System.out.println("Note: No. of slots cannot be less than " + project.getAssignedOfficers().size() + " without unassigning officers first.");
+        }
+        int newSlots = getChoice(project.getAssignedOfficers().size(), Integer.MAX_VALUE);
+        project.setAvailableOfficerSlots(newSlots);
     }
 
     default void editProjectName(HDBProject project) {

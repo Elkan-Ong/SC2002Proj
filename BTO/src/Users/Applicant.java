@@ -61,6 +61,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         sc.nextLine();
         HDBProject selectedProject = filteredProjects.get(choice - 1);
         Flat selectedType = selectedProject.selectAvailableFlats();
+        if (selectedType == null) {
+            System.out.println("Please apply for a different project");
+            return;
+        }
         application = new ProjectApplication(this, selectedProject, selectedType);
         application.displayApplication();
         selectedProject.addApplication(application);

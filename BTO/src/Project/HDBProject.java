@@ -63,6 +63,18 @@ public class HDBProject {
         this.availableOfficerSlots = officerSlots;
     }
 
+    public int getAvailableOfficerSlots() {
+        return availableOfficerSlots;
+    }
+
+    public void setAvailableOfficerSlots(int slots) {
+        this.availableOfficerSlots = slots;
+    }
+
+    public List<HDBOfficer> getAssignedOfficers() {
+        return assignedOfficers;
+    }
+
     public void addQuery(Query query) {
         this.queries.add(query);
     }
@@ -143,9 +155,9 @@ public class HDBProject {
 
     public Flat selectAvailableFlats() {
         Scanner sc = new Scanner(System.in);
-        ArrayList<Flat> availableFlats = new ArrayList<>();
+        List<Flat> availableFlats = new ArrayList<>();
         for (Flat flat : flatType) {
-            if (flat.getNoOfUnitsAvailable() >= 1) {
+            if (flat.getNoOfUnits() >= 1) {
                 availableFlats.add(flat);
             }
         }
@@ -155,7 +167,7 @@ public class HDBProject {
         }
         System.out.println("Select Flat Type:");
         for (int i=0; i < availableFlats.size(); i++) {
-            System.out.println((i+1) + ") " + flatType.get(i).getType() + ": " + flatType.get(i).getNoOfUnitsAvailable() + " available");
+            System.out.println((i+1) + ") " + flatType.get(i).getType() + ": " + (flatType.get(i).getNoOfUnits() - flatType.get(i).getBookedUnits()) + " available");
         }
         int choice;
         while (true) {
