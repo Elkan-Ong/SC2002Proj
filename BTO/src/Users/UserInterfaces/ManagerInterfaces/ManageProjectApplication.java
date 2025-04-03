@@ -1,6 +1,7 @@
 package Users.UserInterfaces.ManagerInterfaces;
 
 import Enums.ApplicationStatus;
+import Project.Flat;
 import Project.HDBProject;
 import Project.ProjectApplication;
 
@@ -63,8 +64,13 @@ public interface ManageProjectApplication {
         }
         sc.nextLine();
         if (choice == 1) {
-            approveApplication(application);
-            System.out.println("Application successfully approved");
+            if (application.getSelectedType().getBookedUnits() < application.getSelectedType().getNoOfUnits()) {
+                approveApplication(application);
+                System.out.println("Application successfully approved");
+            } else {
+                System.out.println("There are no more units available for this flat type.");
+            }
+
         } else if (choice == 2){
             rejectApplication(application);
             System.out.println("Application successfully rejected.");
