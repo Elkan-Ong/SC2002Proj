@@ -1,34 +1,33 @@
 package Project;
 
+import Misc.Query;
 import Misc.WithdrawApplication;
 import Users.HDBManager;
 import Users.HDBOfficer;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class HDBProject {
     private HDBManager manager;
     private String name;
     private String neighbourhood;
-    private ArrayList<Flat> flatType = new ArrayList<Flat>();
+    private List<Flat> flatType = new ArrayList<Flat>();
     private int units = 0;
     private Date openingDate;
     private Date closingDate;
-    private ArrayList<HDBOfficer> assignedOfficers = new ArrayList<HDBOfficer>();
+    private List<HDBOfficer> assignedOfficers = new ArrayList<HDBOfficer>();
     private int availableOfficerSlots;
     private boolean visible = true; // TODO change to false after testing
-    ArrayList<ProjectApplication> projectApplications = new ArrayList<ProjectApplication>();
-    ArrayList<WithdrawApplication> withdrawals = new ArrayList<WithdrawApplication>();
+    List<ProjectApplication> projectApplications = new ArrayList<ProjectApplication>();
+    List<WithdrawApplication> withdrawals = new ArrayList<WithdrawApplication>();
+    List<Query> queries = new ArrayList<>();
 
     private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
 
     // Constructor for file reading
-    public HDBProject(String[] values, HDBManager projectManager, ArrayList<HDBOfficer> projectOfficers) throws ParseException {
+    public HDBProject(String[] values, HDBManager projectManager, List<HDBOfficer> projectOfficers) throws ParseException {
         this.name = values[0];
         this.neighbourhood = values[1];
         this.flatType.add(new Flat(values[2], Integer.parseInt(values[4]), Integer.parseInt(values[3])));
@@ -64,6 +63,24 @@ public class HDBProject {
         this.availableOfficerSlots = officerSlots;
     }
 
+    public int getAvailableOfficerSlots() {
+        return availableOfficerSlots;
+    }
+
+    public void setAvailableOfficerSlots(int slots) {
+        this.availableOfficerSlots = slots;
+    }
+
+    public List<HDBOfficer> getAssignedOfficers() {
+        return assignedOfficers;
+    }
+
+    public void addQuery(Query query) {
+        this.queries.add(query);
+    }
+
+    public List<Query> getQueries() { return queries; }
+
     public void displayProjectApplicant() {
         System.out.println("Project Information: ");
         System.out.println("Name: " + name);
@@ -97,7 +114,7 @@ public class HDBProject {
         this.neighbourhood = neighbourhood;
     }
 
-    public ArrayList<Flat> getFlatType() {
+    public List<Flat> getFlatType() {
         return this.flatType;
     }
 
@@ -119,9 +136,9 @@ public class HDBProject {
 
     public boolean getVisibility() { return visible; }
 
-    public ArrayList<ProjectApplication> getAllProjectApplications() { return projectApplications; }
+    public List<ProjectApplication> getAllProjectApplications() { return projectApplications; }
 
-    public ArrayList<WithdrawApplication> getWithdrawals() { return withdrawals; }
+    public List<WithdrawApplication> getWithdrawals() { return withdrawals; }
 
     public void addApplication(ProjectApplication application) {
         projectApplications.add(application);
@@ -138,9 +155,9 @@ public class HDBProject {
 
     public Flat selectAvailableFlats() {
         Scanner sc = new Scanner(System.in);
-        ArrayList<Flat> availableFlats = new ArrayList<>();
+        List<Flat> availableFlats = new ArrayList<>();
         for (Flat flat : flatType) {
-            if (flat.getNoOfUnitsAvailable() >= 1) {
+            if (flat.getNoOfUnits() >= 1) {
                 availableFlats.add(flat);
             }
         }
@@ -150,7 +167,7 @@ public class HDBProject {
         }
         System.out.println("Select Flat Type:");
         for (int i=0; i < availableFlats.size(); i++) {
-            System.out.println((i+1) + ") " + flatType.get(i).getType() + ": " + flatType.get(i).getNoOfUnitsAvailable() + " available");
+            System.out.println((i+1) + ") " + flatType.get(i).getType() + ": " + (flatType.get(i).getNoOfUnits() - flatType.get(i).getBookedUnits()) + " available");
         }
         int choice;
         while (true) {

@@ -6,13 +6,23 @@ import Validation.BasicValidation;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public interface HDBStaff extends BasicValidation {
-    default void viewEnquiries(ArrayList<Query> allQueries) {
-        if (allQueries.isEmpty()) {
-            System.out.println("No queries have been made.");
+    default void viewEnquiries(List<HDBProject> allPastProjects) {
+        if (allPastProjects.isEmpty()) {
+            System.out.println("No projects have been made.");
             return;
+        }
+
+        List<Query> allQueries = new ArrayList<>();
+        for (HDBProject project : allPastProjects) {
+            for (Query query : project.getQueries()) {
+                if (query.getReply() == null) {
+                    allQueries.add(query);
+                }
+            }
         }
 
         int choice;
@@ -52,7 +62,7 @@ public interface HDBStaff extends BasicValidation {
 
     }
 
-    default void displayProjects(ArrayList<HDBProject> filteredProjects)  {
+    default void displayProjects(List<HDBProject> filteredProjects)  {
         Scanner sc = new Scanner(System.in);
         if (filteredProjects.isEmpty()) {
             System.out.println("No projects have been created.");

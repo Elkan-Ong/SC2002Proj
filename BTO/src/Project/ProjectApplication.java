@@ -36,6 +36,7 @@ public class ProjectApplication {
         System.out.println("Applicant: " + applicant.getName());
         System.out.println("Flat Type: " + selectedType.getType());
         System.out.println("Application Status: " + status);
+        appliedProject.displayProjectApplicant();
     }
 
     public String getApplicationInfo() {

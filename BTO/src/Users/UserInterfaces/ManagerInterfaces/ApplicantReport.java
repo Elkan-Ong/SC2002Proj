@@ -6,16 +6,17 @@ import Project.HDBProject;
 import Project.ProjectApplication;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface ApplicantReport {
 
-    default ApplicantReportFilter createReportFilter(ArrayList<HDBProject> allPastProjects) {
+    default ApplicantReportFilter createReportFilter(List<HDBProject> allPastProjects) {
         ApplicantReportFilter filter = new ApplicantReportFilter();
         filter.createFilter(allPastProjects);
         return filter;
     }
 
-    default void filterApplicants(ArrayList<ProjectApplication> filteredApplications, ApplicantReportFilter applicantFilter, ArrayList<HDBProject> allPastProjects) {
+    default void filterApplicants(List<ProjectApplication> filteredApplications, ApplicantReportFilter applicantFilter, List<HDBProject> allPastProjects) {
         boolean exit;
         for (HDBProject project : allPastProjects) {
             for (ProjectApplication application : project.getAllProjectApplications()) {
@@ -71,8 +72,8 @@ public interface ApplicantReport {
 
     }
 
-    default void getApplicantReport(ArrayList<HDBProject> allPastProjects){
-        ArrayList<ProjectApplication> filteredApplications = new ArrayList<>();
+    default void getApplicantReport(List<HDBProject> allPastProjects){
+        List<ProjectApplication> filteredApplications = new ArrayList<>();
         ApplicantReportFilter applicantFilter = createReportFilter(allPastProjects);
         filterApplicants(filteredApplications, applicantFilter, allPastProjects);
         ReportGenerator.generateReport(filteredApplications, applicantFilter);

@@ -11,11 +11,12 @@ import Users.UserInterfaces.ManagerInterfaces.ManagerProject;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class HDBManager extends User implements HDBStaff, ManagerProject, ApplicantReport, ManageProjectApplication, ManageWithdrawal {
     private HDBProject project;
-    private ArrayList<HDBProject> allPastProjects = new ArrayList<>();
+    private List<HDBProject> allPastProjects = new ArrayList<>();
 
     public HDBManager(String[] values) {
         super(values[0], values[1], Integer.parseInt(values[2]), values[3], values[4]);
@@ -32,7 +33,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
     }
 
     @Override
-    public void displayProjects(ArrayList<HDBProject> filteredProjects) {
+    public void displayProjects(List<HDBProject> filteredProjects) {
         HDBStaff.super.displayProjects(filteredProjects);
     }
 
@@ -51,7 +52,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
     }
 
     @Override
-    public void viewProjects(ArrayList<HDBProject> allProjects) {
+    public void viewProjects(List<HDBProject> allProjects) {
         displayProjects(allProjects);
     }
 
@@ -71,9 +72,8 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
     }
 
     @Override
-    public void handleChoice(ArrayList<HDBProject> allProjects,
-                             ArrayList<Query> allQueries,
-                             ArrayList<OfficerRegistration> allRegistrations,
+    public void handleChoice(List<HDBProject> allProjects,
+                             List<OfficerRegistration> allRegistrations,
                              int choice) throws ParseException {
         switch (choice) {
             case 1:
@@ -82,7 +82,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
             case 2:
                 Date date = new Date();
                 if (project == null || project.getClosingDate().before(date)) {
-                    allPastProjects.add(getProjectDetailsAndCreate(this));
+                    allPastProjects.add(getProjectDetailsAndCreate(this, allProjects));
                 } else {
                     System.out.println("You are currently managing a project and the closing date has not passed.");
                 }
@@ -109,7 +109,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 getApplicantReport(allPastProjects);
                 break;
             case 10:
-                viewEnquiries(allQueries);
+                viewEnquiries(allPastProjects);
                 break;
             default:
                 System.out.println("Invalid choice");

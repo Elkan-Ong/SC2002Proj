@@ -4,11 +4,12 @@ import Project.ProjectApplication;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // This class will be used to create reports for each project based on manager's filters and applications
 public class ReportGenerator {
-    public static void generateReport(ArrayList<ProjectApplication> applications, ApplicantReportFilter filter) {
+    public static void generateReport(List<ProjectApplication> applications, ApplicantReportFilter filter) {
         // we will use a hash map to store the data
         // the key will be the project name, and it will have a value of a hash map with key value of Flat Type and a ProjectReport Object
         Map<String, Map<String, ProjectReport>> reportData = new HashMap<>();
