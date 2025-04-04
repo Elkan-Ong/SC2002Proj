@@ -87,11 +87,15 @@ public interface ManagerProject extends FlatTypeSelection, BasicValidation, Avai
 
         System.out.println("Enter opening date:");
         Date openingDate = validateDate();
+        Date currentDate = new Date();
+        while (openingDate.before(currentDate)) {
+            System.out.println("Project must only be open after today");
+            System.out.println("Enter new opening date (dd/mm/yy):");
+            openingDate = validateDate();
+        }
 
         System.out.println("Enter closing date:");
         Date closingDate = validateDate();
-
-
         while (closingDate.before(openingDate) || closingDate.equals(openingDate)) {
             System.out.println("Closing date cannot be before or same as opening date!");
             System.out.println("Enter new closing date (dd/mm/yy):");
