@@ -64,13 +64,8 @@ public interface ManageProjectApplication {
         }
         sc.nextLine();
         if (choice == 1) {
-            if (application.getSelectedType().getBookedUnits() < application.getSelectedType().getNoOfUnits()) {
-                approveApplication(application);
-                System.out.println("Application successfully approved");
-            } else {
-                System.out.println("There are no more units available for this flat type.");
-            }
-
+            approveApplication(application);
+            System.out.println("Application successfully approved");
         } else if (choice == 2){
             rejectApplication(application);
             System.out.println("Application successfully rejected.");
@@ -79,7 +74,6 @@ public interface ManageProjectApplication {
 
     default void approveApplication(ProjectApplication application) {
         application.setStatus(ApplicationStatus.SUCCESSFUL);
-        application.getSelectedType().reserveUnit();
     }
 
     default void rejectApplication(ProjectApplication application) {
