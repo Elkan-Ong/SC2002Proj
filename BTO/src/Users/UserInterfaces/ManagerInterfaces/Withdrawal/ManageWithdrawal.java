@@ -1,4 +1,4 @@
-package Users.UserInterfaces.ManagerInterfaces;
+package Users.UserInterfaces.ManagerInterfaces.Withdrawal;
 
 import Enums.ApplicationStatus;
 import Enums.RegistrationStatus;

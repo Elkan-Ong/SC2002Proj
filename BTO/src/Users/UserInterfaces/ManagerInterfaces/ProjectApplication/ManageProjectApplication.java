@@ -1,7 +1,6 @@
-package Users.UserInterfaces.ManagerInterfaces;
+package Users.UserInterfaces.ManagerInterfaces.ProjectApplication;
 
 import Enums.ApplicationStatus;
-import Project.Flat;
 import Project.HDBProject;
 import Project.ProjectApplication;
 

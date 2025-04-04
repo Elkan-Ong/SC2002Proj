@@ -1,4 +1,4 @@
-package Users.UserInterfaces.ManagerInterfaces;
+package Users.UserInterfaces.ManagerInterfaces.ProjectHandler;
 
 import Project.AvailableFlatTypes;
 

@@ -2,11 +2,11 @@ package Users;
 
 import Misc.*;
 import Project.HDBProject;
-import Users.UserInterfaces.ManagerInterfaces.ApplicantReport;
-import Users.UserInterfaces.ManagerInterfaces.ManageProjectApplication;
-import Users.UserInterfaces.ManagerInterfaces.ManageWithdrawal;
+import Users.UserInterfaces.ManagerInterfaces.ApplicantReport.ApplicantReport;
+import Users.UserInterfaces.ManagerInterfaces.ProjectApplication.ManageProjectApplication;
+import Users.UserInterfaces.ManagerInterfaces.Withdrawal.ManageWithdrawal;
 import Users.UserInterfaces.StaffInterfaces.HDBStaff;
-import Users.UserInterfaces.ManagerInterfaces.ManagerProject;
+import Users.UserInterfaces.ManagerInterfaces.ProjectHandler.ManagerProject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class HDBManager extends User implements HDBStaff, ManagerProject, ApplicantReport, ManageProjectApplication, ManageWithdrawal {
+public class HDBManager extends User implements HDBStaff, ManagerProject, ApplicantReport, ManageProjectApplication, ManageWithdrawal{
     private HDBProject project;
     private List<HDBProject> allPastProjects = new ArrayList<>();
 
