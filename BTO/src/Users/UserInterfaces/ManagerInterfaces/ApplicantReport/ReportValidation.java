@@ -11,7 +11,7 @@ public interface ReportValidation {
 
     default boolean passesProjectNameFilter(ProjectApplication application, ApplicantReportFilter applicantFilter) {
         return applicantFilter.getFilteredProjectNames().isEmpty() ||
-                applicantFilter.getFilteredProjectNames().contains(application.getProjectName());
+                applicantFilter.getFilteredProjectNames().contains(application.getAppliedProject().getName());
     }
 
     default boolean passesMaritalStatusFilter(ProjectApplication application, ApplicantReportFilter applicantFilter ){

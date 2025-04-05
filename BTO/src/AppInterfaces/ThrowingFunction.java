@@ -5,5 +5,7 @@ package AppInterfaces;
 // Java's functional interface Function<T, R> does not allow you to handle these exceptions
 // T here will be used to call the constructor of the Class we want to create.
 public interface ThrowingFunction<T> {
-    T apply(String[] x) throws Exception;
+//    T apply(String[] x) throws Exception;
+
+    T apply(String s, String s1, int i, String s2, String s3) throws Exception;
 }

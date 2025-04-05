@@ -17,14 +17,14 @@ public class ReportGenerator {
         // Go through applications and populate the map accordingly
         for (ProjectApplication app : applications) {
             // Apply filters
-            if (!filter.getFilteredProjectNames().contains(app.getProjectName())) continue;
+            if (!filter.getFilteredProjectNames().contains(app.getAppliedProject().getName())) continue;
             if (!filter.getFilteredFlatTypes().contains(app.getSelectedType().getType())) continue;
             if (!filter.getFilteredMaritalStatus().contains(app.getApplicant().getMaritalStatus())) continue;
             if (app.getApplicant().getAge() < filter.getMinAge() || app.getApplicant().getAge() > filter.getMaxAge()) continue;
 
             // Group by project and flat type
             reportData
-                    .computeIfAbsent(app.getProjectName(), k -> new HashMap<>())
+                    .computeIfAbsent(app.getAppliedProject().getName(), k -> new HashMap<>())
                     .computeIfAbsent(app.getSelectedType().getType(), k -> new ProjectReport())
                     .addApplicant(app.getApplicant().getMaritalStatus(), app.getApplicant().getAge());
         }

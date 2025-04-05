@@ -123,7 +123,7 @@ public interface ImportFiles {
         for (String[] value : fileData) {
             try {
                 // We create the objects with the values for each row of data in fileData
-                allUsers.addUser((User)constructor.apply(value));
+                allUsers.addUser((User)constructor.apply(value[0], value[1], Integer.parseInt(value[2]), value[3], value[4]));
             } catch (Exception e) {
                 System.err.println("Error parsing data from file '" + fileName + "': " + String.join(",", value));
                 e.printStackTrace();

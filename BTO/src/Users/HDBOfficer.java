@@ -13,17 +13,13 @@ public class HDBOfficer extends Applicant implements HDBStaff {
     }
 
     @Override
-    public void viewProjects(ArrayList<HDBProject> allProjects) {
+    public void viewProjects(List<HDBProject> allProjects) {
         // Display all projects
     }
 
     @Override
     public void displayMenu() {
 
-    }
-
-    @Override
-    public void displayProjects(ArrayList<HDBProject> filteredProjects) {
     }
 
     @Override

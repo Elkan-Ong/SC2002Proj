@@ -1,7 +1,6 @@
 package Users;
 
 import Enums.ApplicationStatus;
-import Misc.OfficerRegistration;
 import Misc.UserFilter;
 import Misc.Query;
 import Misc.WithdrawApplication;
@@ -19,26 +18,59 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Represent a User who is an applicant who would want to apply for a BTO project
+ * @author Elkan Ong Han'en
+ * @since 2025-04-05
+ *
+ * */
 public class Applicant extends User implements Application, QueryInterface, CreateFilter, BasicValidation {
+    /**
+     * An application that the user has submitted, null if user has no previous application
+     */
     private ProjectApplication application = null;
+    /**
+     * The reserved unit of the Applicant when they have successfully applied for a BTO and booked a Unit through an officer.
+     */
     private Unit bookedUnit = null;
+    /**
+     * User's filter to filter projects they would like to view
+     */
     private UserFilter filter = null;
-    // Since we don't have a query file, just take note this will reset everytime
-    private ArrayList<Query> userQueries = new ArrayList<Query>();
-    private WithdrawApplication withdrawApplication;
+    /**
+     * A list of all the queries the Applicant has submitted
+     */
+    private List<Query> userQueries = new ArrayList<>();
+    /**
+     * A withdrawal application if the user wishes to no longer be considered for a project
+     */
+    private WithdrawApplication withdrawApplication = null;
 
-    public Applicant(String[] values) {
-        super(values[0], values[1], Integer.parseInt(values[2]), values[3], values[4]);
-    }
-
+    /**
+     * Creates a new Applicant with basic User details
+     * @param name This is the User's name.
+     * @param nric This is the User's NRIC.
+     * @param age This is the User's age
+     * @param maritalStatus This is the User's marital status.
+     * @param password This is the User's password
+     */
     public Applicant(String name, String nric, int age, String maritalStatus, String password) {
         super(name, nric, age, maritalStatus, password);
     }
 
+    /**
+     * Lets Applicant apply for a project they are interested in
+     * @param filteredProjects the list of projects the Applicant is interested in
+     */
     @Override
     public void applyForProject(List<HDBProject> filteredProjects) {
         if (application != null && application.getApplicationStatus() != ApplicationStatus.UNSUCCESSFUL) {
             System.out.println("You have an ongoing application or your current application has already been approved");
+            return;
+        }
+        if (getMaritalStatus().equals("Single") && getAge() < 35 || getMaritalStatus().equals("Married") && getAge() < 21) {
+            System.out.println("You are ineligible for any flats");
+            System.out.println("You must be at least 35 to apply for a 2-Room or Married and above 21 to apply for 2-Room or 3-Room");
             return;
         }
         Scanner sc = new Scanner(System.in);
@@ -60,7 +92,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         }
         sc.nextLine();
         HDBProject selectedProject = filteredProjects.get(choice - 1);
-        Flat selectedType = selectedProject.selectAvailableFlats();
+        Flat selectedType = selectedProject.selectAvailableFlats(this);
         if (selectedType == null) {
             System.out.println("Please apply for a different project");
             return;
@@ -71,11 +103,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         System.out.println("Application Successfully Created!");
     }
 
-    @Override
-    public void viewApplication() {
-        application.displayApplication();
-    }
-
+    /**
+     * Creates a withdrawal application for the project the Applicant has applied for
+     */
     @Override
     public void requestWithdrawal() {
         if (application == null) {
@@ -88,6 +118,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         application.displayApplication();
     }
 
+    /**
+     * Books an appointment with a HDB officer when the application is successful
+     */
     @Override
     public void bookFlat() {
         if (application.getApplicationStatus() == ApplicationStatus.PENDING) {
@@ -104,6 +137,11 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         // TODO send to HDBOfficer booking implementation
     }
 
+    /**
+     * Displays and gets Applicant selection for the project they would like to submit a query to
+     * @param filteredProjects list of projects the Applicant is interested in
+     * @return the selected project the Applicant wants to submit a query to
+     */
     @Override
     public HDBProject selectProjectForQuery(List<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
@@ -115,6 +153,11 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         return filteredProjects.get(choice-1);
     }
 
+    /**
+     * Creates a Query on a specific project the Applicant would like to inquire about
+     * @param filteredProjects list of projects the Applicant is interested in
+     * @return Query that was created
+     */
     @Override
     public Query createQuery(List<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
@@ -132,6 +175,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         return newQuery;
     }
 
+    /**
+     * Displays all the Applicant's submitted queries
+     */
+    @Override
     public void displayQueries() {
         System.out.println("Select Query to View:");
         for (int i = 0; i < userQueries.size(); i++) {
@@ -139,29 +186,14 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         }
     }
 
-
-    private int validateQueryChoice() {
-        Scanner sc = new Scanner(System.in);
-        int choice;
-        while (true) {
-            try {
-                choice = sc.nextInt();
-                if (choice > 0 && choice <= userQueries.size()) {
-                    break;
-                }
-                System.out.println("Invalid Selection!");
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid Selection!");
-            }
-        }
-        sc.nextLine();
-        return choice;
-    }
-
+    /**
+     * Displays a specific query that the Applicant has submitted
+     * Able to view the response of the query
+     */
     @Override
     public void viewQuery() {
         displayQueries();
-        int choice = validateQueryChoice();
+        int choice = getChoice(1, userQueries.size());
 
         System.out.println("Title:");
         System.out.println(userQueries.get(choice - 1).getTitle());
@@ -171,10 +203,14 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         System.out.println(userQueries.get(choice - 1).getReply());
     }
 
+    /**
+     * Deletes a query that has been submitted by the Applicant
+     * Cannot be deleted if the Query has been replied to
+     */
     @Override
     public void deleteQuery() {
         displayQueries();
-        int choice = validateQueryChoice();
+        int choice = getChoice(1, userQueries.size());
         if (userQueries.get(choice-1).getReply() == null) {
             userQueries.remove(choice - 1);
             System.out.println("Query removed!");
@@ -184,11 +220,16 @@ public class Applicant extends User implements Application, QueryInterface, Crea
 
     }
 
+    /**
+     * Allows Applicant to edit the details of a query they have submitted
+     * Cannot be edited if the query has already been replied to
+     * User will need to resubmit a new Query if they would like to add more details/specifics, but it has been replied to
+     */
     @Override
     public void editQuery() {
         Scanner sc = new Scanner(System.in);
         displayQueries();
-        int choice = validateQueryChoice();
+        int choice = getChoice(1, userQueries.size());
         if (userQueries.get(choice-1).getReply() == null) {
             System.out.println("Query:");
             System.out.println(userQueries.get(choice - 1).getQuery());
@@ -201,6 +242,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         }
     }
 
+    /**
+     * Displays all the actions of the Applicant
+     */
     @Override
     public void displayMenu() {
         System.out.println("What would you like to do?");
@@ -216,6 +260,11 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         System.out.println("10) Create Filter for Projects");
     }
 
+    /**
+     * Filters projects that are visible
+     * @param projects
+     * @return List of projects the Applicant can view
+     */
     public List<HDBProject> getVisibleProjects(List<HDBProject> projects) {
         List<HDBProject> result = new ArrayList<>();
         for (HDBProject project : projects) {
@@ -226,9 +275,13 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         return result;
     }
 
+    /**
+     * Controller to call methods of action that Applicant has selected
+     * @param allProjects List of allProjects
+     * @param choice Selected Applicant action (Refer to displayMenu for choice mapping)
+     */
     @Override
     public void handleChoice(List<HDBProject> allProjects,
-                             List<OfficerRegistration> allRegistrations,
                              int choice) {
         // TODO apply user filter
         // TODO viewProjects should be redundant; can jump to displayProjects, when filterProjects is applied for Users, it should also remove invisible projects as well as those they are not eligible to apply for
@@ -243,7 +296,11 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 applyForProject(filteredProjects);
                 break; //done
             case 3:
-                viewApplication();
+                if (application == null) {
+                    System.out.println("You have not applied for any projects!");
+                    break;
+                }
+                application.displayApplication();
                 break; //done
             case 4:
                 requestWithdrawal();
@@ -277,18 +334,12 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     @Override
     public void viewProjects(List<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
-        ArrayList<HDBProject> displayableProjects = new ArrayList<>();
+        List<HDBProject> displayableProjects = new ArrayList<>();
         for (HDBProject project : filteredProjects) {
             if (project.getVisibility()) {
                 displayableProjects.add(project);
             }
         }
-        displayProjects(displayableProjects);
-    }
-
-    @Override
-    void displayProjects(List<HDBProject> filteredProjects)  {
-        Scanner sc = new Scanner(System.in);
         if (filteredProjects.isEmpty()) {
             System.out.println("No projects have been created.");
             return;
@@ -315,7 +366,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         }
     }
 
-
+    /**
+     * Changes ApplicationStatus of application to UNSUCCESSFUL when the user confirms their withdrawal
+     */
     public void confirmWithdrawApplication() {
         this.application.setStatus(ApplicationStatus.UNSUCCESSFUL);
     }

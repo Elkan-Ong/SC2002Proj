@@ -9,7 +9,16 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Actions that all HDB Staff (Officers and Managers) have access to
+ * @author Elkan Ong Han'en
+ * @since 2025-4-5
+ */
 public interface HDBStaff extends BasicValidation {
+    /**
+     * Displays all the enquiries that have not been replied to
+     * @param allPastProjects list of all projects to view queries of
+     */
     default void viewEnquiries(List<HDBProject> allPastProjects) {
         if (allPastProjects.isEmpty()) {
             System.out.println("No projects have been made.");
@@ -62,9 +71,11 @@ public interface HDBStaff extends BasicValidation {
 
     }
 
-    void viewProjects(ArrayList<HDBProject> allProjects);
-
-    void displayProjects(ArrayList<HDBProject> filteredProjects);
+    /**
+     * displays all the projects passed in allProjects
+     * @param allProjects list of all projects
+     */
+    void viewProjects(List<HDBProject> allProjects);
 
     default void displayProjects(List<HDBProject> filteredProjects)  {
         Scanner sc = new Scanner(System.in);

@@ -94,7 +94,7 @@ public interface WriteFiles {
                         case SUCCESSFUL -> status="Successful";
                         case UNSUCCESSFUL -> status="Unsuccessful";
                     }
-                    writer.println(withdrawal.getApplicant().getName() + "," + withdrawal.getProjectApplication().getProjectName() + "," + status);
+                    writer.println(withdrawal.getApplicant().getName() + "," + withdrawal.getProjectApplication().getAppliedProject().getName() + "," + status);
                 }
             }
         } catch (IOException e) {

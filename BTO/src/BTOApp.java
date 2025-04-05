@@ -12,13 +12,7 @@ import Users.HDBOfficer;
 import java.io.IOException;
 import java.util.List;
 
-// The throws exception might change at a later date, idk what to do with the throw
-// We could also consider since the files should exist that it's not necessary
-// also because the exception handling is extra work to consider (see how?)
 
-// TODO check if there is an easier way to create objects from files in 1 function passing in fileName as a parameter
-// Can use generics but seems like cannot create objects of some generic type
-// Possible to find work around but tentatively we keep as is (just minor scalability problem, if you want to read more files for some reason)
 
 public class BTOApp implements ImportFiles, WriteFiles {
     private static AllUsers allUsers = new AllUsers();

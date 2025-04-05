@@ -28,7 +28,7 @@ public class WithdrawApplication {
     public void displayWithdrawal() {
         System.out.println("Withdrawal Application: ");
         System.out.println("Applicant: " + applicant.getName());
-        System.out.println("Project: " + projectApplication.getProjectName());
+        System.out.println("Project: " + projectApplication.getAppliedProject().getName());
         System.out.println("Status: " + status);
     }
 

@@ -2,6 +2,7 @@ package Project;
 
 import Misc.Query;
 import Misc.WithdrawApplication;
+import Users.Applicant;
 import Users.HDBManager;
 import Users.HDBOfficer;
 
@@ -157,7 +158,7 @@ public class HDBProject {
         System.out.println("Project is now " + (this.visible ? "visible" : "invisible"));
     }
 
-    public Flat selectAvailableFlats() {
+    public Flat selectAvailableFlats(Applicant applicant) {
         Scanner sc = new Scanner(System.in);
         List<Flat> availableFlats = new ArrayList<>();
         for (Flat flat : flatType) {
@@ -179,6 +180,10 @@ public class HDBProject {
                 choice = sc.nextInt();
                 if (choice < 1 || choice > availableFlats.size()) {
                     System.out.println("Invalid Selection!");
+                    continue;
+                }
+                if (availableFlats.get(choice-1).getType().equals("3-Room") && applicant.getMaritalStatus().equals("Single")) {
+                    System.out.println("As a single applicant, you may not apply for any other flats than 2-Room");
                     continue;
                 }
                 break;

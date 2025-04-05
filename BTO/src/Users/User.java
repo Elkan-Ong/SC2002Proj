@@ -4,17 +4,50 @@ import Misc.UserFilter;
 import Project.HDBProject;
 import Users.UserInterfaces.UserAction;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * Represents the basic details of a user in the BTO system
+ * Each user can have a filter to filter projects that they would be interested in
+ * @author Elkan Ong Han'en
+ * @since 2025-04-05
+ *
+ * */
 public abstract class User implements UserAction {
+    /**
+     * Name of the user (unique)
+     * */
     private String name;
+    /**
+     * NRIC of user (unique)
+     * */
     private String nric;
+    /**
+     * Age of the user
+     * */
     private int age;
+    /**
+     * Marital Status of the user: Single/Married
+     * */
     private String maritalStatus;
+    /**
+     * Password to log in to the user's account (by default set to "password"
+     * */
     private String password = "password";
-    private UserFilter userFilter;
+    /**
+     * Filter to store the projects that the user will be interested in
+     * */
+    private UserFilter userFilter = null;
 
+    /**
+     * Create a new User with all attributes except userFilter
+     * @param name This is the User's name.
+     * @param nric This is the User's NRIC.
+     * @param age This is the User's age
+     * @param maritalStatus This is the User's marital status.
+     * @param password This is the User's password
+     * */
     public User(String name, String nric, int age, String maritalStatus, String password) {
         this.name = name;
         this.nric = nric;
@@ -26,22 +59,43 @@ public abstract class User implements UserAction {
         // method should also be callable later on
     }
 
+    /**
+     * Gets name of user
+     * @return this User's name
+     * */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets nric of user
+     * @return this User's nric
+     * */
     public String getNric() {
         return nric;
     }
 
+    /**
+     * Gets marital status of user
+     * @return this User's marital status
+     * */
     public String getMaritalStatus() {
         return maritalStatus;
     }
 
+    /**
+     * Gets marital status of user
+     * @return this User's marital status
+     * */
     public int getAge() { return age; }
 
+    /**
+     * Gets password of user
+     * @return this User's password
+     * */
     public String getPassword() { return password; }
 
+    // TODO may be deleted
     public void changePassword(String old_password, String new_password) {
         // TODO
         if (this.password.equals(old_password)) {
@@ -50,8 +104,5 @@ public abstract class User implements UserAction {
         // else throw exception for incorrect password?
     }
 
-    public abstract void viewProjects(List<HDBProject> allProjects);
-
-    abstract void displayProjects(List<HDBProject> filteredProjects);
 
 }
