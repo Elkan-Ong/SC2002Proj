@@ -39,12 +39,12 @@ public abstract class User implements UserAction {
 
     public int getAge() { return age; }
 
-    public void changePassword(String old_password, String new_password) {
-        // TODO
-        if (this.password.equals(old_password)) {
-            this.password = new_password;
-        }
-        // else throw exception for incorrect password?
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public abstract void viewProjects(ArrayList<HDBProject> allProjects);

@@ -15,8 +15,22 @@ public class LoginHandler {
         this.allUsers = allUsers;
     }
 
-//    public User login(String username, String password) {
-//        Optional<User> user = allUsers.findUser(username);
-//    }
+    public boolean login(String nric, String password) {
+        for (User user : allUsers.getUsers()) {
+            if (user.getNric().equals(nric) && user.getPassword().equals(password)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public User loginAndGetUser(String nric, String password) {
+        for (User user : allUsers.getUsers()) {
+            if (user.getNric().equals(nric) &&
+                user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        return null;
+    }
 }
