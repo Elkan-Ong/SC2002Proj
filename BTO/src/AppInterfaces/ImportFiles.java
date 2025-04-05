@@ -1,10 +1,13 @@
 package AppInterfaces;
 
+import Enums.ApplicationStatus;
+import Enums.RegistrationStatus;
+import Misc.Query;
+import Misc.WithdrawApplication;
+import Project.Flat;
 import Project.HDBProject;
-import Users.AllUsers;
-import Users.HDBManager;
-import Users.HDBOfficer;
-import Users.User;
+import Project.ProjectApplication;
+import Users.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,13 +15,14 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public interface ImportFiles {
 
-    static ArrayList<String[]> readFile(String fileName) throws IOException {
+    static List<String[]> readFile(String fileName) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader("BTO/src/Files/" + fileName))) {
             String line;
-            ArrayList<String[]> result = new ArrayList<String[]>();
+            List<String[]> result = new ArrayList<String[]>();
             boolean firstLine = true;
             while ((line = br.readLine()) != null) {
                 if (firstLine) {
@@ -40,7 +44,7 @@ public interface ImportFiles {
     // we have to parse the column value, identify quotations and keeping the string whole
     static String[] parseCSVLine(String line) {
         // Token represents each value in a cell
-        ArrayList<String> tokens = new ArrayList<>();
+        List<String> tokens = new ArrayList<>();
         // We use StringBuilder as it allows us to create a String (since String objects are normally immutable)
         StringBuilder sb = new StringBuilder();
         boolean inQuotes = false;
@@ -71,12 +75,12 @@ public interface ImportFiles {
     // e.g. only Managers can be of type HDBManager
     // Officers may be problematic if they revert back to Applicants however, if after a project ends
     // Unless for implementation we don't revert them but rather keep them idle until assigned a new project?
-    static ArrayList<HDBProject> readProjects(AllUsers allUsers) throws IOException, ParseException {
-        ArrayList<HDBProject> result = new ArrayList<>();
-        ArrayList<String[]> fileData = readFile("ProjectList.csv");
+    static List<HDBProject> readProjects(AllUsers allUsers) throws IOException, ParseException {
+        List<HDBProject> result = new ArrayList<>();
+        List<String[]> fileData = readFile("ProjectList.csv");
 
         for (String[] value : fileData) {
-            ArrayList<HDBOfficer> projectOfficers = new ArrayList<>();
+            List<HDBOfficer> projectOfficers = new ArrayList<>();
             HDBManager projectManager = null;
 
             // Identify the manager object that is managing the project
@@ -103,6 +107,7 @@ public interface ImportFiles {
             Date date = new Date();
             if (temp.getClosingDate().after(date)) {
                 projectManager.setProject(temp);
+                // TODO set for officer as well
             }
             result.add(temp);
         }
@@ -111,9 +116,9 @@ public interface ImportFiles {
 
     // We want the return type to be of type T
     // We pass in the fileName as well as the constructor of the Class we want to create
-    static <T> void readObjects(AllUsers allUsers, String fileName, ThrowingFunction<T> constructor) throws IOException {
-        ArrayList<T> result = new ArrayList<>();
-        ArrayList<String[]> fileData = readFile(fileName);
+    static <T> void readUsers(AllUsers allUsers, String fileName, ThrowingFunction<T> constructor) throws IOException {
+        List<T> result = new ArrayList<>();
+        List<String[]> fileData = readFile(fileName);
 
         for (String[] value : fileData) {
             try {
@@ -126,4 +131,121 @@ public interface ImportFiles {
         }
 
     }
+
+    static void readApplications(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
+        List<String[]> fileData = readFile("ApplicationList.csv");
+
+        for (String[] value : fileData) {
+            Applicant applicant = null;
+            for (User user : allUsers.getUsers()) {
+                if (value[0].equals(user.getName())) {
+                    applicant = (Applicant) user;
+                }
+            }
+            for (HDBProject project : allProjects) {
+                if (value[1].equals(project.getName())) {
+                    Flat selectedFlat = null;
+                    for (Flat flat : project.getFlatType()) {
+                        if (flat.getType().equals(value[2])) {
+                            selectedFlat = flat;
+                        }
+                    }
+                    ProjectApplication application = new ProjectApplication(applicant, project, selectedFlat);
+                    switch (value[3]) {
+                        case "Pending":
+                            application.setStatus(ApplicationStatus.PENDING);
+                            break;
+                        case "Successful":
+                            application.setStatus(ApplicationStatus.SUCCESSFUL);
+                            break;
+                        case "Unsuccessful":
+                            application.setStatus(ApplicationStatus.UNSUCCESSFUL);
+                            break;
+                        case "Booked":
+                            application.setStatus(ApplicationStatus.BOOKED);
+                            break;
+                    }
+                    project.addApplication(application);
+                }
+            }
+        }
+    }
+
+    static void readQuery(AllUsers allUsers, List<HDBProject> allProjects) throws IOException, ParseException {
+        List<String[]> fileData = readFile("QueryList.csv");
+        for (String[] value : fileData) {
+            Applicant applicant = null;
+            for (User user : allUsers.getUsers()) {
+                if (value[3].equals(user.getName())) {
+                    applicant = (Applicant) user;
+                }
+            }
+            for (HDBProject project : allProjects) {
+                if (value[4].equals(project.getName())) {
+                    Query query = new Query(applicant, project, value[0], value[1], value[5]);
+                    if (!value[2].isEmpty()) {
+                        query.setReply(value[2]);
+                    }
+                    project.addQuery(query);
+                }
+            }
+        }
+    }
+
+    static void readWithdrawal(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
+        List<String[]> fileData = readFile("WithdrawalList.csv");
+        for (String[] value : fileData) {
+            Applicant applicant = null;
+            for (User user : allUsers.getUsers()) {
+                if (value[0].equals(user.getName())) {
+                    applicant = (Applicant) user;
+                }
+            }
+            for (HDBProject project : allProjects) {
+                if (value[1].equals(project.getName())) {
+                    ProjectApplication userApplication = null;
+                    for (ProjectApplication application : project.getAllProjectApplications()) {
+                        if (application.getApplicant().getName().equals(value[0])) {
+                            userApplication = application;
+                        }
+                    }
+                    WithdrawApplication withdrawal = new WithdrawApplication(applicant, userApplication);
+                    switch (value[2]) {
+                        case "Pending":
+                            withdrawal.setStatus(RegistrationStatus.PENDING);
+                            break;
+                        case "Successful":
+                            withdrawal.setStatus(RegistrationStatus.SUCCESSFUL);
+                            break;
+                        case "Unsuccessful":
+                            withdrawal.setStatus(RegistrationStatus.UNSUCCESSFUL);
+                            break;
+                    }
+                    project.addWithdrawal(withdrawal);
+                }
+            }
+        }
+    }
+
+    static void readUnits(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
+        List<String[]> fileData = readFile("WithdrawalList.csv");
+        for (String[] value : fileData) {
+            Applicant applicant = null;
+            for (User user : allUsers.getUsers()) {
+                if (user.getName().equals(value[2])) {
+                    applicant = (Applicant) user;
+                }
+            }
+            for (HDBProject project : allProjects) {
+                if (project.getName().equals(value[0])) {
+                    for (Flat flat : project.getFlatType()) {
+                        if (flat.getType().equals(value[1])) {
+                            flat.getUnits().get(Integer.parseInt(value[3])-1).setBooked(applicant);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

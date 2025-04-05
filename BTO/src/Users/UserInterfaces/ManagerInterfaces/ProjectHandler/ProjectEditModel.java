@@ -3,9 +3,11 @@ package Users.UserInterfaces.ManagerInterfaces.ProjectHandler;
 import Project.AvailableFlatTypes;
 import Project.Flat;
 import Project.HDBProject;
+import Project.Unit;
 import Validation.BasicValidation;
 
 import java.util.Date;
+import java.util.List;
 
 public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
     default void editFlat(HDBProject project) {
@@ -28,8 +30,15 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
 
     default void editUnits(Flat flat) {
         System.out.println("Enter no. of units: ");
-        int minUnits = flat.getBookedUnits();
-        System.out.println("Note: " + minUnits + " units have been booked");
+        int minUnits = 1;
+        List<Unit> units = flat.getUnits();
+        for (int i=units.size()-1; i >= 0; i--) {
+            if (units.get(i).getBooked() == true) {
+                minUnits = i+1;
+                break;
+            }
+        }
+        System.out.println("Note: " + minUnits + " th unit has been booked, you may not reduce the number of units below this number");
         int newUnits = getChoice(minUnits, Integer.MAX_VALUE);
         if (newUnits > flat.getNoOfUnits()) {
             flat.addUnits(newUnits - flat.getNoOfUnits());

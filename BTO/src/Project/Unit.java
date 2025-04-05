@@ -19,4 +19,8 @@ public class Unit {
         this.booked = true;
         this.bookedBy = applicant;
     }
+
+    public Applicant getBookedBy() { return bookedBy; }
+
+    public int getUnitID() { return unitID; }
 }

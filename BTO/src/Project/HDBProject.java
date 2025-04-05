@@ -13,18 +13,18 @@ public class HDBProject {
     private HDBManager manager;
     private String name;
     private String neighbourhood;
-    private List<Flat> flatType = new ArrayList<Flat>();
+    private List<Flat> flatType = new ArrayList<>();
     private int units = 0;
     private Date openingDate;
     private Date closingDate;
-    private List<HDBOfficer> assignedOfficers = new ArrayList<HDBOfficer>();
+    private List<HDBOfficer> assignedOfficers = new ArrayList<>();
     private int availableOfficerSlots;
     private boolean visible = true; // TODO change to false after testing
-    List<ProjectApplication> projectApplications = new ArrayList<ProjectApplication>();
-    List<WithdrawApplication> withdrawals = new ArrayList<WithdrawApplication>();
+    List<ProjectApplication> projectApplications = new ArrayList<>();
+    List<WithdrawApplication> withdrawals = new ArrayList<>();
     List<Query> queries = new ArrayList<>();
 
-    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
+    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
     // Constructor for file reading
     public HDBProject(String[] values, HDBManager projectManager, List<HDBOfficer> projectOfficers) throws ParseException {
@@ -106,6 +106,8 @@ public class HDBProject {
         return this.name;
     }
 
+    public String getNeighbourhood() { return this.neighbourhood; }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -133,6 +135,8 @@ public class HDBProject {
     public void setClosingDate(Date closingDate) {
         this.closingDate = closingDate;
     }
+
+    public HDBManager getManager() { return this.manager; }
 
     public boolean getVisibility() { return visible; }
 

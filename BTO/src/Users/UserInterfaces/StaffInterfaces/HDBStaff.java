@@ -62,6 +62,10 @@ public interface HDBStaff extends BasicValidation {
 
     }
 
+    void viewProjects(ArrayList<HDBProject> allProjects);
+
+    void displayProjects(ArrayList<HDBProject> filteredProjects);
+
     default void displayProjects(List<HDBProject> filteredProjects)  {
         Scanner sc = new Scanner(System.in);
         if (filteredProjects.isEmpty()) {

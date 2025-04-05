@@ -33,6 +33,16 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
     }
 
     @Override
+    public void viewProjects(ArrayList<HDBProject> allProjects) {
+
+    }
+
+    @Override
+    public void displayProjects(ArrayList<HDBProject> filteredProjects) {
+
+    }
+
+    @Override
     public void displayProjects(List<HDBProject> filteredProjects) {
         HDBStaff.super.displayProjects(filteredProjects);
     }

@@ -4,6 +4,7 @@ import Project.HDBProject;
 import Users.UserInterfaces.StaffInterfaces.HDBStaff;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HDBOfficer extends Applicant implements HDBStaff {
 
@@ -23,6 +24,10 @@ public class HDBOfficer extends Applicant implements HDBStaff {
 
     @Override
     public void displayProjects(ArrayList<HDBProject> filteredProjects) {
+    }
+
+    @Override
+    public void displayProjects(List<HDBProject> filteredProjects) {
         HDBStaff.super.displayProjects(filteredProjects);
     }
 }

@@ -40,6 +40,8 @@ public abstract class User implements UserAction {
 
     public int getAge() { return age; }
 
+    public String getPassword() { return password; }
+
     public void changePassword(String old_password, String new_password) {
         // TODO
         if (this.password.equals(old_password)) {

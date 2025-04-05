@@ -3,6 +3,8 @@ package Misc;
 import Project.HDBProject;
 import Users.Applicant;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,6 +15,7 @@ public class Query {
     private Applicant applicant;
     private HDBProject project;
     private Date timestamp;
+    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
     public Query(Applicant applicant, HDBProject project, String title, String query) {
         this.applicant = applicant;
@@ -21,6 +24,16 @@ public class Query {
         this.query = query;
         this.timestamp = new Date();
     }
+
+    public Query(Applicant applicant, HDBProject project, String title, String query, String timestamp) throws ParseException {
+        this.applicant = applicant;
+        this.project = project;
+        this.title = title;
+        this.query = query;
+        this.timestamp = format.parse(timestamp);
+    }
+
+    public Applicant getApplicant() { return applicant; }
 
     public String getTitle() {
         return title;
@@ -39,6 +52,8 @@ public class Query {
     }
 
     public void setReply(String reply) { this.reply = reply; }
+
+    public Date getTimestamp() { return timestamp; }
 
     public void displayQuery() {
         System.out.println("Title: " + this.title);
