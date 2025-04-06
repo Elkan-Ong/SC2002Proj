@@ -1,5 +1,6 @@
 package Project;
 
+import Misc.OfficerRegistration;
 import Misc.WithdrawApplication;
 import Users.HDBManager;
 import Users.HDBOfficer;
@@ -24,6 +25,8 @@ public class HDBProject {
     private boolean visible = true; // TODO change to false after testing
     ArrayList<ProjectApplication> projectApplications = new ArrayList<ProjectApplication>();
     ArrayList<WithdrawApplication> withdrawals = new ArrayList<WithdrawApplication>();
+    ArrayList<OfficerRegistration> officerApplications = new ArrayList<>();
+    ArrayList<ProjectApplication> applicationsPendingBooking = new ArrayList<ProjectApplication>();
 
     private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
 
@@ -83,7 +86,9 @@ public class HDBProject {
         displayProjectApplicant();
         System.out.println("Visibility: " + (visible ? "Visible" : "Invisible"));
         // TODO display officer when implemented
+        // Comment from Mallvin: Not sure if the visibility check is needed since Officer should be able to view regardless of visibility
     }
+
 
     public String getName() {
         return this.name;
@@ -127,9 +132,17 @@ public class HDBProject {
         projectApplications.add(application);
     }
 
+    public void addOfficerRegistration(OfficerRegistration registration) {
+        officerApplications.add(registration);
+    }
+
     public void addWithdrawal(WithdrawApplication withdrawal) {
         withdrawals.add(withdrawal);
     }
+
+    public ArrayList<ProjectApplication> getAllApplicationsPendingBooking() {return applicationsPendingBooking; }
+
+    public void addApplicationPendingBooking(ProjectApplication application) { applicationsPendingBooking.add(application); }
 
     public void toggleVisibility() {
         this.visible = !this.visible;

@@ -32,6 +32,10 @@ public class Query {
         return reply;
     }
 
+    public Applicant getApplicant() {
+        return applicant;
+    }
+
     public void setReply(String reply) { this.reply = reply; }
 
     public void displayQuery() {

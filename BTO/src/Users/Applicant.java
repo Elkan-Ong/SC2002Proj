@@ -18,7 +18,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Applicant extends User implements Application, QueryInterface, CreateFilter {
-    private ProjectApplication application = null;
+    protected ProjectApplication application = null;
     private Unit bookedUnit = null;
     private UserFilter filter = null;
     // Since we don't have a query file, just take note this will reset everytime
@@ -47,7 +47,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
             try {
                 choice = sc.nextInt();
                 if (choice >= 1 && choice <= filteredProjects.size()) {
-                    filteredProjects.get(choice-1).displayProjectApplicant();
+                    filteredProjects.get(choice - 1).displayProjectApplicant();
                     break;
                 }
                 System.out.println("Invalid Selection!");
@@ -186,6 +186,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         System.out.println("8) Edit Enquiry");
         System.out.println("9) Delete Enquiry");
         System.out.println("10) Create Filter for Projects");
+        if (application != null && application.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
+            System.out.println("11) Book Flat");
+        }
     }
 
     public ArrayList<HDBProject> getVisibleProjects(ArrayList<HDBProject> projects) {
@@ -238,6 +241,11 @@ public class Applicant extends User implements Application, QueryInterface, Crea
             case 10:
                 this.filter = createFilter();
                 break;
+
+            case 11:
+                application.getAppliedProject().addApplicationPendingBooking(application);
+                break;
+
             default:
                 // can change to throw exception
                 System.out.println("Invalid choice");
@@ -259,15 +267,15 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     @Override
-    void displayProjects(ArrayList<HDBProject> filteredProjects)  {
+    void displayProjects(ArrayList<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
         if (filteredProjects.isEmpty()) {
             System.out.println("No projects have been created.");
             return;
         }
         System.out.println("List of projects:");
-        for (int i=0; i < filteredProjects.size(); i++) {
-            System.out.println((i+1) + ") " + filteredProjects.get(i).getName());
+        for (int i = 0; i < filteredProjects.size(); i++) {
+            System.out.println((i + 1) + ") " + filteredProjects.get(i).getName());
         }
         int choice;
         while (true) {
@@ -275,7 +283,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 System.out.println("Select project to view: (enter non-number to exit)");
                 choice = sc.nextInt();
                 if (choice > 0 && choice <= filteredProjects.size()) {
-                    HDBProject current = filteredProjects.get(choice-1);
+                    HDBProject current = filteredProjects.get(choice - 1);
                     current.displayProjectApplicant();
                     continue;
                 }
@@ -291,4 +299,8 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     public void deleteApplication() {
         this.application = null;
     }
+
+
+    public void setBookedUnit(Unit unit) {this.bookedUnit = unit;}
+
 }

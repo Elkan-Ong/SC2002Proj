@@ -15,4 +15,9 @@ public class Unit {
         this.booked = true;
         this.bookedBy = applicant;
     }
+
+    public boolean getBooked() {
+        return this.booked;
+    }
+
 }

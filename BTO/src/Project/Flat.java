@@ -1,5 +1,7 @@
 package Project;
 
+import Users.Applicant;
+
 import java.util.ArrayList;
 
 
@@ -35,6 +37,19 @@ public class Flat {
     public void reserveUnit() { this.noOfUnitsAvailable--; }
 
     public void returnUnit() { this.noOfUnitsAvailable++; }
+
+    public void assignUnit(Applicant applicant) {
+        // Get first available unit
+        for (int i =0; i < units.size(); i++) {
+            if (!units.get(i).getBooked()) {
+                units.get(i).setBooked(applicant);
+
+                // Update applicants profile with type of flat booked
+                applicant.setBookedUnit(units.get(i));
+                break;
+            }
+        }
+    }
 
     public void displayFlat() {
         System.out.println(type + " Flat information;");

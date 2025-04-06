@@ -1,6 +1,7 @@
 package Users;
 
 import Misc.*;
+import Misc.OfficerRegistration;
 import Project.HDBProject;
 import Users.UserInterfaces.ManagerInterfaces.ApplicantReport;
 import Users.UserInterfaces.ManagerInterfaces.ManageProjectApplication;
