@@ -3,11 +3,23 @@ package Users.UserInterfaces.ManagerInterfaces.ProjectHandler;
 import Project.HDBProject;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Controller for Manager editing their active project
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public interface ProjectEditController extends ProjectDisplay, ProjectEditModel {
     Scanner sc = new Scanner(System.in);
-    default void editProject(HDBProject project) {
+
+    /**
+     * Handles calling of respective method based on Manager's selected choice of what to edit
+     * @param allProjects all projects created
+     * @param project project the manager is managing
+     */
+    default void editProject(List<HDBProject> allProjects, HDBProject project) {
         editMenu();
         int choice;
         try {
@@ -23,7 +35,7 @@ public interface ProjectEditController extends ProjectDisplay, ProjectEditModel 
         }
         switch (choice) {
             case 1:
-                editProjectName(project);
+                editProjectName(allProjects, project);
                 break;
             case 2:
                 editNeighbourhood(project);

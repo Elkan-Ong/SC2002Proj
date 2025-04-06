@@ -9,7 +9,16 @@ import Validation.BasicValidation;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Model for when Manager wants to edit active Project
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
+    /**
+     * Selector for editing the flat type, flat price, or number of units for each flat
+     * @param project project to be edited
+     */
     default void editFlat(HDBProject project) {
         for (int i=0; i < project.getFlatType().size(); i++) {
             System.out.println((i+1) + ") " + project.getFlatType().get(i).getType());
@@ -22,12 +31,18 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         System.out.println("2) Units");
         choice = getChoice(1, 2);
         if (choice == 1) {
-            editFlatType(selectedFlat);
+            editFlatType(project, selectedFlat);
         } else {
             editUnits(selectedFlat);
         }
     }
 
+    /**
+     * Edits the number of Units in the flat
+     * Minimum number of units is determined by the highest number of units booked at the time of editing
+     * e.g. if the 15th unit has been booked, minimally must maintain 15 units
+     * @param flat flat to have units edited
+     */
     default void editUnits(Flat flat) {
         System.out.println("Enter no. of units: ");
         int minUnits = 1;
@@ -50,15 +65,40 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         System.out.println("Successfully updated units for " + flat.getType());
     }
 
-    default void editFlatType(Flat flat) {
+    /**
+     * Edits the Flat's type (e.g. from 2-Room to 3-Room)
+     * new Flat type cannot be same as the other Flat type
+     * @param flat flat type to be changed
+     */
+    default void editFlatType(HDBProject project, Flat flat) {
+        Flat otherFlat = null;
+        for (Flat existingFlat : project.getFlatType()) {
+            if (!existingFlat.getType().equals(flat.getType())) {
+                otherFlat = existingFlat;
+                break;
+            }
+        }
         System.out.println("Select flat type to change to:");
         for (int i=0; i < availableTypes.length; i++) {
             System.out.println((i+1) + ") " + availableTypes[i]);
         }
-        int choice = getChoice(1, availableTypes.length);
+        int choice;
+        while (true) {
+            choice = getChoice(1, availableTypes.length);
+            if (availableTypes[choice-1].equals(otherFlat.getType())) {
+                System.out.println("Selected flat type cannot be the same as another existing flat type!");
+                continue;
+            }
+            break;
+        }
+
         flat.setType(availableTypes[choice-1]);
     }
 
+    /**
+     * Edits the neighbourhood the Project will be built in
+     * @param project project to be edited
+     */
     default void editNeighbourhood(HDBProject project) {
         System.out.println("Enter new neighbourhood name:");
         String newNeighbourhood = sc.nextLine();
@@ -66,7 +106,10 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         System.out.println("Successfully updated neighbourhood.");
     }
 
-
+    /**
+     * Edits the number of officer slots in the Project
+     * @param project project to be edited
+     */
     default void editOfficerSlots(HDBProject project) {
         System.out.println("Enter new number of officer slots:");
         if (!project.getAssignedOfficers().isEmpty()) {
@@ -76,14 +119,38 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         project.setAvailableOfficerSlots(newSlots);
     }
 
-    default void editProjectName(HDBProject project) {
+    /**
+     * Edits the name of the Project
+     * Project name cannot be same as an existing project
+     * @param project project to be edited
+     */
+    default void editProjectName(List<HDBProject> allProjects, HDBProject project) {
         System.out.println("Enter new project name:");
         String name = sc.nextLine();
+        boolean exit;
+        while (true) {
+            exit = true;
+            for (HDBProject existingProject : allProjects) {
+                if (name.equals(existingProject.getName())) {
+                    System.out.println("New project name cannot be the same as another existing project's name!");
+                    System.out.println("Please enter a new name:");
+                    name = sc.nextLine();
+                    exit = false;
+                    break;
+                }
+            }
+            if (exit) {
+                break;
+            }
+        }
         project.setName(name);
         System.out.println("Project name successfully updated!");
     }
 
-
+    /**
+     * Edits the opening date of the project
+     * @param project project to be edited
+     */
     default void editOpeningDate(HDBProject project) {
         System.out.println("Enter new opening date:");
         Date openingDate;
@@ -98,6 +165,10 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         }
     }
 
+    /**
+     * Edits the closing date of the project
+     * @param project project to be edited
+     */
     default void editClosingDate(HDBProject project) {
         System.out.println("Enter new closing date:");
         Date closingDate;

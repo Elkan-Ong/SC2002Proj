@@ -9,25 +9,76 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Selected information that a Manager would like to filter by to create a ProjectReport
+ * Filters include: project, flat types, marital status, age of applicants
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public class ApplicantReportFilter implements BasicValidation {
-    private List<String> filteredFlatTypes = new ArrayList<>();
-    private List<String> filteredProjectNames = new ArrayList<>();
-    private int maxAge;
-    private int minAge;
-    private List<String> filteredMaritalStatus = new ArrayList<>();
     private Scanner sc = new Scanner(System.in);
+    /**
+     * List of filtered Flat types
+     */
+    private List<String> filteredFlatTypes = new ArrayList<>();
 
+    /**
+     * List of filtered Project names
+     */
+    private List<String> filteredProjectNames = new ArrayList<>();
+
+    /**
+     * Maximum age of Applicants
+     */
+    private int maxAge;
+
+    /**
+     * Minimum age of Applicants
+     */
+    private int minAge;
+
+    /**
+     * List of marital statuses
+     */
+    private List<String> filteredMaritalStatus = new ArrayList<>();
+
+    /**
+     * Gets filtered flat types
+     * @return filtered flat types
+     */
     public List<String> getFilteredFlatTypes() { return filteredFlatTypes; }
 
+    /**
+     * gets filtered Project names
+     * @return filtered Project names
+     */
     public List<String> getFilteredProjectNames() {
         return filteredProjectNames;
     }
 
+    /**
+     * gets filtered marital statuses
+     * @return filtered marital statuses
+     */
     public List<String> getFilteredMaritalStatus() { return filteredMaritalStatus; }
 
+    /**
+     * Gets maximum age of Applicants
+     * @return maximum age of Applicants
+     */
     public int getMaxAge() { return maxAge; }
+
+    /**
+     * Gets minimum age of Applicants
+     * @return minimum age of Applicants
+     */
     public int getMinAge() { return minAge; }
 
+    /**
+     * Calls all the filtering methods
+     * acts as a master method
+     * @param projects all the Manager's projects
+     */
     public void createFilter(List<HDBProject> projects) {
         filterProjectNames(projects);
         filterFlatTypes(projects);
@@ -35,6 +86,12 @@ public class ApplicantReportFilter implements BasicValidation {
         filterAge();
     }
 
+    /**
+     * Generic function to filter information
+     * @param masterList list of options to select for filtering
+     * @param addToList list of options that will be filtered
+     * @param <T> Generic data type of masterList and addToList
+     */
     public <T> void filterLists(List<T> masterList, List<T> addToList) {
         int choice;
         while (true) {
@@ -62,6 +119,10 @@ public class ApplicantReportFilter implements BasicValidation {
         }
     }
 
+    /**
+     * Filters flat types that can be selected based on existing types within the Manager's projects
+     * @param projects all the Manager's past projects
+     */
     public void filterFlatTypes(List<HDBProject> projects) {
         List<String> availableFlatTypes = new ArrayList<>();
         for (HDBProject project : projects) {
@@ -75,6 +136,10 @@ public class ApplicantReportFilter implements BasicValidation {
         filterLists(availableFlatTypes, filteredFlatTypes);
     }
 
+    /**
+     * Filters project names that can be selected based on existing types within the Manager's projects
+     * @param projects all the Manager's past projects
+     */
     public void filterProjectNames(List<HDBProject> projects) {
         List<String> projectNames = new ArrayList<>();
         for (HDBProject project : projects) {
@@ -86,6 +151,9 @@ public class ApplicantReportFilter implements BasicValidation {
         filterLists(projectNames, filteredProjectNames);
     }
 
+    /**
+     * Filters marital statuses
+     */
     public void filterMaritalStatus() {
         List<String> maritalStatuses = new ArrayList<>();
         maritalStatuses.add("Single");
@@ -94,6 +162,9 @@ public class ApplicantReportFilter implements BasicValidation {
         filterLists(maritalStatuses, filteredMaritalStatus);
     }
 
+    /**
+     * Filters minimum and maximum age
+     */
     public void filterAge() {
         System.out.println("Enter minimum age of Applicant:");
         this.minAge = getInt();

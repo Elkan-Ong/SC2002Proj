@@ -4,9 +4,18 @@ import Project.AvailableFlatTypes;
 
 import java.util.Scanner;
 
+/**
+ * Menu to select which flat type a User has interest in
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public interface FlatTypeSelection extends AvailableFlatTypes {
     Scanner sc = new Scanner(System.in);
 
+    /**
+     * Displays available flat types, prompts user to select the one they are interested in
+     * @return selected flat type
+     */
     default String getFlatType() {
         System.out.println("Select Flat Type:");
         for (int i=0; i < AvailableFlatTypes.availableTypes.length; i++) {

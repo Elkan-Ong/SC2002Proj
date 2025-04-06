@@ -5,6 +5,7 @@ import Project.HDBProject;
 import Users.UserInterfaces.UserAction;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -97,8 +98,6 @@ public abstract class User implements UserAction {
         this.password = password;
     }
 
-    public abstract void viewProjects(ArrayList<HDBProject> allProjects);
-
-    abstract void displayProjects(ArrayList<HDBProject> filteredProjects);
+    abstract void displayProjects(List<HDBProject> filteredProjects);
 
 }

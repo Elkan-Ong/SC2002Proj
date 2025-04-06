@@ -17,12 +17,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Read all the files and creates the objects to store all the data
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public interface ImportFiles {
-
+    /**
+     * Generic file reading, returns all the data in the file except the header
+     * @param fileName name of the file
+     * @return data of the file
+     */
     static List<String[]> readFile(String fileName) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader("BTO/src/Files/" + fileName))) {
             String line;
-            List<String[]> result = new ArrayList<String[]>();
+            List<String[]> result = new ArrayList<>();
             boolean firstLine = true;
             while ((line = br.readLine()) != null) {
                 if (firstLine) {
@@ -38,10 +47,11 @@ public interface ImportFiles {
         }
     }
 
-    // This function is primarily for ProjectList
-    // The Officer column will be the assigned officers names, in quotations, separated by commas
-    // this causes a problem when using .split(","), therefore we need to create a way to keep it as 1 string
-    // we have to parse the column value, identify quotations and keeping the string whole
+    /**
+     * Used to obtain values in one cell but separated by commas
+     * @param line line of data being split
+     * @return split line of data
+     */
     static String[] parseCSVLine(String line) {
         // Token represents each value in a cell
         List<String> tokens = new ArrayList<>();
@@ -69,12 +79,11 @@ public interface ImportFiles {
     }
 
 
-    // We need to specially handle readProjects since we need to pass in all HDBManager and HDBOfficer
-    // Warning: Downcasting here is dependent on teh fact that usernames are unique and the respective name is correct
-    // The safety net is that only users of those types are able to reach that point in the first place
-    // e.g. only Managers can be of type HDBManager
-    // Officers may be problematic if they revert back to Applicants however, if after a project ends
-    // Unless for implementation we don't revert them but rather keep them idle until assigned a new project?
+    /**
+     * Read all the projects in ProjectList.csv
+     * @param allUsers AllUsers object containing all the users of the BTO system
+     * @return all the projects stored in ProjectList.csv
+     */
     static List<HDBProject> readProjects(AllUsers allUsers) throws IOException, ParseException {
         List<HDBProject> result = new ArrayList<>();
         List<String[]> fileData = readFile("ProjectList.csv");
@@ -114,8 +123,13 @@ public interface ImportFiles {
         return result;
     }
 
-    // We want the return type to be of type T
-    // We pass in the fileName as well as the constructor of the Class we want to create
+    /**
+     * Reads respective Users file
+     * @param allUsers AllUsers object containing all the users in the BTO system
+     * @param fileName file storing the data of the different User types
+     * @param constructor constructor of the respective User type
+     * @param <T> corresponding User type
+     */
     static <T> void readUsers(AllUsers allUsers, String fileName, ThrowingFunction<T> constructor) throws IOException {
         List<T> result = new ArrayList<>();
         List<String[]> fileData = readFile(fileName);
@@ -132,6 +146,11 @@ public interface ImportFiles {
 
     }
 
+    /**
+     * Reads all the Applications in ApplicationList.csv
+     * @param allUsers AllUsers object containing all the users in the BTO system
+     * @param allProjects List of all projects in the BTO system
+     */
     static void readApplications(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
         List<String[]> fileData = readFile("ApplicationList.csv");
 
@@ -171,6 +190,11 @@ public interface ImportFiles {
         }
     }
 
+    /**
+     * Reads all the Query's in QueryList.csv
+     * @param allUsers AllUsers object containing all the users in the BTO system
+     * @param allProjects List of all projects in the BTO system
+     */
     static void readQuery(AllUsers allUsers, List<HDBProject> allProjects) throws IOException, ParseException {
         List<String[]> fileData = readFile("QueryList.csv");
         for (String[] value : fileData) {
@@ -192,6 +216,11 @@ public interface ImportFiles {
         }
     }
 
+    /**
+     * Reads all the Withdrawals in WithdrawalList.csv
+     * @param allUsers AllUsers object containing all the users in the BTO system
+     * @param allProjects List of all projects in the BTO system
+     */
     static void readWithdrawal(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
         List<String[]> fileData = readFile("WithdrawalList.csv");
         for (String[] value : fileData) {
@@ -227,6 +256,11 @@ public interface ImportFiles {
         }
     }
 
+    /**
+     * Reads all the Units in UnitList.csv
+     * @param allUsers AllUsers object containing all the users in the BTO system
+     * @param allProjects List of all projects in the BTO system
+     */
     static void readUnits(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
         List<String[]> fileData = readFile("WithdrawalList.csv");
         for (String[] value : fileData) {

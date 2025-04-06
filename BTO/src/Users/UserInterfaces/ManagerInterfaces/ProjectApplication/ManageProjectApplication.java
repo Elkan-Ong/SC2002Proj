@@ -6,12 +6,22 @@ import Project.ProjectApplication;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Methods for Manager to handle Applications to their Project
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public interface ManageProjectApplication {
+    /**
+     * View all pending Applications
+     * @param project current Project the Manager is managing
+     */
     default void viewBTOApplication(HDBProject project) {
         Scanner sc = new Scanner(System.in);
-        ArrayList<ProjectApplication> projectApplications = new ArrayList<>();
+        List<ProjectApplication> projectApplications = new ArrayList<>();
         // We will display only pending applications to be approved/rejected
         // Applications that have already been "answered" won't be changed, unless withdrawn by Applicant
         for (ProjectApplication application : project.getAllProjectApplications()) {
@@ -42,6 +52,10 @@ public interface ManageProjectApplication {
         }
     }
 
+    /**
+     * Manager can approve or reject an application
+     * @param application application to be rejected or approve
+     */
     default void manageApplication(ProjectApplication application) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Would you like to approve or reject this application? (enter non-number to exit)");
@@ -71,10 +85,18 @@ public interface ManageProjectApplication {
         }
     }
 
+    /**
+     * Handles approving an application
+     * @param application application to be approved
+     */
     default void approveApplication(ProjectApplication application) {
         application.setStatus(ApplicationStatus.SUCCESSFUL);
     }
 
+    /**
+     * Handles rejection of application
+     * @param application application to be rejected
+     */
     default void rejectApplication(ProjectApplication application) {
         application.setStatus(ApplicationStatus.UNSUCCESSFUL);
     }

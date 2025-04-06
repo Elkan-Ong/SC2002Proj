@@ -13,8 +13,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
+/**
+ * Defines methods to write to important objects to preserve to respective csv files
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public interface WriteFiles {
+    /**
+     * writes Unit information into UnitList.csv
+     * @param allProjects all projects created
+     */
     static void writeUnit(List<HDBProject> allProjects) {
         String fileName = "UnitList.csv";
 
@@ -37,6 +45,10 @@ public interface WriteFiles {
         }
     }
 
+    /**
+     * writes Application information into ApplicationList.csv
+     * @param allProjects all projects created
+     */
     static void writeApplications(List<HDBProject> allProjects) {
         String fileName = "ApplicationList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
@@ -61,6 +73,10 @@ public interface WriteFiles {
         }
     }
 
+    /**
+     * writes Query information into QueryList.csv
+     * @param allProjects all projects created
+     */
     static void writeQuery(List<HDBProject> allProjects) {
         String fileName = "QueryList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
@@ -79,6 +95,10 @@ public interface WriteFiles {
         }
     }
 
+    /**
+     * writes Withdrawal information into WithdrawalList.csv
+     * @param allProjects all projects created
+     */
     static void writeWithdrawal(List<HDBProject> allProjects) {
         String fileName = "WithdrawalList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
@@ -102,6 +122,11 @@ public interface WriteFiles {
         }
     }
 
+    /**
+     * Handles escaping commas, primarily for HDB Officers due to having comma separated values in a cell
+     * @param value value to be escaped
+     * @return escaped value
+     */
     static String escapeCsv(String value) {
         if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
             value = value.replace("\"", "\"\""); // Escape double quotes
@@ -110,6 +135,10 @@ public interface WriteFiles {
         return value;
     }
 
+    /**
+     * writes Project information into ProjectList.csv
+     * @param allProjects all projects created
+     */
     static void writeProject(List<HDBProject> allProjects) {
         String fileName = "ProjectList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
@@ -149,6 +178,10 @@ public interface WriteFiles {
         }
     }
 
+    /**
+     * writes Manager data into ManagerList.csv
+     * @param allUsers list of all users
+     */
     static void writeManager(AllUsers allUsers) {
         String fileName = "ManagerList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
@@ -166,6 +199,10 @@ public interface WriteFiles {
         }
     }
 
+    /**
+     * writes Applicant data into ApplicantList.csv
+     * @param allUsers list of all users
+     */
     static void writeApplicant(AllUsers allUsers) {
         String fileName = "ApplicantList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
@@ -183,6 +220,10 @@ public interface WriteFiles {
         }
     }
 
+    /**
+     * writes Officer data into OfficerList.csv
+     * @param allUsers list of all users
+     */
     static void writeOfficer(AllUsers allUsers) {
         String fileName = "OfficerList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {

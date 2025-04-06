@@ -22,10 +22,4 @@ public interface UserAction {
      */
     void handleChoice(List<HDBProject> allProjects,
                       int choice) throws ParseException;
-    /**
-     * All users will be able to see projects
-     * The projects that can be viewed are determined by the different User types
-     * Refer to specific User types for more information
-     * */
-    void viewProjects(List<HDBProject> allProjects);
 }

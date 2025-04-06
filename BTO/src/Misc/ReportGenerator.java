@@ -7,8 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// This class will be used to create reports for each project based on manager's filters and applications
+/**
+ * Generates a report for Manager based on filters to display project Applicant information
+ * Report will contain Project name, the flat types filtered, marital status of applicants filtered, average age of applicants
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public class ReportGenerator {
+    /**
+     * Displays the report after applying the filter on the list of applicants
+     * @param applications all Applications for the Project
+     * @param filter ApplicantReportFilter object which has all the filters the Manager selected
+     */
     public static void generateReport(List<ProjectApplication> applications, ApplicantReportFilter filter) {
         // we will use a hash map to store the data
         // the key will be the project name, and it will have a value of a hash map with key value of Flat Type and a ProjectReport Object

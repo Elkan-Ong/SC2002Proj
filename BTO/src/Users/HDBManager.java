@@ -42,6 +42,11 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         super(name, nric, age, maritalStatus, password);
     }
 
+    @Override
+    public void displayProjects(List<HDBProject> filteredProjects) {
+        HDBStaff.super.displayProjects(filteredProjects);
+    }
+
     /**
      * Sets the active project the manager is managing
      * @param project project the manager is managing
@@ -74,13 +79,14 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
      * Deletes the project
      */
     @Override
-    public void deleteProject() {
+    public void deleteProject(List<HDBProject> allProjects) {
+        allProjects.remove(project);
         this.project = null;
     }
 
     /**
      *  Displays all the projects regardless of filter and who created the project
-     * @param allProjects master list of all the proejcts
+     * @param allProjects master list of all the projects
      */
     @Override
     public void viewProjects(List<HDBProject> allProjects) {
@@ -103,6 +109,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         System.out.println("8) View BTO Withdrawal");
         System.out.println("9) View report of applicants for current project");
         System.out.println("10) View enquiries");
+        System.out.println("11) Toggle visibility of Current BTO Project");
     }
 
     /**
@@ -127,13 +134,13 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 }
                 break;
             case 3:
-                editProject(this.project);
+                editProject(allProjects, this.project);
                 break;
             case 4:
-                deleteProject();
+                deleteProject(allProjects);
                 break;
             case 5:
-                viewProjects(allProjects);
+                displayProjects(allProjects);
                 break;
             case 6:
                 // Requires Officer class to be completed
@@ -150,12 +157,18 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
             case 10:
                 viewEnquiries(allPastProjects);
                 break;
+            case 11:
+                if (project == null) {
+                    System.out.println("You are not currently managing a project!");
+                    break;
+                }
+                project.toggleVisibility();
+                break;
             default:
                 System.out.println("Invalid choice");
                 break;
         }
     }
-
 }
 
 

@@ -10,32 +10,90 @@ import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+/**
+ * A BTO Project that was created by a Manager
+ * Each Project will have 2 flat types (as of now 2-Room and 3-Room only)
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public class HDBProject {
-    private HDBManager manager;
+    /**
+     * The Manager who is managing the project
+     */
+    private final HDBManager manager;
+
+    /**
+     * Name of the project
+     */
     private String name;
+
+    /**
+     * The neighbourhood the project will be built in
+     */
     private String neighbourhood;
-    private List<Flat> flatType = new ArrayList<>();
-    private int units = 0;
+
+    /**
+     * A List of Flat objects which contain information on the flats of the project
+     */
+    private final List<Flat> flatType = new ArrayList<>();
+
+    /**
+     * The date the project is open for applications
+     */
     private Date openingDate;
+
+    /**
+     * The date the project closes and can no longer be applied for
+     */
     private Date closingDate;
+
+    /**
+     * HDB Officers assigned to assist the Manager
+     */
     private List<HDBOfficer> assignedOfficers = new ArrayList<>();
+
+    /**
+     * The number of Officers that can be assigned to this project
+     */
     private int availableOfficerSlots;
-    private boolean visible = true; // TODO change to false after testing
+
+    /**
+     * Whether the project is visible to Applicants
+     */
+    private boolean visible = true;
+
+    /**
+     * List containing all the Applications for this project
+     */
     List<ProjectApplication> projectApplications = new ArrayList<>();
+
+    /**
+     * List containing all the Withdrawals for this project
+     */
     List<WithdrawApplication> withdrawals = new ArrayList<>();
+
+    /**
+     * List containing all the Query for this project
+     */
     List<Query> queries = new ArrayList<>();
 
-    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    /**
+     * Date formatter for format dates to dd/MM/yyyy format
+     */
+    private final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
-    // Constructor for file reading
+    /**
+     * Constructor for reading csv files
+     * @param values values in the csv file
+     * @param projectManager Manager managing this project
+     * @param projectOfficers Officers assigned to this project
+     * @throws ParseException
+     */
     public HDBProject(String[] values, HDBManager projectManager, List<HDBOfficer> projectOfficers) throws ParseException {
         this.name = values[0];
         this.neighbourhood = values[1];
         this.flatType.add(new Flat(values[2], Integer.parseInt(values[4]), Integer.parseInt(values[3])));
         this.flatType.add(new Flat(values[5], Integer.parseInt(values[7]), Integer.parseInt(values[6])));
-        for (Flat flat : flatType) {
-            this.units += flat.getUnits().size();
-        }
         try {
             this.openingDate = format.parse(values[8]);
             this.closingDate = format.parse(values[9]);
@@ -48,7 +106,21 @@ public class HDBProject {
         this.availableOfficerSlots = Integer.parseInt(values[11]) - this.assignedOfficers.size();
     }
 
-    // Constructor for new project creation
+    /**
+     * Creates a new HDB Project after Manager fills in project form
+     * @param projectName Name of the Project
+     * @param neighbourhood Neighbourhood the Project is in
+     * @param type1 First type of Flat
+     * @param units1 No. of units in the first Flat type
+     * @param price1 Price of the first Flat type
+     * @param type2 Second type of Flat
+     * @param units2 No. of units in the second Flat type
+     * @param price2 Price of the second Flat type
+     * @param openingDate Opening Date of the Project
+     * @param closingDate Closing Date of the Project
+     * @param manager Manager managing the Project
+     * @param officerSlots No. of Officers that can be assigned to this Project
+     */
     public HDBProject(String projectName, String neighbourhood,
                       String type1, int units1, long price1,
                       String type2, int units2, long price2,
@@ -64,24 +136,142 @@ public class HDBProject {
         this.availableOfficerSlots = officerSlots;
     }
 
+    /**
+     * Gets the number of Officers that can be assigned to this Project
+     * @return number of Officers that can be assigned to this Project
+     */
     public int getAvailableOfficerSlots() {
         return availableOfficerSlots;
     }
 
+    /**
+     * Sets the number of Officers that can be assigned to this Project
+     * @param slots number of Officers that can be assigned to this Project
+     */
     public void setAvailableOfficerSlots(int slots) {
         this.availableOfficerSlots = slots;
     }
 
+
+    /**
+     * Gets list of Officers that have been assigned to this Project
+     * @return list of Officers that have been assigned to this Project
+     */
     public List<HDBOfficer> getAssignedOfficers() {
         return assignedOfficers;
     }
 
+    /**
+     * Adds a Query to the list of queries in the Project
+     * @param query Query to be added
+     */
     public void addQuery(Query query) {
         this.queries.add(query);
     }
 
+    /**
+     * gets the list of Query for this Project
+     * @return List of Query
+     */
     public List<Query> getQueries() { return queries; }
 
+    /**
+     * Gets the name of the Project
+     * @return Name of the Project
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Gets the neighbourhood of the Project
+     * @return neighbourhood of the Project
+     */
+    public String getNeighbourhood() { return this.neighbourhood; }
+
+    /**
+     * Changes the name of the Project
+     * @param name new name of the Project
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Changes the neighbourhood of the Project
+     * @param neighbourhood new neighbourhood of the Project
+     */
+    public void setNeighbourhood(String neighbourhood) {
+        this.neighbourhood = neighbourhood;
+    }
+
+    /**
+     * Gets the List of Flats
+     * @return List of Flats
+     */
+    public List<Flat> getFlatType() {
+        return this.flatType;
+    }
+
+    /**
+     * Gets opening date of the Project
+     * @return opening date of the Project
+     */
+    public Date getOpeningDate() {
+        return openingDate;
+    }
+
+    /**
+     * Change the opening date of the Project
+     * @param openingDate new opening date
+     */
+    public void setOpeningDate(Date openingDate) {
+        this.openingDate = openingDate;
+    }
+
+    /**
+     * Gets the closing date of the Project
+     * @return closing date of the Project
+     */
+    public Date getClosingDate() {
+        return closingDate;
+    }
+
+    /**
+     * Changes the closing date of the Project
+     * @param closingDate new closing date
+     */
+    public void setClosingDate(Date closingDate) {
+        this.closingDate = closingDate;
+    }
+
+    /**
+     * Gets the Manager managing the Project
+     * @return Manager managing the Project
+     */
+    public HDBManager getManager() { return this.manager; }
+
+    /**
+     * Gets the visibility of the Project
+     * @return Visibility of the Project
+     */
+    public boolean getVisibility() { return visible; }
+
+    /**
+     * Gets a List of all the Applications made for this Project
+     * @return List of all the Applications made for this Project
+     */
+    public List<ProjectApplication> getAllProjectApplications() { return projectApplications; }
+
+    /**
+     * Gets a List of all the Withdrawals made for this Project
+     * @return List of all the Withdrawals made for this Project
+     */
+    public List<WithdrawApplication> getWithdrawals() { return withdrawals; }
+
+    /**
+     * Displays information of the Project to be used by Applicants
+     */
     public void displayProjectApplicant() {
         System.out.println("Project Information: ");
         System.out.println("Name: " + name);
@@ -95,105 +285,38 @@ public class HDBProject {
     }
 
     // TODO displayProject for Officer/Manager should display officer slots also
-    // TODO can do manager special one with current officers also
 
+    /**
+     * Displays information of the Project, to be used by HDB Staff
+     */
     public void displayProjectStaff() {
         displayProjectApplicant();
         System.out.println("Visibility: " + (visible ? "Visible" : "Invisible"));
         // TODO display officer when implemented
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public String getNeighbourhood() { return this.neighbourhood; }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setNeighbourhood(String neighbourhood) {
-        this.neighbourhood = neighbourhood;
-    }
-
-    public List<Flat> getFlatType() {
-        return this.flatType;
-    }
-
-    public Date getOpeningDate() {
-        return openingDate;
-    }
-
-    public void setOpeningDate(Date openingDate) {
-        this.openingDate = openingDate;
-    }
-
-    public Date getClosingDate() {
-        return closingDate;
-    }
-
-    public void setClosingDate(Date closingDate) {
-        this.closingDate = closingDate;
-    }
-
-    public HDBManager getManager() { return this.manager; }
-
-    public boolean getVisibility() { return visible; }
-
-    public List<ProjectApplication> getAllProjectApplications() { return projectApplications; }
-
-    public List<WithdrawApplication> getWithdrawals() { return withdrawals; }
-
+    /**
+     * Adds an Application to the List of all Applications for this Project
+     * @param application Application to be added
+     */
     public void addApplication(ProjectApplication application) {
         projectApplications.add(application);
     }
 
+    /**
+     * Adds a Withdrawal to the List of all Withdrawals for this Project
+     * @param withdrawal Withdrawal to be added
+     */
     public void addWithdrawal(WithdrawApplication withdrawal) {
         withdrawals.add(withdrawal);
     }
 
+    /**
+     * Toggles the visibility of the project from visible to invisible vice versa
+     */
     public void toggleVisibility() {
         this.visible = !this.visible;
         System.out.println("Project is now " + (this.visible ? "visible" : "invisible"));
     }
-
-    public Flat selectAvailableFlats(Applicant applicant) {
-        Scanner sc = new Scanner(System.in);
-        List<Flat> availableFlats = new ArrayList<>();
-        for (Flat flat : flatType) {
-            if (flat.getNoOfUnits() >= 1) {
-                availableFlats.add(flat);
-            }
-        }
-        if (availableFlats.isEmpty()) {
-            System.out.println("No units are available");
-            return null;
-        }
-        System.out.println("Select Flat Type:");
-        for (int i=0; i < availableFlats.size(); i++) {
-            System.out.println((i+1) + ") " + flatType.get(i).getType() + ": " + (flatType.get(i).getNoOfUnits() - flatType.get(i).getBookedUnits()) + " available");
-        }
-        int choice;
-        while (true) {
-            try {
-                choice = sc.nextInt();
-                if (choice < 1 || choice > availableFlats.size()) {
-                    System.out.println("Invalid Selection!");
-                    continue;
-                }
-                if (availableFlats.get(choice-1).getType().equals("3-Room") && applicant.getMaritalStatus().equals("Single")) {
-                    System.out.println("As a single applicant, you may not apply for any other flats than 2-Room");
-                    continue;
-                }
-                break;
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid Selection!");
-            }
-            sc.nextLine();
-        }
-        return availableFlats.get(choice-1);
-    }
-
 
 }

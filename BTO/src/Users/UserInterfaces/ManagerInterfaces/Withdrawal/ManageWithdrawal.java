@@ -9,12 +9,22 @@ import Validation.BasicValidation;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Defines methods for Manager to handle withdrawal requests
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public interface ManageWithdrawal extends BasicValidation {
+    /**
+     * Displays withdrawal information and gets selection for which withdrawal the manager would like to approve/reject to
+     * @param project project the Manager is handling
+     */
     default void viewBTOWithdrawal(HDBProject project) {
         Scanner sc = new Scanner(System.in);
-        ArrayList<WithdrawApplication> withdrawApplications = new ArrayList<>();
+        List<WithdrawApplication> withdrawApplications = new ArrayList<>();
         // We will display only pending applications to be approved/rejected
         // Applications that have already been "answered" won't be changed, unless withdrawn by Applicant
         for (WithdrawApplication application : project.getWithdrawals()) {
@@ -41,12 +51,16 @@ public interface ManageWithdrawal extends BasicValidation {
             System.out.println("Selected Withdrawal Information:");
             WithdrawApplication selectedWithdrawal = withdrawApplications.get(choice-1);
             selectedWithdrawal.displayWithdrawal();
-            manageWithdrawal(selectedWithdrawal, project);
+            manageWithdrawal(selectedWithdrawal);
         }
 
     }
 
-    default void manageWithdrawal(WithdrawApplication application, HDBProject project) {
+    /**
+     * Manager decides if they would like to approve or reject the withdrawal request
+     * @param application the withdrawal to be approved/rejected
+     */
+    default void manageWithdrawal(WithdrawApplication application) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Would you like to approve or reject this withdrawal? (enter non-number to exit)");
         System.out.println("1) Approve");
@@ -54,7 +68,7 @@ public interface ManageWithdrawal extends BasicValidation {
         int choice = getChoice(1, 2);
         sc.nextLine();
         if (choice == 1) {
-            approveApplication(application, project);
+            approveApplication(application);
             System.out.println("Application successfully approved");
         } else if (choice == 2){
             rejectApplication(application);
@@ -62,19 +76,30 @@ public interface ManageWithdrawal extends BasicValidation {
         }
     }
 
-    default void approveApplication(WithdrawApplication application, HDBProject project) {
+    /**
+     * Approves a withdrawal application
+     * @param application withdrawal application to be approved
+     */
+    default void approveApplication(WithdrawApplication application) {
         application.setStatus(RegistrationStatus.SUCCESSFUL);
         ProjectApplication projectApplication = application.getProjectApplication();
         // If a unit has been booked, we need to return that to the pool of available units
-        if (projectApplication.getApplicationStatus() == ApplicationStatus.SUCCESSFUL || projectApplication.getApplicationStatus() == ApplicationStatus.BOOKED) {
+        if (projectApplication.getApplicationStatus() == ApplicationStatus.BOOKED) {
+
+            //TODO implement booked unit returning
             projectApplication.getSelectedType().returnUnit();
         }
-        // We need to delete the application
-        project.getAllProjectApplications().remove(application.getProjectApplication());
+        projectApplication.setStatus(ApplicationStatus.UNSUCCESSFUL);
     }
 
-    default  void rejectApplication(WithdrawApplication application) {
+    /**
+     * Rejects a withdrawal application
+     * @param application withdrawal application to be rejected
+     */
+    default void rejectApplication(WithdrawApplication application) {
         application.setStatus(RegistrationStatus.UNSUCCESSFUL);
+        System.out.println("The following application has been rejected.");
+        application.getProjectApplication().displayApplication();
     }
 
 }

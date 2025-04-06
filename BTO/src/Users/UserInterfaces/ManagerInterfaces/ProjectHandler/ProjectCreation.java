@@ -9,9 +9,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Interface for when a Manager wants to create a brand-new project
+ * @author Elkan Ong Han'en
+ * @since 2025-4-6
+ */
 public interface ProjectCreation extends BasicValidation, FlatTypeSelection {
     Scanner sc = new Scanner(System.in);
-    default HDBProject getProjectDetailsAndCreate(HDBManager manager, List<HDBProject> allProjects) throws ParseException {
+
+    /**
+     * Gathers the details of the Project to be created
+     * @param manager Manager creating the project
+     * @param allProjects all the projects created
+     * @return HDB Project created
+     */
+    default HDBProject getProjectDetailsAndCreate(HDBManager manager, List<HDBProject> allProjects) {
         String projectName = getProjectName(allProjects);
         String neighbourhood = getNeighbourhood();
 
@@ -60,8 +72,6 @@ public interface ProjectCreation extends BasicValidation, FlatTypeSelection {
             officerSlots = getInt();
         }
 
-
-
         HDBProject newProject = new HDBProject(projectName, neighbourhood,
                 type1, units1, price1,
                 type2, units2, price2,
@@ -73,6 +83,12 @@ public interface ProjectCreation extends BasicValidation, FlatTypeSelection {
         return newProject;
     }
 
+    /**
+     * Gets and checks the project name against all existing project
+     * name must be unique
+     * @param allProjects all projects created
+     * @return name of the project
+     */
     default String getProjectName(List<HDBProject> allProjects) {
         System.out.println("Enter project name:");
         String name;
@@ -91,6 +107,10 @@ public interface ProjectCreation extends BasicValidation, FlatTypeSelection {
         return name;
     }
 
+    /**
+     * Gets the neighbourhood the Project will be built in
+     * @return name of the neighbourhood
+     */
     default String getNeighbourhood() {
         System.out.println("Enter neighbourhood:");
         return sc.nextLine();
