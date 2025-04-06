@@ -45,21 +45,7 @@ public class BTOApp implements ImportFiles {
 //        System.out.println("Projects: ");
 //        System.out.println(projects.toString());
 
-        // String name, String nric, int age, String maritalStatus, String password
-        String[] values = {"Mallvin", "T123457H", "24", "single", "password"};
-        HDBOfficer test = new HDBOfficer(values);
-
-        allQueries.add(new Query((Applicant)allUsers.getUsers().get(0), "Test 1", "This is a test query"));
-
-        while (true) {
-            System.out.println();
-            test.displayMenu();
-
-            Scanner scanner = new Scanner(System.in);
-            int choice = scanner.nextInt();
-
-            test.handleChoice(projects, allQueries, null, choice);
-        }
+        
 
     }
 
