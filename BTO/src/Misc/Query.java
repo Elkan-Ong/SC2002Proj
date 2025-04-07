@@ -121,6 +121,10 @@ public class Query {
      * Changes the reply to the Applicant's query
      * @param reply reply to the applicant's query
      */
+    public Applicant getApplicant() {
+        return applicant;
+    }
+
     public void setReply(String reply) { this.reply = reply; }
 
     /**

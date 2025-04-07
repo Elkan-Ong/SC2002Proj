@@ -1,6 +1,7 @@
 package Project;
 
 import Misc.Query;
+import Misc.OfficerRegistration;
 import Misc.WithdrawApplication;
 import Users.Applicant;
 import Users.HDBManager;
@@ -56,6 +57,11 @@ public class HDBProject {
      * The number of Officers that can be assigned to this project
      */
     private int availableOfficerSlots;
+    private boolean visible = true; // TODO change to false after testing
+    ArrayList<ProjectApplication> projectApplications = new ArrayList<ProjectApplication>();
+    ArrayList<WithdrawApplication> withdrawals = new ArrayList<WithdrawApplication>();
+    ArrayList<OfficerRegistration> officerApplications = new ArrayList<>();
+    ArrayList<ProjectApplication> applicationsPendingBooking = new ArrayList<ProjectApplication>();
 
     /**
      * Whether the project is visible to Applicants
@@ -303,6 +309,10 @@ public class HDBProject {
         projectApplications.add(application);
     }
 
+    public void addOfficerRegistration(OfficerRegistration registration) {
+        officerApplications.add(registration);
+    }
+
     /**
      * Adds a Withdrawal to the List of all Withdrawals for this Project
      * @param withdrawal Withdrawal to be added
@@ -310,6 +320,10 @@ public class HDBProject {
     public void addWithdrawal(WithdrawApplication withdrawal) {
         withdrawals.add(withdrawal);
     }
+
+    public ArrayList<ProjectApplication> getAllApplicationsPendingBooking() {return applicationsPendingBooking; }
+
+    public void addApplicationPendingBooking(ProjectApplication application) { applicationsPendingBooking.add(application); }
 
     /**
      * Toggles the visibility of the project from visible to invisible vice versa

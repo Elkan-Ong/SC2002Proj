@@ -11,11 +11,9 @@ import Project.Unit;
 import Users.UserInterfaces.Application;
 import Users.UserInterfaces.CreateFilter;
 import Users.UserInterfaces.QueryInterface;
-import Validation.BasicValidation;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -293,6 +291,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         System.out.println("8) Edit Enquiry");
         System.out.println("9) Delete Enquiry");
         System.out.println("10) Create Filter for Projects");
+        if (application != null && application.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
+            System.out.println("11) Book Flat");
+        }
     }
 
     /**
@@ -358,6 +359,11 @@ public class Applicant extends User implements Application, QueryInterface, Crea
             case 10:
                 this.filter = createFilter();
                 break;
+
+            case 11:
+                application.getAppliedProject().addApplicationPendingBooking(application);
+                break;
+
             default:
                 // can change to throw exception
                 System.out.println("Invalid choice");
@@ -371,4 +377,8 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     public void confirmWithdrawApplication() {
         this.application.setStatus(ApplicationStatus.UNSUCCESSFUL);
     }
+
+
+    public void setBookedUnit(Unit unit) {this.bookedUnit = unit;}
+
 }

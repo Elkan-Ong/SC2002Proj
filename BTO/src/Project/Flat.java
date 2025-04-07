@@ -1,5 +1,7 @@
 package Project;
 
+import Users.Applicant;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,6 +147,19 @@ public class Flat implements AvailableFlatTypes {
     /**
      * Display information on the Flat
      */
+    public void assignUnit(Applicant applicant) {
+        // Get first available unit
+        for (int i =0; i < units.size(); i++) {
+            if (!units.get(i).getBooked()) {
+                units.get(i).setBooked(applicant);
+
+                // Update applicants profile with type of flat booked
+                applicant.setBookedUnit(units.get(i));
+                break;
+            }
+        }
+    }
+
     public void displayFlat() {
         System.out.println(type + " Flat information;");
         System.out.println("Total no. of units: " + units.size());
