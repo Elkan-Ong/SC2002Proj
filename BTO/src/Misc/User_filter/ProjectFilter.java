@@ -1,8 +1,11 @@
+import Project.HDBProject;
+
+import java.util.List;
 import java.util.Scanner;
 
 public class ProjectFilter {
 
-    private Project[] projectList;
+    private List<HDBProject> allProjects;
     private Applicant[] applicantList;
     private User user;
     

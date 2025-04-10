@@ -9,10 +9,7 @@ import Project.ProjectApplication;
 import Users.UserInterfaces.QueryInterface;
 import Users.UserInterfaces.StaffInterfaces.HDBStaff;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
 
@@ -125,6 +122,11 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
             return;
         }
 
+        if (assignedProject != null && assignedProject.getClosingDate().before(new Date())) {
+            System.out.println("You are currently assigned to a project and the project has not closed!");
+            return;
+        }
+
         Scanner sc = new Scanner(System.in);
 
         viewProjects(filteredProjects);
@@ -228,10 +230,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
     }
 
     private void flatBooking() {
-
-        HDBProject project = officerRegistration.getAppliedProject();
-
-        List<ProjectApplication> applications = project.getAllApplicationsPendingBooking();
+        List<ProjectApplication> applications = assignedProject.getAllApplicationsPendingBooking();
 
         // Check if any applications which are successful but have not booked a flat yet
         for (ProjectApplication application : applications) {
@@ -241,20 +240,14 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
 
             // 1. Update number of units in selected flat type
             // Check if sufficient units available for selected flat type
-
-            for (int i=0; i < project.getFlatType().size(); i ++) {
-                if (application.getSelectedType() == project.getFlatType().get(i)) {
-                    if (project.getFlatType().get(i).getNoOfUnitsAvailable() == 0) {
-                        // TODO: Throw exception and handle program flow
-                        System.out.println("Error! Insufficient units");
-                    } else {
-                        // Update units available
-                        project.getFlatType().get(i).reserveUnit();
-                        // Assign unit to applicant
-                        project.getFlatType().get(i).assignUnit(application.getApplicant());
-                    }
-                    break;
-                }
+            if (application.getSelectedType().getNoOfUnitsAvailable() == 0) {
+                // TODO: Throw exception and handle program flow
+                System.out.println("Error! Insufficient units");
+            } else {
+                // Update units available
+                application.getSelectedType().reserveUnit();
+                // Assign unit to applicant
+                application.getSelectedType().assignUnit(application.getApplicant());
             }
 
             // 2. Retrieve applicants BTO application with NRIC
@@ -275,7 +268,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
             System.out.println("Marital Status: " + application.getApplicant().getMaritalStatus());
             System.out.println("Flat type booked: " + application.getSelectedType() + "\n");
             System.out.println("Project Details:");
-            project.displayProjectApplicant();
+            assignedProject.displayProjectApplicant();
 
 
 

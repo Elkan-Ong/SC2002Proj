@@ -74,4 +74,22 @@ public interface BasicValidation {
         return dateObj;
     }
 
+    default long validatePrice() {
+        long price;
+        while (true) {
+            try {
+                price = sc.nextLong();
+                sc.nextLine();
+                if (price < 1) {
+                    System.out.println("Price must be a positive number");
+                    continue;
+                }
+                return price;
+            } catch (InputMismatchException e) {
+                sc.nextLine();
+                System.out.println("Invalid price");
+            }
+        }
+    }
+
 }

@@ -149,12 +149,11 @@ public class Flat implements AvailableFlatTypes {
      */
     public void assignUnit(Applicant applicant) {
         // Get first available unit
-        for (int i =0; i < units.size(); i++) {
-            if (!units.get(i).getBooked()) {
-                units.get(i).setBooked(applicant);
-
+        for (Unit unit : units) {
+            if (!unit.getBooked()) {
+                unit.setBookedBy(applicant);
                 // Update applicants profile with type of flat booked
-                applicant.setBookedUnit(units.get(i));
+                applicant.setBookedUnit(unit);
                 break;
             }
         }

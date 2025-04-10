@@ -35,7 +35,7 @@ public interface WriteFiles {
                 for (Flat flat : project.getFlatType()) {
                     for (Unit unit : flat.getUnits()) {
                         if (unit.getBooked()) {
-                            writer.println(project.getName() + "," + flat.getType() + "," + unit.getBookedBy().getName() + "," + unit.getUnitID());
+                            writer.println(project.getName() + "," + flat.getType() + "," + unit.getBookedBy().getNric() + "," + unit.getUnitID());
                         }
                     }
                 }
@@ -65,7 +65,7 @@ public interface WriteFiles {
                         case SUCCESSFUL -> status="Successful";
                         case UNSUCCESSFUL -> status="Unsuccessful";
                     }
-                    writer.println(application.getApplicant().getName() + "," + project.getName() + "," + application.getSelectedType().getType() + "," + status);
+                    writer.println(application.getApplicant().getNric() + "," + project.getName() + "," + application.getSelectedType().getType() + "," + status);
                 }
             }
         } catch (IOException e) {
@@ -87,7 +87,7 @@ public interface WriteFiles {
             for (HDBProject project : allProjects) {
                 for (Query query : project.getQueries()) {
                     String reply = query.getReply() == null ? "" : query.getReply();
-                    writer.println(query.getTitle() + "," + query.getQuery() + "," + reply + "," + query.getApplicant().getName() + "," + project.getName() + "," + query.getTimestamp());
+                    writer.println(query.getTitle() + "," + query.getQuery() + "," + reply + "," + query.getApplicant().getNric() + "," + project.getName() + "," + query.getTimestamp());
                 }
             }
         } catch (IOException e) {
@@ -114,7 +114,7 @@ public interface WriteFiles {
                         case SUCCESSFUL -> status="Successful";
                         case UNSUCCESSFUL -> status="Unsuccessful";
                     }
-                    writer.println(withdrawal.getApplicant().getName() + "," + withdrawal.getProjectApplication().getAppliedProject().getName() + "," + status);
+                    writer.println(withdrawal.getApplicant().getNric() + "," + withdrawal.getProjectApplication().getAppliedProject().getName() + "," + status);
                 }
             }
         } catch (IOException e) {
@@ -152,9 +152,9 @@ public interface WriteFiles {
                 String officers = "";
                 for (HDBOfficer officer : project.getAssignedOfficers()) {
                     if (officers.isEmpty()) {
-                        officers = officers.concat(officer.getName());
+                        officers = officers.concat(officer.getNric());
                     } else {
-                        officers = officers.concat("," + officer.getName());
+                        officers = officers.concat("," + officer.getNric());
                     }
                 }
                 officers = escapeCsv(officers);
@@ -168,7 +168,7 @@ public interface WriteFiles {
                         + secondFlat.getPrice() + ","
                         + project.getOpeningDate() + ","
                         + project.getClosingDate() + ","
-                        + project.getManager().getName() + ","
+                        + project.getManager().getNric() + ","
                         + project.getAvailableOfficerSlots() + ","
                         + officers);
 
@@ -191,7 +191,7 @@ public interface WriteFiles {
             // Write data rows
             for (User user : allUsers.getUsers()) {
                 if (user instanceof HDBManager) {
-                    writer.println(user.getName() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
+                    writer.println(user.getNric() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
                 }
             }
         } catch (IOException e) {
@@ -212,7 +212,7 @@ public interface WriteFiles {
             // Write data rows
             for (User user : allUsers.getUsers()) {
                 if (user instanceof Applicant) {
-                    writer.println(user.getName() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
+                    writer.println(user.getNric() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
                 }
             }
         } catch (IOException e) {
@@ -233,7 +233,7 @@ public interface WriteFiles {
             // Write data rows
             for (User user : allUsers.getUsers()) {
                 if (user instanceof HDBOfficer) {
-                    writer.println(user.getName() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
+                    writer.println(user.getNric() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
                 }
             }
         } catch (IOException e) {

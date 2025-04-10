@@ -1,7 +1,7 @@
 package Users;
 
 import Enums.ApplicationStatus;
-import Misc.UserFilter;
+import Misc.Filter.UserFilter;
 import Misc.Query;
 import Misc.WithdrawApplication;
 import Project.Flat;
@@ -9,14 +9,11 @@ import Project.HDBProject;
 import Project.ProjectApplication;
 import Project.Unit;
 import Users.UserInterfaces.Application;
-import Users.UserInterfaces.CreateFilter;
+import Misc.Filter.CreateFilter;
 import Users.UserInterfaces.QueryInterface;
 import Validation.BasicValidation;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Represent a User who is an applicant who would want to apply for a BTO project
@@ -40,7 +37,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     /**
      * A list of all the queries the Applicant has submitted
      */
-    private List<Query> userQueries = new ArrayList<>();
+    private final List<Query> userQueries = new ArrayList<>();
     /**
      * A withdrawal application if the user wishes to no longer be considered for a project
      */
@@ -62,19 +59,11 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         return application;
     }
 
+    public Unit getBookedUnit() { return bookedUnit; }
+
     @Override
     void displayProjects(List<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
-        List<HDBProject> displayableProjects = new ArrayList<>();
-        for (HDBProject project : filteredProjects) {
-            if (project.getVisibility()) {
-                displayableProjects.add(project);
-            }
-        }
-        if (filteredProjects.isEmpty()) {
-            System.out.println("No projects have been created.");
-            return;
-        }
         System.out.println("List of projects:");
         for (int i=0; i < filteredProjects.size(); i++) {
             System.out.println((i+1) + ") " + filteredProjects.get(i).getName());
@@ -84,6 +73,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
             try {
                 System.out.println("Select project to view: (enter non-number to exit)");
                 choice = sc.nextInt();
+                sc.nextLine();
                 if (choice > 0 && choice <= filteredProjects.size()) {
                     HDBProject current = filteredProjects.get(choice-1);
                     current.displayProjectApplicant();
@@ -91,9 +81,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 }
                 System.out.println("Please enter a valid project number!");
             } catch (InputMismatchException e) {
+                sc.nextLine();
                 break;
             }
-            sc.nextLine();
         }
     }
 
@@ -158,7 +148,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     /**
-     * Books an appointment with a HDB officer when the application is successful
+     * Books an appointment with an HDB officer when the application is successful
      */
     @Override
     public void bookFlat() {
@@ -171,9 +161,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         }
         if (application.getApplicationStatus() == ApplicationStatus.BOOKED) {
             System.out.println("You have already booked a flat.");
-            return;
         }
-        // TODO send to HDBOfficer booking implementation
+        application.getAppliedProject().addApplicationPendingBooking(application);
+        System.out.println("Your request for a booking has been submitted!");
     }
 
     /**
@@ -183,7 +173,6 @@ public class Applicant extends User implements Application, QueryInterface, Crea
      */
     @Override
     public HDBProject selectProjectForQuery(List<HDBProject> filteredProjects) {
-        Scanner sc = new Scanner(System.in);
         System.out.println("Select which project you would like to submit a query for:");
         for (int i=0; i < filteredProjects.size(); i++) {
             System.out.println((i+1) + ") " + filteredProjects.get(i).getName());
@@ -304,13 +293,15 @@ public class Applicant extends User implements Application, QueryInterface, Crea
 
     /**
      * Filters projects that are visible
-     * @param projects
+     * @param projects list of all projects
      * @return List of projects the Applicant can view
      */
     public List<HDBProject> getVisibleProjects(List<HDBProject> projects) {
         List<HDBProject> result = new ArrayList<>();
+        Date today = new Date();
         for (HDBProject project : projects) {
-            if (project.getVisibility()) {
+            // Ensure project is visible, must be in opening window
+            if (project.getVisibility() && project.getOpeningDate().before(today) && project.getClosingDate().after(today)) {
                 result.add(project);
             }
         }
@@ -325,16 +316,24 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     @Override
     public void handleChoice(List<HDBProject> allProjects,
                              int choice) {
-        // TODO apply user filter
-        // TODO viewProjects should be redundant; can jump to displayProjects, when filterProjects is applied for Users, it should also remove invisible projects as well as those they are not eligible to apply for
-        List<HDBProject> filteredAllProjects = allProjects;
-        List<HDBProject> filteredProjects = getVisibleProjects(filteredAllProjects);
+        List<HDBProject> filteredProjects = getVisibleProjects(allProjects);
+        if (this.filter != null) {
+            filteredProjects = filter.applyFilter(filteredProjects, this.filter);
+        }
 
         switch (choice) {
             case 1:
+                if (filteredProjects.isEmpty()) {
+                    System.out.println("No projects to display! Either no projects have been created or your filter is too strict!");
+                    break;
+                }
                 displayProjects(filteredProjects);
                 break; //done
             case 2:
+                if (filteredProjects.isEmpty()) {
+                    System.out.println("No projects to display! Either no projects have been created or your filter is too strict!");
+                    break;
+                }
                 applyForProject(filteredProjects);
                 break; //done
             case 3:
@@ -351,6 +350,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 withdrawApplication.displayWithdrawal();
                 break; //done
             case 6:
+                if (filteredProjects.isEmpty()) {
+                    System.out.println("No projects to display! Either no projects have been created or your filter is too strict!");
+                    break;
+                }
                 createQuery(filteredProjects);
                 break; //done
             case 7:
@@ -363,25 +366,15 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 deleteQuery();
                 break; //done
             case 10:
-                this.filter = createFilter();
+                this.filter = createFilter(allProjects);
                 break;
-
             case 11:
-                application.getAppliedProject().addApplicationPendingBooking(application);
+                bookFlat();
                 break;
-
             default:
-                // can change to throw exception
                 System.out.println("Invalid choice");
                 break;
         }
-    }
-
-    /**
-     * Changes ApplicationStatus of application to UNSUCCESSFUL when the user confirms their withdrawal
-     */
-    public void confirmWithdrawApplication() {
-        this.application.setStatus(ApplicationStatus.UNSUCCESSFUL);
     }
 
 

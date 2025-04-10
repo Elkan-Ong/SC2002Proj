@@ -11,7 +11,7 @@ public class Unit {
     /**
      * Applicant that booked the unit
      */
-    private Applicant bookedBy;
+    private Applicant bookedBy = null;
 
     /**
      * Identifier of the unit
@@ -44,9 +44,14 @@ public class Unit {
      * Changes the booking status of the unit
      * @param applicant applicant that wants to book the unit
      */
-    public void setBooked(Applicant applicant) {
+    public void setBookedBy(Applicant applicant) {
         this.booked = true;
         this.bookedBy = applicant;
+    }
+
+    public void returnUnit() {
+        this.booked = false;
+        this.bookedBy = null;
     }
 
     /**

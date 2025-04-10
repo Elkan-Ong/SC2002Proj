@@ -10,7 +10,6 @@ public class OfficerRegistration {
     private RegistrationStatus status;
     private final HDBOfficer applicant;
     private final HDBProject appliedProject;
-    private HDBManager approvedBy;
 
     public OfficerRegistration(HDBOfficer applicant, HDBProject project) {
         this.applicant = applicant;

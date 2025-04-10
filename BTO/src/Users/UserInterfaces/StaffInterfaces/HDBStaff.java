@@ -1,10 +1,8 @@
 package Users.UserInterfaces.StaffInterfaces;
 
-import Misc.Query;
 import Project.HDBProject;
 import Validation.BasicValidation;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -25,9 +23,6 @@ public interface HDBStaff extends BasicValidation {
      * @param allProjects list of all projects
      */
     void viewProjects(List<HDBProject> allProjects);
-
-    void handleChoice(List<HDBProject> allProjects,
-                      int choice);
 
     default void displayProjects(List<HDBProject> filteredProjects)  {
         Scanner sc = new Scanner(System.in);

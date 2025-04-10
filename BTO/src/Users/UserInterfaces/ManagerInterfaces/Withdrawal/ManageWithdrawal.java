@@ -85,9 +85,8 @@ public interface ManageWithdrawal extends BasicValidation {
         ProjectApplication projectApplication = application.getProjectApplication();
         // If a unit has been booked, we need to return that to the pool of available units
         if (projectApplication.getApplicationStatus() == ApplicationStatus.BOOKED) {
-
-            //TODO implement booked unit returning
-            projectApplication.getSelectedType().returnUnit();
+            projectApplication.getApplicant().getBookedUnit().returnUnit();
+            projectApplication.getApplicant().setBookedUnit(null);
         }
         projectApplication.setStatus(ApplicationStatus.UNSUCCESSFUL);
     }

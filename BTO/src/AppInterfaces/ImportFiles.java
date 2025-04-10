@@ -94,7 +94,7 @@ public interface ImportFiles {
 
             // Identify the manager object that is managing the project
             for (User manager : allUsers.getUsers()) {
-                if (manager.getName().compareTo(value[10]) == 0) {
+                if (manager.getNric().compareTo(value[10]) == 0) {
                     projectManager = (HDBManager) manager;
                     break;
                 }
@@ -105,7 +105,7 @@ public interface ImportFiles {
             String[] officerNames = value[12].split(",");
             for (User officer : allUsers.getUsers()) {
                 for (String assigned : officerNames) {
-                    if (officer.getName().compareTo(assigned) == 0) {
+                    if (officer.getNric().compareTo(assigned) == 0) {
                         // If the officer in officers list is the name of the office assigned, we add them to the list of assigned officers
                         projectOfficers.add((HDBOfficer) officer);
                     }
@@ -157,7 +157,7 @@ public interface ImportFiles {
         for (String[] value : fileData) {
             Applicant applicant = null;
             for (User user : allUsers.getUsers()) {
-                if (value[0].equals(user.getName())) {
+                if (value[0].equals(user.getNric())) {
                     applicant = (Applicant) user;
                 }
             }
@@ -200,7 +200,7 @@ public interface ImportFiles {
         for (String[] value : fileData) {
             Applicant applicant = null;
             for (User user : allUsers.getUsers()) {
-                if (value[3].equals(user.getName())) {
+                if (value[3].equals(user.getNric())) {
                     applicant = (Applicant) user;
                 }
             }
@@ -226,7 +226,7 @@ public interface ImportFiles {
         for (String[] value : fileData) {
             Applicant applicant = null;
             for (User user : allUsers.getUsers()) {
-                if (value[0].equals(user.getName())) {
+                if (value[0].equals(user.getNric())) {
                     applicant = (Applicant) user;
                 }
             }
@@ -234,7 +234,7 @@ public interface ImportFiles {
                 if (value[1].equals(project.getName())) {
                     ProjectApplication userApplication = null;
                     for (ProjectApplication application : project.getAllProjectApplications()) {
-                        if (application.getApplicant().getName().equals(value[0])) {
+                        if (application.getApplicant().getNric().equals(value[0])) {
                             userApplication = application;
                         }
                     }
@@ -266,7 +266,7 @@ public interface ImportFiles {
         for (String[] value : fileData) {
             Applicant applicant = null;
             for (User user : allUsers.getUsers()) {
-                if (user.getName().equals(value[2])) {
+                if (user.getNric().equals(value[2])) {
                     applicant = (Applicant) user;
                 }
             }
@@ -274,7 +274,7 @@ public interface ImportFiles {
                 if (project.getName().equals(value[0])) {
                     for (Flat flat : project.getFlatType()) {
                         if (flat.getType().equals(value[1])) {
-                            flat.getUnits().get(Integer.parseInt(value[3])-1).setBooked(applicant);
+                            flat.getUnits().get(Integer.parseInt(value[3])-1).setBookedBy(applicant);
                         }
                     }
                 }

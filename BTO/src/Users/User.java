@@ -1,10 +1,9 @@
 package Users;
 
-import Misc.UserFilter;
+import Misc.Filter.UserFilter;
 import Project.HDBProject;
 import Users.UserInterfaces.UserAction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,7 +54,7 @@ public abstract class User implements UserAction {
         this.age = age;
         this.maritalStatus = maritalStatus;
         this.password = password;
-        // create default Misc.UserFilter object when created
+        // create default Misc.Filter.UserFilter object when created
         // can create a method to ask user if they want to have a custom filter
         // method should also be callable later on
     }
