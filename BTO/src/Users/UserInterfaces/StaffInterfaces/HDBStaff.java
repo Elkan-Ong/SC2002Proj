@@ -17,65 +17,17 @@ import java.util.Scanner;
 public interface HDBStaff extends BasicValidation {
     /**
      * Displays all the enquiries that have not been replied to
-     * @param allPastProjects list of all projects to view queries of
      */
-    default void viewEnquiries(List<HDBProject> allPastProjects) {
-        if (allPastProjects.isEmpty()) {
-            System.out.println("No projects have been made.");
-            return;
-        }
-
-        List<Query> allQueries = new ArrayList<>();
-        for (HDBProject project : allPastProjects) {
-            for (Query query : project.getQueries()) {
-                if (query.getReply() == null) {
-                    allQueries.add(query);
-                }
-            }
-        }
-
-        int choice;
-        int respondChoice;
-        while (true) {
-            System.out.println("Select query to view: (enter non-digit to exit)");
-            for (int i=0; i < allQueries.size(); i++) {
-                System.out.println((i+1) + ") " + allQueries.get(i).getTitle());
-            }
-            try {
-                choice = sc.nextInt();
-                if (choice < 1 || choice > allQueries.size()) {
-                    sc.nextLine();
-                    System.out.println("Invalid Selection");
-                }
-            } catch (InputMismatchException e) {
-                sc.nextLine();
-                break;
-            }
-            Query selectedQuery = allQueries.get(choice-1);
-            System.out.println("Selected Query:");
-            selectedQuery.displayQuery();
-            System.out.println("Would you like to respond to this query?");
-            System.out.println("1) Yes");
-            System.out.println("2) No");
-            respondChoice = getChoice(1, 2);
-            if (respondChoice == 2) {
-                continue;
-            }
-            System.out.println("Enter reply");
-            selectedQuery.setReply(sc.nextLine());
-            System.out.println("Successfully replied to query!");
-            selectedQuery.displayQuery();
-            // whitespace
-            System.out.println();
-        }
-
-    }
+    void viewEnquiries();
 
     /**
      * displays all the projects passed in allProjects
      * @param allProjects list of all projects
      */
     void viewProjects(List<HDBProject> allProjects);
+
+    void handleChoice(List<HDBProject> allProjects,
+                      int choice);
 
     default void displayProjects(List<HDBProject> filteredProjects)  {
         Scanner sc = new Scanner(System.in);

@@ -49,19 +49,14 @@ public class HDBProject {
     private Date closingDate;
 
     /**
+     * No. of slots for officers to be assigned to this Project
+     */
+    private int availableOfficerSlots;
+
+    /**
      * HDB Officers assigned to assist the Manager
      */
     private List<HDBOfficer> assignedOfficers = new ArrayList<>();
-
-    /**
-     * The number of Officers that can be assigned to this project
-     */
-    private int availableOfficerSlots;
-    private boolean visible = true; // TODO change to false after testing
-    ArrayList<ProjectApplication> projectApplications = new ArrayList<ProjectApplication>();
-    ArrayList<WithdrawApplication> withdrawals = new ArrayList<WithdrawApplication>();
-    ArrayList<OfficerRegistration> officerApplications = new ArrayList<>();
-    ArrayList<ProjectApplication> applicationsPendingBooking = new ArrayList<ProjectApplication>();
 
     /**
      * Whether the project is visible to Applicants
@@ -84,16 +79,16 @@ public class HDBProject {
     List<Query> queries = new ArrayList<>();
 
     /**
-     * Date formatter for format dates to dd/MM/yyyy format
+     * The number of Officers that can be assigned to this project
      */
-    private final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    List<OfficerRegistration> officerApplications = new ArrayList<>();
+    List<ProjectApplication> applicationsPendingBooking = new ArrayList<>();
 
     /**
      * Constructor for reading csv files
      * @param values values in the csv file
      * @param projectManager Manager managing this project
      * @param projectOfficers Officers assigned to this project
-     * @throws ParseException
      */
     public HDBProject(String[] values, HDBManager projectManager, List<HDBOfficer> projectOfficers) throws ParseException {
         this.name = values[0];
@@ -101,6 +96,10 @@ public class HDBProject {
         this.flatType.add(new Flat(values[2], Integer.parseInt(values[4]), Integer.parseInt(values[3])));
         this.flatType.add(new Flat(values[5], Integer.parseInt(values[7]), Integer.parseInt(values[6])));
         try {
+            /**
+             * Date formatter for format dates to dd/MM/yyyy format
+             */
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             this.openingDate = format.parse(values[8]);
             this.closingDate = format.parse(values[9]);
         } catch (ParseException pe) {
@@ -166,6 +165,8 @@ public class HDBProject {
     public List<HDBOfficer> getAssignedOfficers() {
         return assignedOfficers;
     }
+
+    public void assignOfficer(HDBOfficer officer) { assignedOfficers.add(officer); }
 
     /**
      * Adds a Query to the list of queries in the Project
@@ -309,6 +310,7 @@ public class HDBProject {
         projectApplications.add(application);
     }
 
+    public List<OfficerRegistration> getOfficerApplications() { return officerApplications; }
     public void addOfficerRegistration(OfficerRegistration registration) {
         officerApplications.add(registration);
     }
@@ -321,7 +323,7 @@ public class HDBProject {
         withdrawals.add(withdrawal);
     }
 
-    public ArrayList<ProjectApplication> getAllApplicationsPendingBooking() {return applicationsPendingBooking; }
+    public List<ProjectApplication> getAllApplicationsPendingBooking() { return applicationsPendingBooking; }
 
     public void addApplicationPendingBooking(ProjectApplication application) { applicationsPendingBooking.add(application); }
 

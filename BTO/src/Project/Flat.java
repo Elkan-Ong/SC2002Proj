@@ -160,6 +160,10 @@ public class Flat implements AvailableFlatTypes {
         }
     }
 
+    public int getNoOfUnitsAvailable() {
+        return noOfUnits - bookedUnits;
+    }
+
     public void displayFlat() {
         System.out.println(type + " Flat information;");
         System.out.println("Total no. of units: " + units.size());

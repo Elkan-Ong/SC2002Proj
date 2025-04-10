@@ -11,9 +11,11 @@ import Project.Unit;
 import Users.UserInterfaces.Application;
 import Users.UserInterfaces.CreateFilter;
 import Users.UserInterfaces.QueryInterface;
+import Validation.BasicValidation;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -54,6 +56,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
      */
     public Applicant(String name, String nric, int age, String maritalStatus, String password) {
         super(name, nric, age, maritalStatus, password);
+    }
+
+    public ProjectApplication getApplication() {
+        return application;
     }
 
     @Override

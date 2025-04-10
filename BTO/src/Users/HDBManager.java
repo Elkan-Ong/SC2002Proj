@@ -1,7 +1,7 @@
 package Users;
 
+import Enums.RegistrationStatus;
 import Misc.*;
-import Misc.OfficerRegistration;
 import Project.HDBProject;
 import Users.UserInterfaces.ManagerInterfaces.ApplicantReport.ApplicantReport;
 import Users.UserInterfaces.ManagerInterfaces.ProjectApplication.ManageProjectApplication;
@@ -9,10 +9,7 @@ import Users.UserInterfaces.ManagerInterfaces.Withdrawal.ManageWithdrawal;
 import Users.UserInterfaces.StaffInterfaces.HDBStaff;
 import Users.UserInterfaces.ManagerInterfaces.ProjectHandler.ManagerProject;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents a Manager for HDB
@@ -83,6 +80,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
     @Override
     public void deleteProject(List<HDBProject> allProjects) {
         allProjects.remove(project);
+        allPastProjects.remove(project);
         this.project = null;
     }
 
@@ -118,13 +116,16 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
      * Controller to call methods of action that Manager has selected
      * @param allProjects master list of all the projects created
      * @param choice Selected Applicant action (Refer to displayMenu for choice mapping)
-     * @throws ParseException
      */
     @Override
     public void handleChoice(List<HDBProject> allProjects,
-                             int choice) throws ParseException {
+                             int choice) {
         switch (choice) {
             case 1:
+                if (project == null) {
+                    System.out.println("You are not currently managing a project!");
+                    break;
+                }
                 viewCurrentProject();
                 break;
             case 2:
@@ -136,28 +137,53 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 }
                 break;
             case 3:
+                if (project == null) {
+                    System.out.println("You are not currently managing a project!");
+                    break;
+                }
                 editProject(allProjects, this.project);
                 break;
             case 4:
+                // TODO could change to deleting a past project but don't know if should be allowed since it's completed
+                if (project == null) {
+                    System.out.println("You are not currently managing a project!");
+                    break;
+                }
                 deleteProject(allProjects);
                 break;
             case 5:
                 displayProjects(allProjects);
                 break;
             case 6:
-                // Requires Officer class to be completed
+                if (project == null) {
+                    System.out.println("You are not currently managing a project!");
+                    break;
+                }
+                viewOfficerRegistration(project);
                 break;
             case 7:
+                if (project == null) {
+                    System.out.println("You are not currently managing a project!");
+                    break;
+                }
                 viewBTOApplication(project);
                 break;
             case 8:
+                if (project == null) {
+                    System.out.println("You are not currently managing a project!");
+                    break;
+                }
                 viewBTOWithdrawal(project);
                 break;
             case 9:
                 getApplicantReport(allPastProjects);
                 break;
             case 10:
-                viewEnquiries(allPastProjects);
+                if (project == null) {
+                    System.out.println("You are not currently managing a project!");
+                    break;
+                }
+                viewEnquiries();
                 break;
             case 11:
                 if (project == null) {
@@ -170,6 +196,137 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 System.out.println("Invalid choice");
                 break;
         }
+    }
+
+    public void viewOfficerRegistration(HDBProject project) {
+        List<OfficerRegistration> applications = new ArrayList<>();
+        for (OfficerRegistration registration : project.getOfficerApplications()) {
+            if (registration.getApplicationStatus() == RegistrationStatus.PENDING) {
+                applications.add(registration);
+            }
+        }
+        if (applications.isEmpty()) {
+            System.out.println("No pending applications!");
+            return;
+        }
+        while (true) {
+            System.out.println("Select which Officer Registration you would like to view: (enter non-digit to exit)");
+            for (int i=0; i < applications.size(); i++) {
+                System.out.println((i+1) + ") " + applications.get(i).getApplicant().getName() + "'s Application");
+            }
+            int choice;
+            Scanner sc = new Scanner(System.in);
+            while (true) {
+                try {
+                    choice = sc.nextInt();
+                    sc.nextLine();
+                    if (choice < 1 || choice > applications.size()) {
+                        System.out.println("Invalid Input");
+                        continue;
+                    }
+                    break;
+                } catch (InputMismatchException e) {
+                    sc.nextLine();
+                    return;
+                }
+            }
+            OfficerRegistration selectedRegistration = applications.get(choice-1);
+            selectedRegistration.displayApplication();
+            System.out.println("Would you like to approve or reject this application? (enter non-digit to exit)");
+            System.out.println("1) Accept");
+            System.out.println("2) Reject");
+            while (true) {
+                try {
+                    choice = sc.nextInt();
+                    sc.nextLine();
+                    if (choice < 1 || choice > 2) {
+                        System.out.println("Invalid Input");
+                        continue;
+                    }
+                    break;
+                } catch (InputMismatchException e) {
+                    sc.nextLine();
+                    return;
+                }
+            }
+            if (choice == 1) {
+                if (project.getAvailableOfficerSlots() > project.getAssignedOfficers().size()) {
+                    approveRegistration(selectedRegistration);
+                } else {
+                    System.out.println("All officer slots have been filled for your project!");
+                    return;
+                }
+            } else {
+                rejectRegistration(selectedRegistration);
+            }
+            applications.remove(selectedRegistration);
+        }
+    }
+
+    public void approveRegistration(OfficerRegistration registration) {
+        registration.setStatus(RegistrationStatus.SUCCESSFUL);
+        project.assignOfficer(registration.getApplicant());
+        registration.getApplicant().setAssignedProject(project);
+        System.out.println("Registration successfully Approved!");
+    }
+
+    public void rejectRegistration(OfficerRegistration registration) {
+        registration.setStatus(RegistrationStatus.UNSUCCESSFUL);
+        System.out.println("Registration successfully Rejected!");
+    }
+
+    @Override
+    public void viewEnquiries() {
+        if (allPastProjects.isEmpty()) {
+            System.out.println("No projects have been made.");
+            return;
+        }
+
+        List<Query> allQueries = new ArrayList<>();
+        for (HDBProject project : allPastProjects) {
+            for (Query query : project.getQueries()) {
+                if (query.getReply() == null) {
+                    allQueries.add(query);
+                }
+            }
+        }
+
+        int choice;
+        int respondChoice;
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("Select query to view: (enter non-digit to exit)");
+            for (int i=0; i < allQueries.size(); i++) {
+                System.out.println((i+1) + ") " + allQueries.get(i).getTitle());
+            }
+            try {
+                choice = sc.nextInt();
+                if (choice < 1 || choice > allQueries.size()) {
+                    sc.nextLine();
+                    System.out.println("Invalid Selection");
+                }
+            } catch (InputMismatchException e) {
+                sc.nextLine();
+                break;
+            }
+            Query selectedQuery = allQueries.get(choice-1);
+            System.out.println("Selected Query:");
+            selectedQuery.displayQuery();
+            System.out.println("Would you like to respond to this query?");
+            System.out.println("1) Yes");
+            System.out.println("2) No");
+            respondChoice = getChoice(1, 2);
+            if (respondChoice == 2) {
+                continue;
+            }
+            System.out.println("Enter reply");
+            selectedQuery.setReply(sc.nextLine());
+            System.out.println("Successfully replied to query!");
+            selectedQuery.displayQuery();
+            // whitespace
+            System.out.println();
+        }
+
     }
 }
 

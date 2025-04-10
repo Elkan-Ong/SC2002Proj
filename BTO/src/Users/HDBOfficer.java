@@ -4,9 +4,9 @@ import Enums.ApplicationStatus;
 import Enums.RegistrationStatus;
 import Misc.OfficerRegistration;
 import Misc.Query;
-import Project.Flat;
 import Project.HDBProject;
 import Project.ProjectApplication;
+import Users.UserInterfaces.QueryInterface;
 import Users.UserInterfaces.StaffInterfaces.HDBStaff;
 
 import java.util.ArrayList;
@@ -14,12 +14,17 @@ import java.util.List;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class HDBOfficer extends Applicant implements HDBStaff {
+public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
 
-    private OfficerRegistration officerRegistration;
+    private OfficerRegistration officerRegistration = null;
+    private HDBProject assignedProject = null;
 
-    public HDBOfficer(String[] values) {
-        super(values);
+    public HDBOfficer(String name, String nric, int age, String maritalStatus, String password) {
+        super(name, nric, age, maritalStatus, password);
+    }
+
+    void setAssignedProject(HDBProject project) {
+        this.assignedProject = project;
     }
 
     @Override
@@ -50,18 +55,15 @@ public class HDBOfficer extends Applicant implements HDBStaff {
             System.out.println("6) View Project Details");
             System.out.println("7) Flat Bookings");
         }
-
     }
 
 
     @Override
-    public void handleChoice(ArrayList<HDBProject> allProjects,
-                             ArrayList<Query> allQueries,
-                             ArrayList<OfficerRegistration> allRegistrations,
+    public void handleChoice(List<HDBProject> allProjects,
                              int choice) {
         // TODO apply user filter
-        ArrayList<HDBProject> filteredAllProjects = allProjects;
-        ArrayList<HDBProject> filteredProjects = getVisibleProjects(filteredAllProjects);
+        List<HDBProject> filteredAllProjects = allProjects;
+        List<HDBProject> filteredProjects = getVisibleProjects(filteredAllProjects);
 
         switch (choice) {
             case 1:
@@ -80,7 +82,11 @@ public class HDBOfficer extends Applicant implements HDBStaff {
                 break;
 
             case 5:
-                viewEnquiries(allQueries);
+                if (assignedProject == null) {
+                    System.out.println("You do not have an assigned project yet!");
+                    break;
+                }
+                viewEnquiries();
                 break;
 
             case 6:
@@ -105,9 +111,9 @@ public class HDBOfficer extends Applicant implements HDBStaff {
         HDBStaff.super.displayProjects(filteredProjects);
     }
 
-    public void applyForProjectAsHDBOfficer(ArrayList<HDBProject> filteredProjects) {
+    public void applyForProjectAsHDBOfficer(List<HDBProject> filteredProjects) {
         // Check if is an existing applicant with an application
-        if (application != null && application.getApplicationStatus() != ApplicationStatus.UNSUCCESSFUL) {
+        if (this.getApplication() != null && this.getApplication().getApplicationStatus() != ApplicationStatus.UNSUCCESSFUL) {
             System.out.println("You have an ongoing application or your current application has already been approved");
             return;
         }
@@ -164,82 +170,54 @@ public class HDBOfficer extends Applicant implements HDBStaff {
 
 
     @Override
-    public void viewEnquiries(ArrayList<Query> allQueries) {
-        // Overriding method in HDBStaff as officer should only be able to see enquires
-        // for projects they are an officer of
-
-        if (allQueries.isEmpty()) {
-            System.out.println("No queries have been made.");
+    public void viewEnquiries() {
+        if (assignedProject == null) {
+            System.out.println("No project has been assigned to you.");
             return;
+        }
+
+        List<Query> allQueries = new ArrayList<>();
+        for (Query query : assignedProject.getQueries()) {
+            if (query.getReply() == null) {
+                allQueries.add(query);
+            }
         }
 
         int choice;
         int respondChoice;
-
-        ArrayList<Query> filteredQueries = new ArrayList<>();
-
-        for (int i = 0; i < allQueries.size(); i++) {
-
-            Query query = allQueries.get(i);
-
-            Applicant applicant = query.getApplicant();
-
-            // Check if officer is handling the project related to the query
-            // TODO: Handle exception when Applicant.application is null (enquiring without an application)
-            if (applicant.application.getAppliedProject().getName().equals(this.officerRegistration.getAppliedProject().getName())) {
-                filteredQueries.add(query);
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("Select query to view: (enter non-digit to exit)");
+            for (int i=0; i < allQueries.size(); i++) {
+                System.out.println((i+1) + ") " + allQueries.get(i).getTitle());
             }
-
-        }
-
-        if (filteredQueries.size() > 0) {
-            while (true) {
-                System.out.println("Select query to view: (enter non-digit to exit)");
-
-                for (int i = 0; i < filteredQueries.size(); i++) {
-                    System.out.println((i + 1) + ") " + filteredQueries.get(i).getTitle());
-                }
-
-                try {
-                    choice = sc.nextInt();
-                    if (choice < 1 || choice > filteredQueries.size()) {
-                        sc.nextLine();
-                        System.out.println("Invalid Selection");
-                    }
-                } catch (InputMismatchException e) {
+            try {
+                choice = sc.nextInt();
+                if (choice < 1 || choice > allQueries.size()) {
                     sc.nextLine();
-                    break;
+                    System.out.println("Invalid Selection");
                 }
-
-                Query selectedQuery = filteredQueries.get(choice - 1);
-
-                System.out.println("Selected Query:");
-                selectedQuery.displayQuery();
-                System.out.println("Would you like to respond to this query?");
-                System.out.println("1) Yes");
-                System.out.println("2) No");
-
-                respondChoice = getChoice(1, 2);
-
-                if (respondChoice == 2) {
-                    continue;
-                }
-
-                System.out.println("Enter reply");
-
-                selectedQuery.setReply(sc.nextLine());
-                System.out.println("Successfully replied to query!");
-                selectedQuery.displayQuery();
-
-                // whitespace
-                System.out.println();
+            } catch (InputMismatchException e) {
+                sc.nextLine();
+                break;
             }
-
-        } else {
-            System.out.println("No queries have been made.");
+            Query selectedQuery = allQueries.get(choice-1);
+            System.out.println("Selected Query:");
+            selectedQuery.displayQuery();
+            System.out.println("Would you like to respond to this query?");
+            System.out.println("1) Yes");
+            System.out.println("2) No");
+            respondChoice = getChoice(1, 2);
+            if (respondChoice == 2) {
+                continue;
+            }
+            System.out.println("Enter reply");
+            selectedQuery.setReply(sc.nextLine());
+            System.out.println("Successfully replied to query!");
+            selectedQuery.displayQuery();
+            // whitespace
+            System.out.println();
         }
-
-
     }
 
 
@@ -253,7 +231,7 @@ public class HDBOfficer extends Applicant implements HDBStaff {
 
         HDBProject project = officerRegistration.getAppliedProject();
 
-        ArrayList<ProjectApplication> applications = project.getAllApplicationsPendingBooking();
+        List<ProjectApplication> applications = project.getAllApplicationsPendingBooking();
 
         // Check if any applications which are successful but have not booked a flat yet
         for (ProjectApplication application : applications) {
@@ -264,20 +242,18 @@ public class HDBOfficer extends Applicant implements HDBStaff {
             // 1. Update number of units in selected flat type
             // Check if sufficient units available for selected flat type
 
-            for (int i =0; i < project.getFlatType().size(); i ++) {
+            for (int i=0; i < project.getFlatType().size(); i ++) {
                 if (application.getSelectedType() == project.getFlatType().get(i)) {
                     if (project.getFlatType().get(i).getNoOfUnitsAvailable() == 0) {
                         // TODO: Throw exception and handle program flow
                         System.out.println("Error! Insufficient units");
-                        break;
                     } else {
                         // Update units available
                         project.getFlatType().get(i).reserveUnit();
-
                         // Assign unit to applicant
                         project.getFlatType().get(i).assignUnit(application.getApplicant());
-                        break;
                     }
+                    break;
                 }
             }
 
