@@ -104,7 +104,6 @@ public class HDBProject {
             this.closingDate = format.parse(values[9]);
         } catch (ParseException pe) {
             System.err.println("Parse error in file ProjectList.csv with data: " + String.join(",", values));
-            pe.printStackTrace();
         }
         this.manager = projectManager;
         this.assignedOfficers = projectOfficers;
@@ -289,9 +288,9 @@ public class HDBProject {
         System.out.println("Opening Date: " + openingDate);
         System.out.println("Closing Date: " + closingDate);
         System.out.println("Manager: " + manager.getName());
+        System.out.println();
     }
 
-    // TODO displayProject for Officer/Manager should display officer slots also
 
     /**
      * Displays information of the Project, to be used by HDB Staff
@@ -299,7 +298,11 @@ public class HDBProject {
     public void displayProjectStaff() {
         displayProjectApplicant();
         System.out.println("Visibility: " + (visible ? "Visible" : "Invisible"));
-        // TODO display officer when implemented
+        System.out.println("Officers Assigned: ");
+        for (HDBOfficer officer : assignedOfficers) {
+            System.out.println(officer.getName());
+        }
+        System.out.println();
     }
 
     /**

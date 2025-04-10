@@ -46,11 +46,9 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
         } else {
             System.out.println("1) Register for Project");
             System.out.println("2) View Registration Status");
-            System.out.println("3) Flat Selection");
-            System.out.println("4) Generate Flat Selection Receipt");
-            System.out.println("5) View/Reply Enquiries");
-            System.out.println("6) View Project Details");
-            System.out.println("7) Flat Bookings");
+            System.out.println("3) View/Reply Enquiries");
+            System.out.println("4) View Project Details");
+            System.out.println("5) Flat Bookings");
         }
     }
 
@@ -73,10 +71,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
                 viewRegistrationStatus();
                 break;
 
-            case 3, 4:
-                break;
-
-            case 5:
+            case 3:
                 if (assignedProject == null) {
                     System.out.println("You do not have an assigned project yet!");
                     break;
@@ -84,11 +79,15 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
                 viewEnquiries();
                 break;
 
-            case 6:
-                viewProjectDetails();
+            case 4:
+                if (assignedProject == null) {
+                    System.out.println("You do not have an assigned project yet!");
+                    break;
+                }
+                assignedProject.displayProjectStaff();
                 break;
 
-            case 7:
+            case 5:
                 flatBooking();
                 break;
 
@@ -206,20 +205,11 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
         respondQuery(allQueries);
     }
 
-
-    private void viewProjectDetails() {
-        // View project details regardless of visibility setting
-        officerRegistration.getAppliedProject().displayProjectStaff();
-
-    }
-
     private void flatBooking() {
         List<ProjectApplication> applications = assignedProject.getAllApplicationsPendingBooking();
 
         // Check if any applications which are successful but have not booked a flat yet
         for (ProjectApplication application : applications) {
-            // TODO: Not sure if need to implement check for existing booking?
-
             // Book flat for applicant
 
             // 1. Update number of units in selected flat type

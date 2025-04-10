@@ -375,6 +375,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 this.filter = createFilter(allProjects);
                 break;
             case 11:
+                if (application == null || application.getApplicationStatus() != ApplicationStatus.SUCCESSFUL) {
+                    System.out.println("Invalid choice");
+                }
                 bookFlat();
                 break;
             default:
