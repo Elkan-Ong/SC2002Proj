@@ -1,9 +1,9 @@
 package AccountHandler.Validation;
 
-public class NRICValidator {
+public interface NRICValidator {
 
     // Basic format check: 1 letter + 7 digits + 1 letter
-    public static boolean isValid(String nric) {
+    default boolean isValid(String nric) {
         if (nric == null || nric.length() != 9) {
             return false;
         }
@@ -23,10 +23,6 @@ public class NRICValidator {
         }
 
         // Check suffix is an alphabet letter
-        if (!Character.isLetter(suffix)) {
-            return false;
-        }
-
-        return true;
+        return Character.isLetter(suffix);
     }
 }

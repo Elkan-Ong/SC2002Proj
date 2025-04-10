@@ -41,7 +41,7 @@ public interface WriteFiles {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing to files");
         }
     }
 
@@ -69,7 +69,7 @@ public interface WriteFiles {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing to files");
         }
     }
 
@@ -91,7 +91,7 @@ public interface WriteFiles {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing to files");
         }
     }
 
@@ -118,7 +118,7 @@ public interface WriteFiles {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing to files");
         }
     }
 
@@ -174,7 +174,7 @@ public interface WriteFiles {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing to files");
         }
     }
 
@@ -195,7 +195,7 @@ public interface WriteFiles {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing to files");
         }
     }
 
@@ -216,7 +216,7 @@ public interface WriteFiles {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing to files");
         }
     }
 
@@ -237,8 +237,19 @@ public interface WriteFiles {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing to files");
         }
+    }
+
+    static void writeAllFiles(List<HDBProject> allProjects, AllUsers allUsers) {
+        writeUnit(allProjects);
+        writeApplications(allProjects);
+        writeQuery(allProjects);
+        writeWithdrawal(allProjects);
+        writeProject(allProjects);
+        writeManager(allUsers);
+        writeApplicant(allUsers);
+        writeOfficer(allUsers);
     }
 
 }

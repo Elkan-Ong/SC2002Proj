@@ -1,5 +1,6 @@
 package Users;
 
+import AccountHandler.Password.PasswordManager;
 import Enums.ApplicationStatus;
 import Misc.Filter.UserFilter;
 import Misc.Query;
@@ -13,6 +14,7 @@ import Misc.Filter.CreateFilter;
 import Users.UserInterfaces.QueryInterface;
 import Validation.BasicValidation;
 
+import javax.print.DocFlavor;
 import java.util.*;
 
 /**
@@ -60,6 +62,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     public Unit getBookedUnit() { return bookedUnit; }
+
+    public UserFilter getFilter() {
+        return filter;
+    }
 
     @Override
     void displayProjects(List<HDBProject> filteredProjects) {
@@ -275,7 +281,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
      */
     @Override
     public void displayMenu() {
-        System.out.println("What would you like to do?");
+        System.out.println("What would you like to do? (enter non-digit to log out)");
         System.out.println("1) View available projects");
         System.out.println("2) Apply for a project");
         System.out.println("3) View project application");
@@ -374,6 +380,26 @@ public class Applicant extends User implements Application, QueryInterface, Crea
             default:
                 System.out.println("Invalid choice");
                 break;
+        }
+    }
+
+    @Override
+    public int getChoice() {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                sc.nextLine();
+                if (choice < 1 || choice > 11) {
+                    System.out.println("Invalid Selection");
+                    continue;
+                }
+                return choice;
+            } catch (InputMismatchException e) {
+                sc.nextLine();
+                return -1;
+            }
         }
     }
 

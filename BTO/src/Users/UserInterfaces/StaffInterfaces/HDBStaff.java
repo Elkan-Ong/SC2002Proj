@@ -1,5 +1,6 @@
 package Users.UserInterfaces.StaffInterfaces;
 
+import Misc.Query;
 import Project.HDBProject;
 import Validation.BasicValidation;
 
@@ -49,6 +50,44 @@ public interface HDBStaff extends BasicValidation {
                 break;
             }
             sc.nextLine();
+        }
+    }
+
+    default void respondQuery(List<Query> allQueries) {
+        int choice;
+        int respondChoice;
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("Select query to view: (enter non-digit to exit)");
+            for (int i=0; i < allQueries.size(); i++) {
+                System.out.println((i+1) + ") " + allQueries.get(i).getTitle());
+            }
+            try {
+                choice = sc.nextInt();
+                if (choice < 1 || choice > allQueries.size()) {
+                    sc.nextLine();
+                    System.out.println("Invalid Selection");
+                }
+            } catch (InputMismatchException e) {
+                sc.nextLine();
+                break;
+            }
+            Query selectedQuery = allQueries.get(choice-1);
+            System.out.println("Selected Query:");
+            selectedQuery.displayQuery();
+            System.out.println("Would you like to respond to this query?");
+            System.out.println("1) Yes");
+            System.out.println("2) No");
+            respondChoice = getChoice(1, 2);
+            if (respondChoice == 2) {
+                continue;
+            }
+            System.out.println("Enter reply");
+            selectedQuery.setReply(sc.nextLine());
+            System.out.println("Successfully replied to query!");
+            selectedQuery.displayQuery();
+            // whitespace
+            System.out.println();
         }
     }
 }

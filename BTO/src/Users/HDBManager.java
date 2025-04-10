@@ -26,7 +26,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
     /**
      * The list of all past projects (including the current project) that the manager has managed
      */
-    private List<HDBProject> allPastProjects = new ArrayList<>();
+    private final List<HDBProject> allPastProjects = new ArrayList<>();
 
 
     /**
@@ -72,7 +72,6 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         }
     }
 
-    // TODO need to check the master/past projects lists and delete also
 
     /**
      * Deletes the project
@@ -144,7 +143,6 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 editProject(allProjects, this.project);
                 break;
             case 4:
-                // TODO could change to deleting a past project but don't know if should be allowed since it's completed
                 if (project == null) {
                     System.out.println("You are not currently managing a project!");
                     break;
@@ -195,6 +193,26 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
             default:
                 System.out.println("Invalid choice");
                 break;
+        }
+    }
+
+    @Override
+    public int getChoice() {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                sc.nextLine();
+                if (choice < 1 || choice > 11) {
+                    System.out.println("Invalid Selection");
+                    continue;
+                }
+                return choice;
+            } catch (InputMismatchException e) {
+                sc.nextLine();
+                return -1;
+            }
         }
     }
 
@@ -291,41 +309,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
             }
         }
 
-        int choice;
-        int respondChoice;
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            System.out.println("Select query to view: (enter non-digit to exit)");
-            for (int i=0; i < allQueries.size(); i++) {
-                System.out.println((i+1) + ") " + allQueries.get(i).getTitle());
-            }
-            try {
-                choice = sc.nextInt();
-                if (choice < 1 || choice > allQueries.size()) {
-                    sc.nextLine();
-                    System.out.println("Invalid Selection");
-                }
-            } catch (InputMismatchException e) {
-                sc.nextLine();
-                break;
-            }
-            Query selectedQuery = allQueries.get(choice-1);
-            System.out.println("Selected Query:");
-            selectedQuery.displayQuery();
-            System.out.println("Would you like to respond to this query?");
-            System.out.println("1) Yes");
-            System.out.println("2) No");
-            respondChoice = getChoice(1, 2);
-            if (respondChoice == 2) {
-                continue;
-            }
-            System.out.println("Enter reply");
-            selectedQuery.setReply(sc.nextLine());
-            System.out.println("Successfully replied to query!");
-            selectedQuery.displayQuery();
-            // whitespace
-            System.out.println();
-        }
+        respondQuery(allQueries);
 
     }
 }

@@ -42,7 +42,6 @@ public interface ImportFiles {
             }
             return result;
         } catch (IOException e) {
-            e.printStackTrace();
             throw new IOException("File not found " + fileName);
         }
     }
@@ -82,10 +81,8 @@ public interface ImportFiles {
     /**
      * Read all the projects in ProjectList.csv
      * @param allUsers AllUsers object containing all the users of the BTO system
-     * @return all the projects stored in ProjectList.csv
      */
-    static List<HDBProject> readProjects(AllUsers allUsers) throws IOException, ParseException {
-        List<HDBProject> result = new ArrayList<>();
+    static void readProjects(AllUsers allUsers, List<HDBProject> allProjects) throws IOException, ParseException {
         List<String[]> fileData = readFile("ProjectList.csv");
 
         for (String[] value : fileData) {
@@ -112,15 +109,17 @@ public interface ImportFiles {
                 }
             }
             HDBProject temp = new HDBProject(value, projectManager, projectOfficers);
+            assert projectManager != null;
             projectManager.addOldProject(temp);
             Date date = new Date();
             if (temp.getClosingDate().after(date)) {
                 projectManager.setProject(temp);
-                // TODO set for officer as well
+                for (HDBOfficer officer : projectOfficers) {
+                    officer.setAssignedProject(temp);
+                }
             }
-            result.add(temp);
+            allProjects.add(temp);
         }
-        return result;
     }
 
     /**
@@ -131,7 +130,6 @@ public interface ImportFiles {
      * @param <T> corresponding User type
      */
     static <T> void readUsers(AllUsers allUsers, String fileName, ThrowingFunction<T> constructor) throws IOException {
-        List<T> result = new ArrayList<>();
         List<String[]> fileData = readFile(fileName);
 
         for (String[] value : fileData) {
@@ -140,7 +138,6 @@ public interface ImportFiles {
                 allUsers.addUser((User)constructor.apply(value[0], value[1], Integer.parseInt(value[2]), value[3], value[4]));
             } catch (Exception e) {
                 System.err.println("Error parsing data from file '" + fileName + "': " + String.join(",", value));
-                e.printStackTrace();
             }
         }
 
@@ -279,6 +276,21 @@ public interface ImportFiles {
                     }
                 }
             }
+        }
+    }
+
+    static void readAllFiles(AllUsers allUsers, List<HDBProject> allProjects) {
+        try {
+            ImportFiles.readUsers(allUsers,"ApplicantList.csv", Applicant::new);
+            ImportFiles.readUsers(allUsers,"OfficerList.csv", HDBOfficer::new);
+            ImportFiles.readUsers(allUsers,"ManagerList.csv", HDBManager::new);
+            ImportFiles.readProjects(allUsers, allProjects);
+            ImportFiles.readApplications(allUsers, allProjects);
+            ImportFiles.readQuery(allUsers, allProjects);
+            ImportFiles.readWithdrawal(allUsers, allProjects);
+            ImportFiles.readUnits(allUsers, allProjects);
+        } catch (Exception e) {
+            System.out.println("An error has occurred while reading files, please ensure provided files are used");
         }
     }
 

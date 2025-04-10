@@ -20,7 +20,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
         super(name, nric, age, maritalStatus, password);
     }
 
-    void setAssignedProject(HDBProject project) {
+    public void setAssignedProject(HDBProject project) {
         this.assignedProject = project;
     }
 
@@ -36,7 +36,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
     public void displayMenu() {
         System.out.println("What would you like to do?");
         System.out.println("1) Applicant Tasks");
-        System.out.println("2) HDB Offier Tasks");
+        System.out.println("2) HDB Officer Tasks");
 
         int choice = getChoice(1, 2);
 
@@ -59,8 +59,10 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
     public void handleChoice(List<HDBProject> allProjects,
                              int choice) {
         // TODO apply user filter
-        List<HDBProject> filteredAllProjects = allProjects;
-        List<HDBProject> filteredProjects = getVisibleProjects(filteredAllProjects);
+        List<HDBProject> filteredProjects = allProjects;
+        if (this.getFilter() != null) {
+            filteredProjects = getFilter().applyFilter(filteredProjects, this.getFilter());
+        }
 
         switch (choice) {
             case 1:
@@ -71,11 +73,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
                 viewRegistrationStatus();
                 break;
 
-            case 3:
-                break;
-
-            case 4:
-
+            case 3, 4:
                 break;
 
             case 5:
@@ -100,6 +98,26 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
                 break;
         }
 
+    }
+
+    @Override
+    public int getChoice() {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                sc.nextLine();
+                if (choice < 1 || choice > 7) {
+                    System.out.println("Invalid Selection");
+                    continue;
+                }
+                return choice;
+            } catch (InputMismatchException e) {
+                sc.nextLine();
+                return -1;
+            }
+        }
     }
 
 
@@ -185,41 +203,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
             }
         }
 
-        int choice;
-        int respondChoice;
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            System.out.println("Select query to view: (enter non-digit to exit)");
-            for (int i=0; i < allQueries.size(); i++) {
-                System.out.println((i+1) + ") " + allQueries.get(i).getTitle());
-            }
-            try {
-                choice = sc.nextInt();
-                if (choice < 1 || choice > allQueries.size()) {
-                    sc.nextLine();
-                    System.out.println("Invalid Selection");
-                }
-            } catch (InputMismatchException e) {
-                sc.nextLine();
-                break;
-            }
-            Query selectedQuery = allQueries.get(choice-1);
-            System.out.println("Selected Query:");
-            selectedQuery.displayQuery();
-            System.out.println("Would you like to respond to this query?");
-            System.out.println("1) Yes");
-            System.out.println("2) No");
-            respondChoice = getChoice(1, 2);
-            if (respondChoice == 2) {
-                continue;
-            }
-            System.out.println("Enter reply");
-            selectedQuery.setReply(sc.nextLine());
-            System.out.println("Successfully replied to query!");
-            selectedQuery.displayQuery();
-            // whitespace
-            System.out.println();
-        }
+        respondQuery(allQueries);
     }
 
 
@@ -251,7 +235,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
             }
 
             // 2. Retrieve applicants BTO application with NRIC
-            // TODO: Not sure if this is needed/markable requirement
+            // TODO: Not sure if this is needed/mark-able requirement
 
             // 3. Update applicant's application status from successful to booked
             application.setStatus(ApplicationStatus.BOOKED);
