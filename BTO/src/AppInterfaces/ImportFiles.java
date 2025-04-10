@@ -2,6 +2,7 @@ package AppInterfaces;
 
 import Enums.ApplicationStatus;
 import Enums.RegistrationStatus;
+import Misc.OfficerRegistration;
 import Misc.Query;
 import Misc.WithdrawApplication;
 import Project.Flat;
@@ -213,6 +214,7 @@ public interface ImportFiles {
         }
     }
 
+
     /**
      * Reads all the Withdrawals in WithdrawalList.csv
      * @param allUsers AllUsers object containing all the users in the BTO system
@@ -236,17 +238,7 @@ public interface ImportFiles {
                         }
                     }
                     WithdrawApplication withdrawal = new WithdrawApplication(applicant, userApplication);
-                    switch (value[2]) {
-                        case "Pending":
-                            withdrawal.setStatus(RegistrationStatus.PENDING);
-                            break;
-                        case "Successful":
-                            withdrawal.setStatus(RegistrationStatus.SUCCESSFUL);
-                            break;
-                        case "Unsuccessful":
-                            withdrawal.setStatus(RegistrationStatus.UNSUCCESSFUL);
-                            break;
-                    }
+
                     project.addWithdrawal(withdrawal);
                 }
             }
@@ -279,6 +271,40 @@ public interface ImportFiles {
         }
     }
 
+    static void readRegistrations(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
+        List<String[]> fileData = readFile("OfficerRegistrationList.csv");
+        for (String[] value : fileData) {
+            HDBOfficer officer = null;
+            HDBProject registerProject = null;
+
+            for (User user : allUsers.getUsers()) {
+                if (user.getNric().equals(value[0])) {
+                    officer = (HDBOfficer) user;
+                }
+            }
+            for (HDBProject project : allProjects) {
+                if (project.getName().equals(value[1])) {
+                    registerProject = project;
+                    break;
+                }
+            }
+            OfficerRegistration registration = new OfficerRegistration(officer, registerProject);
+            switch (value[2]) {
+                case "Pending":
+                    registration.setStatus(RegistrationStatus.PENDING);
+                    break;
+                case "Successful":
+                    registration.setStatus(RegistrationStatus.SUCCESSFUL);
+                    break;
+                case "Unsuccessful":
+                    registration.setStatus(RegistrationStatus.UNSUCCESSFUL);
+                    break;
+            }
+            assert registerProject != null;
+            registerProject.addOfficerRegistration(registration);
+        }
+    }
+
     static void readAllFiles(AllUsers allUsers, List<HDBProject> allProjects) {
         try {
             ImportFiles.readUsers(allUsers,"ApplicantList.csv", Applicant::new);
@@ -289,6 +315,7 @@ public interface ImportFiles {
             ImportFiles.readQuery(allUsers, allProjects);
             ImportFiles.readWithdrawal(allUsers, allProjects);
             ImportFiles.readUnits(allUsers, allProjects);
+            ImportFiles.readRegistrations(allUsers, allProjects);
         } catch (Exception e) {
             System.out.println("An error has occurred while reading files, please ensure provided files are used");
         }

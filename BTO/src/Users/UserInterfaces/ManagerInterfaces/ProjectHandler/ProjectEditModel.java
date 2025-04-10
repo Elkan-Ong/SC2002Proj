@@ -26,15 +26,35 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         System.out.println("Which flat would you like to edit?");
         int choice = getChoice(1, project.getFlatType().size());
         Flat selectedFlat = project.getFlatType().get(choice-1);
-        System.out.println("Do you want to edit flat type or the number of units?");
+        System.out.println("Do you want to edit flat type or price or the number of units?");
         System.out.println("1) Flat Type");
+        System.out.println("2) Flat Price");
         System.out.println("2) Units");
-        choice = getChoice(1, 2);
+        choice = getChoice(1, 3);
         if (choice == 1) {
             editFlatType(project, selectedFlat);
         } else {
             editUnits(selectedFlat);
         }
+        switch (choice) {
+            case 1:
+                editFlatType(project, selectedFlat);
+                break;
+            case 2:
+                editFlatPrice(selectedFlat);
+                break;
+            case 3:
+                editUnits(selectedFlat);
+                break;
+        }
+        System.out.println();
+    }
+
+    default void editFlatPrice(Flat selectedFlat) {
+        System.out.println("Enter new price: ");
+        long newPrice = validatePrice();
+        selectedFlat.setPrice(newPrice);
+        System.out.println("Price successfully updated to $" + newPrice);
     }
 
     /**
@@ -48,7 +68,7 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         int minUnits = 1;
         List<Unit> units = flat.getUnits();
         for (int i=units.size()-1; i >= 0; i--) {
-            if (units.get(i).getBooked() == true) {
+            if (units.get(i).getBooked()) {
                 minUnits = i+1;
                 break;
             }

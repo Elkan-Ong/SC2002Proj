@@ -1,5 +1,6 @@
 package AppInterfaces;
 
+import Misc.OfficerRegistration;
 import Misc.Query;
 import Misc.WithdrawApplication;
 import Project.Flat;
@@ -19,6 +20,31 @@ import java.io.PrintWriter;
  * @since 2025-4-6
  */
 public interface WriteFiles {
+    static void writeRegistration(List<HDBProject> allProjects) {
+        String fileName = "RegistrationList.csv";
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            // Write header row
+            writer.println("applicant, project, status");
+
+            // Write data rows
+            for (HDBProject project : allProjects) {
+                for (OfficerRegistration registration : project.getOfficerApplications()) {
+                    String status = "";
+                    switch (registration.getApplicationStatus()) {
+                        case PENDING -> status = "Pending";
+                        case SUCCESSFUL -> status = "Successful";
+                        case UNSUCCESSFUL -> status = "Unsuccessful";
+                    }
+                    writer.println(registration.getApplicant().getNric() + "," + registration.getAppliedProject().getName() + "," + status);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to files");
+        }
+    }
+
+
     /**
      * writes Unit information into UnitList.csv
      * @param allProjects all projects created
@@ -242,6 +268,7 @@ public interface WriteFiles {
     }
 
     static void writeAllFiles(List<HDBProject> allProjects, AllUsers allUsers) {
+        writeRegistration(allProjects);
         writeUnit(allProjects);
         writeApplications(allProjects);
         writeQuery(allProjects);
