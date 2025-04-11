@@ -21,7 +21,7 @@ import java.io.PrintWriter;
  */
 public interface WriteFiles {
     static void writeRegistration(List<HDBProject> allProjects) {
-        String fileName = "RegistrationList.csv";
+        String fileName = "BTO/src/Files/RegistrationList.csv";
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
@@ -50,7 +50,7 @@ public interface WriteFiles {
      * @param allProjects all projects created
      */
     static void writeUnit(List<HDBProject> allProjects) {
-        String fileName = "UnitList.csv";
+        String fileName = "BTO/src/Files/UnitList.csv";
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
@@ -76,7 +76,7 @@ public interface WriteFiles {
      * @param allProjects all projects created
      */
     static void writeApplications(List<HDBProject> allProjects) {
-        String fileName = "ApplicationList.csv";
+        String fileName = "BTO/src/Files/ApplicationList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
             writer.println("applicant,project,type,status");
@@ -104,7 +104,7 @@ public interface WriteFiles {
      * @param allProjects all projects created
      */
     static void writeQuery(List<HDBProject> allProjects) {
-        String fileName = "QueryList.csv";
+        String fileName = "BTO/src/Files/QueryList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
             writer.println("title,query,reply,applicant,project,timestamp");
@@ -126,7 +126,7 @@ public interface WriteFiles {
      * @param allProjects all projects created
      */
     static void writeWithdrawal(List<HDBProject> allProjects) {
-        String fileName = "WithdrawalList.csv";
+        String fileName = "BTO/src/Files/WithdrawalList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
             writer.println("applicant,project,status");
@@ -166,7 +166,7 @@ public interface WriteFiles {
      * @param allProjects all projects created
      */
     static void writeProject(List<HDBProject> allProjects) {
-        String fileName = "ProjectList.csv";
+        String fileName = "BTO/src/Files/ProjectList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
             writer.println("Project Name,Neighbourhood,Type 1,Number of units for Type 1,Selling price for Type 1,Type 2,Number of units for Type 2,Selling price for Type 2,Application opening date,Application closing date,Manager,Officer Slot,Officer");
@@ -197,7 +197,6 @@ public interface WriteFiles {
                         + project.getManager().getNric() + ","
                         + project.getAvailableOfficerSlots() + ","
                         + officers);
-                System.out.println(project.getClosingDate());
             }
         } catch (IOException e) {
             System.out.println("Error writing to files");
@@ -209,7 +208,7 @@ public interface WriteFiles {
      * @param allUsers list of all users
      */
     static void writeManager(AllUsers allUsers) {
-        String fileName = "ManagerList.csv";
+        String fileName = "BTO/src/Files/ManagerList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
             writer.println("Name,NRIC,Age,Marital Status,Password");
@@ -230,7 +229,7 @@ public interface WriteFiles {
      * @param allUsers list of all users
      */
     static void writeApplicant(AllUsers allUsers) {
-        String fileName = "ApplicantList.csv";
+        String fileName = "BTO/src/Files/ApplicantList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
             writer.println("Name,NRIC,Age,Marital Status,Password");
@@ -251,7 +250,7 @@ public interface WriteFiles {
      * @param allUsers list of all users
      */
     static void writeOfficer(AllUsers allUsers) {
-        String fileName = "OfficerList.csv";
+        String fileName = "BTO/src/Files/OfficerList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
             writer.println("Name,NRIC,Age,Marital Status,Password");
