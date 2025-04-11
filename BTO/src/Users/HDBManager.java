@@ -204,6 +204,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
             try {
                 choice = sc.nextInt();
                 sc.nextLine();
+                // choice to be edited if menu is expanded/shrunk
                 if (choice < 1 || choice > 11) {
                     System.out.println("Invalid Selection");
                     continue;

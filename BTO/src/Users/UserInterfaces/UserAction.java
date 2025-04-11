@@ -22,6 +22,6 @@ public interface UserAction {
      */
     void handleChoice(List<HDBProject> allProjects,
                       int choice) throws ParseException;
-
     int getChoice();
+    void displayProjects(List<HDBProject> filteredProjects);
 }

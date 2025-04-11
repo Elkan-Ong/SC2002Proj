@@ -1,6 +1,5 @@
 package Users;
 
-import AccountHandler.Password.PasswordManager;
 import Enums.ApplicationStatus;
 import Misc.Filter.UserFilter;
 import Misc.Query;
@@ -14,7 +13,6 @@ import Misc.Filter.CreateFilter;
 import Users.UserInterfaces.QueryInterface;
 import Validation.BasicValidation;
 
-import javax.print.DocFlavor;
 import java.util.*;
 
 /**
@@ -68,7 +66,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     @Override
-    void displayProjects(List<HDBProject> filteredProjects) {
+    public void displayProjects(List<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
         System.out.println("List of projects:");
         for (int i=0; i < filteredProjects.size(); i++) {

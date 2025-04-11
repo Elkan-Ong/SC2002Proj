@@ -6,12 +6,14 @@ import Misc.OfficerRegistration;
 import Misc.Query;
 import Project.HDBProject;
 import Project.ProjectApplication;
+import Users.UserInterfaces.OfficerInterfaces.FlatBookingHandler;
+import Users.UserInterfaces.OfficerInterfaces.OfficerAsApplicant;
 import Users.UserInterfaces.QueryInterface;
 import Users.UserInterfaces.StaffInterfaces.HDBStaff;
 
 import java.util.*;
 
-public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
+public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, FlatBookingHandler, OfficerAsApplicant {
 
     private OfficerRegistration officerRegistration = null;
     private HDBProject assignedProject = null;
@@ -34,69 +36,65 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
 
     @Override
     public void displayMenu() {
-        System.out.println("What would you like to do?");
-        System.out.println("1) Applicant Tasks");
-        System.out.println("2) HDB Officer Tasks");
+        super.displayMenu();
+        System.out.println("12) Register for Project");
+        System.out.println("13) View Registration Status");
+        System.out.println("14) View/Reply Enquiries");
+        System.out.println("15) View Project Details");
+        System.out.println("16) Flat Bookings");
 
-        int choice = getChoice(1, 2);
-
-        if (choice == 1) {
-            super.displayMenu();
-
-        } else {
-            System.out.println("1) Register for Project");
-            System.out.println("2) View Registration Status");
-            System.out.println("3) View/Reply Enquiries");
-            System.out.println("4) View Project Details");
-            System.out.println("5) Flat Bookings");
-        }
     }
 
 
     @Override
     public void handleChoice(List<HDBProject> allProjects,
                              int choice) {
-        // TODO apply user filter
         List<HDBProject> filteredProjects = allProjects;
         if (this.getFilter() != null) {
             filteredProjects = getFilter().applyFilter(filteredProjects, this.getFilter());
         }
 
+        if (choice == 2) {
+            applyForProjectOfficer(filteredProjects);
+            return;
+        }
+        if (choice < 12) {
+            super.handleChoice(filteredProjects, choice);
+            return;
+        }
+
         switch (choice) {
-            case 1:
+            case 12:
                 applyForProjectAsHDBOfficer(filteredProjects);
                 break;
-
-            case 2:
-                viewRegistrationStatus();
+            case 13:
+                if (officerRegistration == null) {
+                    System.out.println("No application available");
+                } else {
+                    officerRegistration.displayApplication();
+                }
                 break;
-
-            case 3:
+            case 14:
                 if (assignedProject == null) {
                     System.out.println("You do not have an assigned project yet!");
                     break;
                 }
                 viewEnquiries();
                 break;
-
-            case 4:
+            case 15:
                 if (assignedProject == null) {
                     System.out.println("You do not have an assigned project yet!");
                     break;
                 }
                 assignedProject.displayProjectStaff();
                 break;
-
-            case 5:
+            case 16:
                 flatBooking();
                 break;
-
             default:
-                // can change to throw exception
                 System.out.println("Invalid choice");
                 break;
         }
-
     }
 
     @Override
@@ -174,17 +172,6 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
 
 
         System.out.println("Application Successfully Created!");
-
-
-    }
-
-
-    private void viewRegistrationStatus() {
-        if (officerRegistration == null) {
-            System.out.println("No application available");
-        } else {
-            System.out.println(officerRegistration.getApplicationStatus());
-        }
     }
 
 
@@ -205,7 +192,8 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
         respondQuery(allQueries);
     }
 
-    private void flatBooking() {
+    @Override
+    public void flatBooking() {
         List<ProjectApplication> applications = assignedProject.getAllApplicationsPendingBooking();
 
         // Check if any applications which are successful but have not booked a flat yet
@@ -243,11 +231,19 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface {
             System.out.println("Flat type booked: " + application.getSelectedType() + "\n");
             System.out.println("Project Details:");
             assignedProject.displayProjectApplicant();
-
-
-
         }
     }
 
-
+    @Override
+    public void applyForProjectOfficer(List<HDBProject> filteredProjects) {
+        // copy the list of filtered projects to prevent modification later
+        List<HDBProject> applicableProjects = new ArrayList<>(filteredProjects);
+        // If the officer has an assigned project we need to remove it from the list of projects they can apply for
+        if (assignedProject != null) {
+            applicableProjects.remove(assignedProject);
+        }
+        // We need to apply same rules for applying, must be visible and open for application then we can apply as per normal
+        applicableProjects = getVisibleProjects(applicableProjects);
+        super.applyForProject(applicableProjects);
+    }
 }

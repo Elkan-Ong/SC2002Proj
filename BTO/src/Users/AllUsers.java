@@ -13,7 +13,7 @@ public class AllUsers {
     /**
      * List to store all the different users
      */
-    private List<User> users = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
 
     /**
      * Adds user to users list

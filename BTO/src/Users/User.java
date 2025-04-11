@@ -97,6 +97,6 @@ public abstract class User implements UserAction {
         this.password = password;
     }
 
-    abstract void displayProjects(List<HDBProject> filteredProjects);
+
 
 }
