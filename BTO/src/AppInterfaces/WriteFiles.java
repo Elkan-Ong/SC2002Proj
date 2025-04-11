@@ -197,7 +197,7 @@ public interface WriteFiles {
                         + project.getManager().getNric() + ","
                         + project.getAvailableOfficerSlots() + ","
                         + officers);
-
+                System.out.println(project.getClosingDate());
             }
         } catch (IOException e) {
             System.out.println("Error writing to files");

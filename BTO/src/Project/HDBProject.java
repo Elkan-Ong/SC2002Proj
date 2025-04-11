@@ -100,7 +100,7 @@ public class HDBProject implements HDBProjectDisplay {
             /**
              * Date formatter for format dates to dd/MM/yyyy format
              */
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
             this.openingDate = format.parse(values[8]);
             this.closingDate = format.parse(values[9]);
         } catch (ParseException pe) {

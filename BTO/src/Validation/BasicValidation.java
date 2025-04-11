@@ -6,9 +6,24 @@ import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Provides basic validation methods for commonly used inputs
+ */
 public interface BasicValidation {
-    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
+    /**
+     * Date format for reading in dates
+     */
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+    /**
+     * Scanner object to read inputs
+     */
     Scanner sc = new Scanner(System.in);
+
+    /**
+     * Get some integer input, checks for valid integer
+     * @return integer user input
+     */
     default int getInt() {
         int result;
         while (true) {
@@ -23,6 +38,10 @@ public interface BasicValidation {
         return result;
     }
 
+    /**
+     * Gets some long input, checks for valid long
+     * @return long user input
+     */
     default long getLong() {
         long result;
         while (true) {
@@ -37,6 +56,12 @@ public interface BasicValidation {
         return result;
     }
 
+    /**
+     * Gets choice for some menu selection
+     * @param min the minimum choice that can be made
+     * @param max the maximum choice that can be made
+     * @return choice of the user
+     */
     default int getChoice(int min, int max) {
         int choice;
         while (true) {
@@ -56,6 +81,10 @@ public interface BasicValidation {
         return choice;
     }
 
+    /**
+     * Gets a valid date input (dd/mm/yyyy) and converts to a Date object
+     * @return date input
+     */
     default Date validateDate() {
         String date;
         Date dateObj;
@@ -63,7 +92,7 @@ public interface BasicValidation {
             // Handle the ParseException
             // Other functions that call this function directly/indirectly will still need to indicate a throw
             try {
-                System.out.println("Enter date (dd/mm/yy):");
+                System.out.println("Enter date (dd/mm/yyyy):");
                 date = sc.nextLine();
                 dateObj = format.parse(date);
                 break;
@@ -74,6 +103,10 @@ public interface BasicValidation {
         return dateObj;
     }
 
+    /**
+     * Gets a valid price (long more than 0)
+     * @return user input of price
+     */
     default long validatePrice() {
         long price;
         while (true) {

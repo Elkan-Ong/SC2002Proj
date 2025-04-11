@@ -1,36 +1,31 @@
 package Users;
 
 import Misc.Filter.UserFilter;
-import Project.HDBProject;
 import Users.UserInterfaces.UserAction;
-
-import java.util.List;
 
 /**
  *
  * Represents the basic details of a user in the BTO system
  * Each user can have a filter to filter projects that they would be interested in
- * @author Elkan Ong Han'en
- * @since 2025-04-05
  *
  * */
 public abstract class User implements UserAction {
     /**
      * Name of the user (unique)
      * */
-    private String name;
+    private final String name;
     /**
      * NRIC of user (unique)
      * */
-    private String nric;
+    private final String nric;
     /**
      * Age of the user
      * */
-    private int age;
+    private final int age;
     /**
      * Marital Status of the user: Single/Married
      * */
-    private String maritalStatus;
+    private final String maritalStatus;
     /**
      * Password to log in to the user's account (by default set to "password"
      * */
@@ -54,9 +49,6 @@ public abstract class User implements UserAction {
         this.age = age;
         this.maritalStatus = maritalStatus;
         this.password = password;
-        // create default Misc.Filter.UserFilter object when created
-        // can create a method to ask user if they want to have a custom filter
-        // method should also be callable later on
     }
 
     /**
@@ -89,14 +81,35 @@ public abstract class User implements UserAction {
      * */
     public int getAge() { return age; }
 
+    /**
+     * Gets password of user
+     * @return User's password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Sets password of user
+     * @param password new password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * Gets the filter of the User
+     * @return filter of the User
+     */
+    public UserFilter getUserFilter() {
+        return userFilter;
+    }
 
-
+    /**
+     * Sets the filter of the User
+     * @param userFilter new filter
+     */
+    public void setUserFilter(UserFilter userFilter) {
+        this.userFilter = userFilter;
+    }
 }

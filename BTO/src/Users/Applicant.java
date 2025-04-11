@@ -61,10 +61,6 @@ public class Applicant extends User implements Application, QueryInterface, Crea
 
     public Unit getBookedUnit() { return bookedUnit; }
 
-    public UserFilter getFilter() {
-        return filter;
-    }
-
     @Override
     public void displayProjects(List<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
@@ -370,7 +366,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 deleteQuery();
                 break; //done
             case 10:
-                this.filter = createFilter(allProjects);
+                setUserFilter(createFilter(allProjects));
                 break;
             case 11:
                 if (application == null || application.getApplicationStatus() != ApplicationStatus.SUCCESSFUL) {

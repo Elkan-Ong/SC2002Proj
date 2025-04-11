@@ -76,7 +76,7 @@ public class Query implements QueryDisplay {
         this.project = project;
         this.title = title;
         this.query = query;
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
         this.timestamp = format.parse(timestamp);
     }
 

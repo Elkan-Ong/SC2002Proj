@@ -2,6 +2,7 @@ package Users;
 
 import Enums.RegistrationStatus;
 import Misc.*;
+import Misc.Filter.CreateFilter;
 import Project.HDBProject;
 import Users.UserInterfaces.ManagerInterfaces.ApplicantReport.ApplicantReport;
 import Users.UserInterfaces.ManagerInterfaces.OfficerRegistrationHandler;
@@ -15,10 +16,8 @@ import java.util.*;
 /**
  * Represents a Manager for HDB
  * A Manager can manage only 1 project at a time but has a collection of all their past projects
- * @author Elkan Ong Han'en
- * @since 2025-04-05
  */
-public class HDBManager extends User implements HDBStaff, ManagerProject, ApplicantReport, ManageProjectApplication, ManageWithdrawal, OfficerRegistrationHandler {
+public class HDBManager extends User implements HDBStaff, ManagerProject, ApplicantReport, ManageProjectApplication, ManageWithdrawal, OfficerRegistrationHandler, CreateFilter {
     /**
      * The current project the Manager is managing
      */
@@ -42,6 +41,10 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         super(name, nric, age, maritalStatus, password);
     }
 
+    /**
+     * Displays all the filtered projects of the Manager
+     * @param filteredProjects projects that have been filtered
+     */
     @Override
     public void displayProjects(List<HDBProject> filteredProjects) {
         HDBStaff.super.displayProjects(filteredProjects);
@@ -69,7 +72,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         if (project == null) {
             System.out.println("You are not currently managing a project!");
         } else {
-            project.displayProjectApplicant();
+            project.displayProjectStaff();
         }
     }
 
@@ -110,6 +113,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         System.out.println("9) View report of applicants for current project");
         System.out.println("10) View enquiries");
         System.out.println("11) Toggle visibility of Current BTO Project");
+        System.out.println("12) Create Filter For Projects");
     }
 
     /**
@@ -191,6 +195,8 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 }
                 project.toggleVisibility();
                 break;
+            case 12:
+                setUserFilter(createFilter(allProjects));
             default:
                 System.out.println("Invalid choice");
                 break;

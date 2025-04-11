@@ -13,15 +13,38 @@ import Users.UserInterfaces.StaffInterfaces.HDBStaff;
 
 import java.util.*;
 
+/**
+ * Officer for HDB
+ * Is an Applicant with the ability to assist with HDB Projects that they are interested in
+ * An Officer may only assist with one project at a time and may not be an applicant for that project
+ */
 public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, FlatBookingHandler, OfficerAsApplicant {
-
+    /**
+     * Registration of the Officer for some project they are interested in
+     */
     private OfficerRegistration officerRegistration = null;
+
+    /**
+     * The project they have been assigned to
+     */
     private HDBProject assignedProject = null;
 
+    /**
+     * Creates a new Officer with standard User parameters
+     * @param name This is the User's name.
+     * @param nric This is the User's NRIC.
+     * @param age This is the User's age
+     * @param maritalStatus This is the User's marital status.
+     * @param password This is the User's password
+     * */
     public HDBOfficer(String name, String nric, int age, String maritalStatus, String password) {
         super(name, nric, age, maritalStatus, password);
     }
 
+    /**
+     * Sets the assigned project of the officer to some project
+     * @param project project to be assigned
+     */
     public void setAssignedProject(HDBProject project) {
         this.assignedProject = project;
     }
@@ -50,8 +73,8 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
     public void handleChoice(List<HDBProject> allProjects,
                              int choice) {
         List<HDBProject> filteredProjects = allProjects;
-        if (this.getFilter() != null) {
-            filteredProjects = getFilter().applyFilter(filteredProjects, this.getFilter());
+        if (getUserFilter() != null) {
+            filteredProjects = getUserFilter().applyFilter(filteredProjects, getUserFilter());
         }
 
         if (choice == 2) {

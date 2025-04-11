@@ -13,21 +13,39 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Main class for executing the program
+ */
 public class BTOApp implements ImportFiles, WriteFiles, BasicValidation {
+    /**
+     * "Master" list of all users in the BTO system
+     */
     private static final AllUsers allUsers = new AllUsers();
+    /**
+     * "Master" list of all projects in the BTO system
+     */
     private static final List<HDBProject> allProjects = new ArrayList<>();
+    /**
+     * Acts as the main "interface" to interact with the logging in/creation of users
+     */
     private static final Account accountManager = new Account();
 
+    /**
+     * Main function body
+     */
     public static void main(String[] args) throws ParseException {
         Scanner sc = new Scanner(System.in);
+        // Import all the files to set up our "database"
         try {
             ImportFiles.readAllFiles(allUsers, allProjects);
         } catch (Exception e) {
+            // There should only be error if the files are no as provided, in that case, re-download and try again
             return;
         }
         while (true) {
             System.out.println("Welcome to the BTO App!");
             System.out.println("Please login or create an account to continue (enter a non-digit to exit the app)");
+            // We start by getting the users to log in or to create an account
             AccountDisplay.displayAccountMenu();
             int choice = 0;
             boolean exitApp = false;
@@ -48,12 +66,14 @@ public class BTOApp implements ImportFiles, WriteFiles, BasicValidation {
             if (exitApp) {
                 break;
             }
+            // User create account
             if (choice == 2) {
                 accountManager.createUser(allUsers);
                 continue;
             }
             boolean exitLogin = false;
             User loggedInUser = null;
+            // User login
             while (true) {
                 System.out.println("Enter NRIC: (To cancel login: enter -1)");
                 String nric = sc.nextLine();
@@ -73,6 +93,7 @@ public class BTOApp implements ImportFiles, WriteFiles, BasicValidation {
             if (exitLogin) {
                 continue;
             }
+            // Displays the User's respective menu and the actions they want to do
             while (true) {
                 loggedInUser.displayMenu();
                 int userChoice = loggedInUser.getChoice();
@@ -81,9 +102,11 @@ public class BTOApp implements ImportFiles, WriteFiles, BasicValidation {
                 }
                 loggedInUser.handleChoice(allProjects, choice);
             }
+            // After user is done, we go back to logging in
             System.out.println("Logging out...");
             System.out.println();
         }
+        // If the user exits the app, we will write to the files and close the program
         System.out.println("Exiting BTO App...");
         WriteFiles.writeAllFiles(allProjects, allUsers);
     }
