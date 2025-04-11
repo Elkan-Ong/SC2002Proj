@@ -1,6 +1,7 @@
 package Misc;
 
 import Enums.RegistrationStatus;
+import Misc.MiscInterfaces.WithdrawalDisplay;
 import Project.ProjectApplication;
 import Users.Applicant;
 
@@ -9,16 +10,16 @@ import Users.Applicant;
  * @author Elkan Ong Han'en
  * @since 2025-4-6
  */
-public class WithdrawApplication {
+public class WithdrawApplication implements WithdrawalDisplay {
     /**
      * Applicant who submitted the Withdrawal
      */
-    private Applicant applicant;
+    private final Applicant applicant;
 
     /**
      * The Applicant's Application
      */
-    private ProjectApplication projectApplication;
+    private final ProjectApplication projectApplication;
 
     /**
      * Status of the Withdrawal

@@ -1,12 +1,14 @@
 package Misc;
 
 import Enums.RegistrationStatus;
+import Misc.MiscInterfaces.OfficerRegistrationDisplay;
 import Project.HDBProject;
 import Users.Applicant;
 import Users.HDBManager;
 import Users.HDBOfficer;
+import Users.UserInterfaces.ManagerInterfaces.OfficerRegistrationHandler;
 
-public class OfficerRegistration {
+public class OfficerRegistration implements OfficerRegistrationDisplay {
     private RegistrationStatus status;
     private final HDBOfficer applicant;
     private final HDBProject appliedProject;
@@ -31,6 +33,7 @@ public class OfficerRegistration {
         return appliedProject;
     }
 
+    @Override
     public void displayApplication() {
         System.out.println("Officer Application:");
         System.out.println("Project Name: " + appliedProject.getName());

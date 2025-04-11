@@ -3,6 +3,7 @@ package Project;
 import Misc.Query;
 import Misc.OfficerRegistration;
 import Misc.WithdrawApplication;
+import Project.ProjectInterfaces.HDBProjectDisplay;
 import Users.Applicant;
 import Users.HDBManager;
 import Users.HDBOfficer;
@@ -17,7 +18,7 @@ import java.text.SimpleDateFormat;
  * @author Elkan Ong Han'en
  * @since 2025-4-6
  */
-public class HDBProject {
+public class HDBProject implements HDBProjectDisplay {
     /**
      * The Manager who is managing the project
      */
@@ -278,6 +279,7 @@ public class HDBProject {
     /**
      * Displays information of the Project to be used by Applicants
      */
+    @Override
     public void displayProjectApplicant() {
         System.out.println("Project Information: ");
         System.out.println("Name: " + name);
@@ -295,6 +297,7 @@ public class HDBProject {
     /**
      * Displays information of the Project, to be used by HDB Staff
      */
+    @Override
     public void displayProjectStaff() {
         displayProjectApplicant();
         System.out.println("Visibility: " + (visible ? "Visible" : "Invisible"));

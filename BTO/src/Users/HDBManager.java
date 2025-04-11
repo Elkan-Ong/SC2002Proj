@@ -4,6 +4,7 @@ import Enums.RegistrationStatus;
 import Misc.*;
 import Project.HDBProject;
 import Users.UserInterfaces.ManagerInterfaces.ApplicantReport.ApplicantReport;
+import Users.UserInterfaces.ManagerInterfaces.OfficerRegistrationHandler;
 import Users.UserInterfaces.ManagerInterfaces.ProjectApplication.ManageProjectApplication;
 import Users.UserInterfaces.ManagerInterfaces.Withdrawal.ManageWithdrawal;
 import Users.UserInterfaces.StaffInterfaces.HDBStaff;
@@ -17,7 +18,7 @@ import java.util.*;
  * @author Elkan Ong Han'en
  * @since 2025-04-05
  */
-public class HDBManager extends User implements HDBStaff, ManagerProject, ApplicantReport, ManageProjectApplication, ManageWithdrawal {
+public class HDBManager extends User implements HDBStaff, ManagerProject, ApplicantReport, ManageProjectApplication, ManageWithdrawal, OfficerRegistrationHandler {
     /**
      * The current project the Manager is managing
      */
@@ -217,6 +218,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         }
     }
 
+    @Override
     public void viewOfficerRegistration(HDBProject project) {
         List<OfficerRegistration> applications = new ArrayList<>();
         for (OfficerRegistration registration : project.getOfficerApplications()) {
@@ -282,6 +284,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         }
     }
 
+    @Override
     public void approveRegistration(OfficerRegistration registration) {
         registration.setStatus(RegistrationStatus.SUCCESSFUL);
         project.assignOfficer(registration.getApplicant());
@@ -289,6 +292,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         System.out.println("Registration successfully Approved!");
     }
 
+    @Override
     public void rejectRegistration(OfficerRegistration registration) {
         registration.setStatus(RegistrationStatus.UNSUCCESSFUL);
         System.out.println("Registration successfully Rejected!");
@@ -309,9 +313,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 }
             }
         }
-
         respondQuery(allQueries);
-
     }
 }
 

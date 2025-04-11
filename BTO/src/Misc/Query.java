@@ -1,5 +1,6 @@
 package Misc;
 
+import Misc.MiscInterfaces.QueryDisplay;
 import Project.HDBProject;
 import Users.Applicant;
 
@@ -13,7 +14,7 @@ import java.util.Objects;
  * @author Elkan Ong Han'en
  * @since 2025-4-6
  */
-public class Query {
+public class Query implements QueryDisplay {
     /**
      * title of the Query
      */
@@ -132,6 +133,7 @@ public class Query {
     /**
      * Displays information about the Query
      */
+    @Override
     public void displayQuery() {
         System.out.println("Title: " + this.title);
         System.out.println("Query: " + this.query);

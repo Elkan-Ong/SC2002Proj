@@ -1,13 +1,14 @@
 package Project;
 
 import Enums.ApplicationStatus;
+import Project.ProjectInterfaces.ProjectApplicationDisplay;
 import Users.Applicant;
 
 /**
  * An Application that an Applicant creates to indicate their interest in a project
  * Each Applicant can have only one active Application at a time
  */
-public class ProjectApplication {
+public class ProjectApplication implements ProjectApplicationDisplay {
     /**
      * Indicates the current status of the Application
      * Possible states: Pending, Unsuccessful, Successful, Booked
@@ -75,6 +76,7 @@ public class ProjectApplication {
     /**
      * Displays information of the Application
      */
+    @Override
     public void displayApplication() {
         System.out.println("Project Application:");
         System.out.println("Project Name: " + appliedProject.getName());
@@ -88,6 +90,7 @@ public class ProjectApplication {
      * Gets the Applicant's name and the type of unit they want as a String
      * @return Applicant's name and unit they want
      */
+    @Override
     public String getApplicationInfo() {
         return applicant.getName() + " " + selectedType;
     }

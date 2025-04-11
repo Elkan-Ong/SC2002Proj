@@ -1,5 +1,7 @@
 package Project;
 
+import Project.ProjectInterfaces.FlatInterface.BookUnitHandler;
+import Project.ProjectInterfaces.FlatInterface.FlatDisplay;
 import Users.Applicant;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.List;
  * @author Elkan Ong Han'en
  * @since 2025-4-6
  */
-public class Flat implements AvailableFlatTypes {
+public class Flat implements AvailableFlatTypes, FlatDisplay, BookUnitHandler {
     /**
      * List of Units belonging to the Flat
      */
@@ -147,6 +149,7 @@ public class Flat implements AvailableFlatTypes {
     /**
      * Display information on the Flat
      */
+    @Override
     public void assignUnit(Applicant applicant) {
         // Get first available unit
         for (Unit unit : units) {
@@ -163,6 +166,7 @@ public class Flat implements AvailableFlatTypes {
         return noOfUnits - bookedUnits;
     }
 
+    @Override
     public void displayFlat() {
         System.out.println(type + " Flat information;");
         System.out.println("Total no. of units: " + units.size());
