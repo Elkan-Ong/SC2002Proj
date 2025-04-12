@@ -148,7 +148,7 @@ public interface ImportFiles {
      * @param allUsers AllUsers object containing all the users in the BTO system
      * @param allProjects List of all projects in the BTO system
      */
-    static void readApplications(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
+    static void readApplications(AllUsers allUsers, List<HDBProject> allProjects) throws IOException, ParseException {
         List<String[]> fileData = readFile("ApplicationList.csv");
 
         for (String[] value : fileData) {
@@ -166,7 +166,7 @@ public interface ImportFiles {
                             selectedFlat = flat;
                         }
                     }
-                    ProjectApplication application = new ProjectApplication(applicant, project, selectedFlat);
+                    ProjectApplication application = new ProjectApplication(applicant, project, selectedFlat, value[4]);
                     switch (value[3]) {
                         case "Pending":
                             application.setStatus(ApplicationStatus.PENDING);
@@ -182,6 +182,16 @@ public interface ImportFiles {
                             break;
                     }
                     project.addApplication(application);
+                    assert applicant != null;
+                    // We need to decide which application the applicant will be assigned
+                    // if they don't have any application yet, just assign the first one seen
+                    // otherwise we assign the one that was created at a later date
+                    if (applicant.getApplication() == null) {
+                        applicant.setApplication(application);
+                    }  else if (application.getCreationDate().after(applicant.getApplication().getCreationDate())) {
+                        applicant.setApplication(application);
+                    }
+
                 }
             }
         }

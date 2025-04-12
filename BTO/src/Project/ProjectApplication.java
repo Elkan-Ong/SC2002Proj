@@ -4,6 +4,10 @@ import Enums.ApplicationStatus;
 import Project.ProjectInterfaces.ProjectApplicationDisplay;
 import Users.Applicant;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * An Application that an Applicant creates to indicate their interest in a project
  * Each Applicant can have only one active Application at a time
@@ -17,19 +21,24 @@ public class ProjectApplication implements ProjectApplicationDisplay {
     /**
      * The Applicant who submitted the application
      */
-    private Applicant applicant;
+    private final Applicant applicant;
     /**
      * The Project that the Applicant applied for
      */
-    private HDBProject appliedProject;
+    private final HDBProject appliedProject;
 
     /**
      * The type of flat that the Applicant wants e.g. 2-Room, 3-Room
      */
-    private Flat selectedType;
+    private final Flat selectedType;
 
     /**
-     * Creates an Application with the Applicant, Project, and select type of flat
+     * Date application was created
+     */
+    private final Date creationDate;
+
+    /**
+     * Creates an Application with the Applicant, Project, and selected type of flat
      * @param applicant Applicant that submits the application
      * @param project Project the Applicant would like to apply for
      * @param selectedType Type of flat the user wants
@@ -38,7 +47,31 @@ public class ProjectApplication implements ProjectApplicationDisplay {
         this.applicant = applicant;
         this.appliedProject = project;
         this.selectedType = selectedType;
+        this.creationDate = new Date();
         this.status = ApplicationStatus.PENDING;
+    }
+
+    /**
+     * Creates an Application with the Applicant, Project, selected type of flat, and date
+     * @param applicant Applicant that submits the application
+     * @param project Project the Applicant would like to apply for
+     * @param selectedType Type of flat the user wants
+     * @param date Date the Application was created
+     */
+    public ProjectApplication(Applicant applicant, HDBProject project, Flat selectedType, String date) throws ParseException {
+        this.applicant = applicant;
+        this.appliedProject = project;
+        this.selectedType = selectedType;
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
+        this.creationDate = format.parse(date);
+    }
+
+    /**
+     * Gets the date the application was created
+     * @return Date the application was created
+     */
+    public Date getCreationDate() {
+        return creationDate;
     }
 
     /**

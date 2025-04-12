@@ -95,9 +95,6 @@ public class HDBProject implements HDBProjectDisplay {
         this.flatType.add(new Flat(values[2], Integer.parseInt(values[4]), Integer.parseInt(values[3])));
         this.flatType.add(new Flat(values[5], Integer.parseInt(values[7]), Integer.parseInt(values[6])));
         try {
-            /**
-             * Date formatter for format dates to dd/MM/yyyy format
-             */
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
             this.openingDate = format.parse(values[8]);
             this.closingDate = format.parse(values[9]);

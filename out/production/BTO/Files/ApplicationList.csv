@@ -1,4 +1,5 @@
-applicant,project,type,status
-S1234567A,Test Project 10,2-Room,Pending
-T7654321B,Test Project 10,3-Room,Successful
-S9876543C,Test Project 10,2-Room,Unsuccessful
+applicant,project,type,status,created
+S1234567A,Test Project 10,2-Room,Unsuccessful,19/3/25
+S1234567A,Test Project 9,2-Room,Pending,5/4/25
+T7654321B,Test Project 10,3-Room,Successful,18/3/25
+S9876543C,Test Project 8,2-Room,Unsuccessful,17/3/25

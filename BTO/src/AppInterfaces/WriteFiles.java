@@ -83,7 +83,7 @@ public interface WriteFiles {
         String fileName = "BTO/src/Files/ApplicationList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
-            writer.println("applicant,project,type,status");
+            writer.println("applicant,project,type,status,created");
 
             // Write data rows
             for (HDBProject project : allProjects) {
@@ -95,7 +95,8 @@ public interface WriteFiles {
                         case SUCCESSFUL -> status="Successful";
                         case UNSUCCESSFUL -> status="Unsuccessful";
                     }
-                    writer.println(application.getApplicant().getNric() + "," + project.getName() + "," + application.getSelectedType().getType() + "," + status);
+                    String formattedCreationDate = formatter.format(application.getCreationDate());
+                    writer.println(application.getApplicant().getNric() + "," + project.getName() + "," + application.getSelectedType().getType() + "," + status + "," + formattedCreationDate);
                 }
             }
         } catch (IOException e) {

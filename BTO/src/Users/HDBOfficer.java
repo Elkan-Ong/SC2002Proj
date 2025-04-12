@@ -59,7 +59,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         System.out.println("12) Register for Project");
         System.out.println("13) View Registration Status");
         System.out.println("14) View/Reply Enquiries");
-        System.out.println("15) View Project Details");
+        System.out.println("15) View Assigned Project Details");
         System.out.println("16) Flat Bookings");
 
     }
@@ -88,31 +88,31 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         }
 
         switch (choice) {
-            case 13:
+            case 12:
                 applyForProjectAsHDBOfficer(filteredProjects);
                 break;
-            case 14:
+            case 13:
                 if (officerRegistration == null) {
                     System.out.println("No application available");
                 } else {
                     officerRegistration.displayApplication();
                 }
                 break;
-            case 15:
+            case 14:
                 if (assignedProject == null) {
                     System.out.println("You do not have an assigned project yet!");
                     break;
                 }
                 viewEnquiries();
                 break;
-            case 16:
+            case 15:
                 if (assignedProject == null) {
                     System.out.println("You do not have an assigned project yet!");
                     break;
                 }
                 assignedProject.displayProjectStaff();
                 break;
-            case 17:
+            case 16:
                 flatBooking();
                 break;
             default:
@@ -135,7 +135,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
             try {
                 choice = sc.nextInt();
                 sc.nextLine();
-                if (choice < 1 || choice > 18) {
+                if (choice < 1 || choice > 16) {
                     System.out.println("Invalid Selection");
                     continue;
                 }
@@ -145,15 +145,6 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
                 return -1;
             }
         }
-    }
-
-    /**
-     * Displays all projects in the list of filtered projects
-     * @param filteredProjects list of projects the user can view
-     */
-    @Override
-    public void displayProjects(List<HDBProject> filteredProjects) {
-        HDBStaff.super.displayProjects(filteredProjects);
     }
 
     /**

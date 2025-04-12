@@ -57,6 +57,14 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     /**
+     * Assigns application to Applicant
+     * @param application application to be assigned
+     */
+    public void setApplication(ProjectApplication application) {
+        this.application = application;
+    }
+
+    /**
      * Gets the Unit booked by the Applicant
      * @return Unit booked by the Applicant
      */
@@ -138,7 +146,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
             System.out.println("Please apply for a different project");
             return;
         }
-        application = new ProjectApplication(this, selectedProject, selectedType);
+        setApplication(new ProjectApplication(this, selectedProject, selectedType));
         application.displayApplication();
         selectedProject.addApplication(application);
         System.out.println("Application Successfully Created!");
