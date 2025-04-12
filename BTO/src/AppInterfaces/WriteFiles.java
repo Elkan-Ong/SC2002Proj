@@ -9,6 +9,7 @@ import Project.ProjectApplication;
 import Project.Unit;
 import Users.*;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.io.PrintWriter;
  * Defines methods to write to important objects to preserve to respective csv files
  */
 public interface WriteFiles {
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     /**
      * writes OfficerRegistration information into RegistrationList.csv
      * @param allProjects all projects created
@@ -114,8 +116,9 @@ public interface WriteFiles {
             // Write data rows
             for (HDBProject project : allProjects) {
                 for (Query query : project.getQueries()) {
+                    String formattedQueryDate = formatter.format(query.getTimestamp());
                     String reply = query.getReply() == null ? "" : query.getReply();
-                    writer.println(query.getTitle() + "," + query.getQuery() + "," + reply + "," + query.getApplicant().getNric() + "," + project.getName() + "," + query.getTimestamp());
+                    writer.println(query.getTitle() + "," + query.getQuery() + "," + reply + "," + query.getApplicant().getNric() + "," + project.getName() + "," + formattedQueryDate);
                 }
             }
         } catch (IOException e) {
@@ -185,6 +188,8 @@ public interface WriteFiles {
                         officers = officers.concat("," + officer.getNric());
                     }
                 }
+                String formattedOpeningDate = formatter.format(project.getOpeningDate());
+                String formattedClosingDate = formatter.format(project.getClosingDate());
                 officers = escapeCsv(officers);
                 writer.println(project.getName() + ","
                         + project.getNeighbourhood() + ","
@@ -194,8 +199,8 @@ public interface WriteFiles {
                         + secondFlat.getType() + ","
                         + secondFlat.getNoOfUnits() + ","
                         + secondFlat.getPrice() + ","
-                        + project.getOpeningDate() + ","
-                        + project.getClosingDate() + ","
+                        + formattedOpeningDate + ","
+                        + formattedClosingDate + ","
                         + project.getManager().getNric() + ","
                         + project.getAvailableOfficerSlots() + ","
                         + officers);
@@ -218,7 +223,7 @@ public interface WriteFiles {
             // Write data rows
             for (User user : allUsers.getUsers()) {
                 if (user instanceof HDBManager) {
-                    writer.println(user.getNric() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
+                    writer.println(user.getName() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
                 }
             }
         } catch (IOException e) {
@@ -238,8 +243,8 @@ public interface WriteFiles {
 
             // Write data rows
             for (User user : allUsers.getUsers()) {
-                if (user instanceof Applicant) {
-                    writer.println(user.getNric() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
+                if (user instanceof Applicant && !(user instanceof HDBOfficer)) {
+                    writer.println(user.getName() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
                 }
             }
         } catch (IOException e) {
@@ -260,7 +265,7 @@ public interface WriteFiles {
             // Write data rows
             for (User user : allUsers.getUsers()) {
                 if (user instanceof HDBOfficer) {
-                    writer.println(user.getNric() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
+                    writer.println(user.getName() + "," + user.getNric() + "," + user.getAge() + "," + user.getMaritalStatus() + "," + user.getPassword());
                 }
             }
         } catch (IOException e) {

@@ -1,10 +1,12 @@
 package AccountHandler.Password;
 
+import AccountHandler.AccountDisplay;
+import AccountHandler.Validation.AccountValidator;
 import Users.User;
 
 import java.util.Scanner;
 
-public interface PasswordManager {
+public interface PasswordManager extends AccountValidator {
 
 
     default void changePassword(User user) {

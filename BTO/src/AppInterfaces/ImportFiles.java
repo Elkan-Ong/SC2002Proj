@@ -275,7 +275,7 @@ public interface ImportFiles {
      * @param allProjects List of all projects in the BTO system
      */
     static void readRegistrations(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
-        List<String[]> fileData = readFile("OfficerRegistrationList.csv");
+        List<String[]> fileData = readFile("RegistrationList.csv");
         for (String[] value : fileData) {
             HDBOfficer officer = null;
             HDBProject registerProject = null;
@@ -325,6 +325,7 @@ public interface ImportFiles {
             ImportFiles.readUnits(allUsers, allProjects);
             ImportFiles.readRegistrations(allUsers, allProjects);
         } catch (Exception e) {
+            System.out.println(e);
             System.out.println("An error has occurred while reading files, please ensure provided files are used");
         }
     }
