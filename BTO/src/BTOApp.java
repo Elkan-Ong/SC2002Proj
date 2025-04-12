@@ -109,6 +109,7 @@ public class BTOApp implements ImportFiles, WriteFiles, BasicValidation, Account
             }
             // Displays the User's respective menu and the actions they want to do
             while (true) {
+                System.out.println();
                 loggedInUser.displayMenu();
                 int userChoice = loggedInUser.getChoice();
                 if (userChoice == -1) {

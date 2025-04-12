@@ -172,6 +172,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
      */
     @Override
     public void bookFlat() {
+        if (bookedUnit != null) {
+            System.out.println("You already have a booked unit!");
+        }
         if (application.getApplicationStatus() == ApplicationStatus.PENDING) {
             System.out.println("Your application is still pending.");
         }

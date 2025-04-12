@@ -51,7 +51,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
 
     /**
      * Menu of options for HDB Officer
-     * Calls displayMenu() of Applicant as Officer also has all of Applicants capabilities
+     * Calls displayMenu() of Applicant as Officer also has all Applicants capabilities
      */
     @Override
     public void displayMenu() {
@@ -113,6 +113,10 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
                 assignedProject.displayProjectStaff();
                 break;
             case 16:
+                if (assignedProject == null) {
+                    System.out.println("You do not have an assigned project yet!");
+                    break;
+                }
                 flatBooking();
                 break;
             default:
@@ -228,6 +232,10 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
     @Override
     public void flatBooking() {
         List<ProjectApplication> applications = assignedProject.getAllApplicationsPendingBooking();
+        if (applications.isEmpty()) {
+            System.out.println("No Booking Requests have been made yet!");
+            return;
+        }
 
         // Check if any applications which are successful but have not booked a flat yet
         for (ProjectApplication application : applications) {
@@ -236,8 +244,8 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
             // 1. Update number of units in selected flat type
             // Check if sufficient units available for selected flat type
             if (application.getSelectedType().getNoOfUnitsAvailable() == 0) {
-                // TODO: Throw exception and handle program flow
-                System.out.println("Error! Insufficient units");
+                System.out.println("Insufficient units for applicants");
+                continue;
             } else {
                 // Update units available
                 application.getSelectedType().reserveUnit();
@@ -256,12 +264,12 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
 
             // Generate receipt
             System.out.println("Flat booked successfully!\n");
-            System.out.println("Here are the booking details\n:");
+            System.out.println("Here are the booking details:");
             System.out.println("Applicant Name: " + application.getApplicant().getName());
             System.out.println("NRIC: " + application.getApplicant().getNric());
             System.out.println("Age: " + application.getApplicant().getAge());
             System.out.println("Marital Status: " + application.getApplicant().getMaritalStatus());
-            System.out.println("Flat type booked: " + application.getSelectedType() + "\n");
+            System.out.println("Flat type booked: " + application.getSelectedType().getType() + "\n");
             System.out.println("Project Details:");
             assignedProject.displayProjectApplicant();
         }

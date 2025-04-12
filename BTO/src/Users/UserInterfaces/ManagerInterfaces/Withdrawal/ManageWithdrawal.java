@@ -85,6 +85,7 @@ public interface ManageWithdrawal extends BasicValidation {
         if (projectApplication.getApplicationStatus() == ApplicationStatus.BOOKED) {
             projectApplication.getApplicant().getBookedUnit().returnUnit();
             projectApplication.getApplicant().setBookedUnit(null);
+            projectApplication.getSelectedType().returnUnit();
         }
         projectApplication.setStatus(ApplicationStatus.UNSUCCESSFUL);
     }

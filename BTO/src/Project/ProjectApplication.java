@@ -116,6 +116,10 @@ public class ProjectApplication implements ProjectApplicationDisplay {
         System.out.println("Applicant: " + applicant.getName());
         System.out.println("Flat Type: " + selectedType.getType());
         System.out.println("Application Status: " + status);
+        if (status == ApplicationStatus.BOOKED) {
+            System.out.println("Unit: " + applicant.getBookedUnit().getUnitID());
+        }
+        System.out.println();
         appliedProject.displayProjectApplicant();
     }
 

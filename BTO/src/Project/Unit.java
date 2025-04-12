@@ -14,7 +14,7 @@ public class Unit {
     /**
      * Identifier of the unit
      */
-    private int unitID;
+    private final int unitID;
 
     /**
      * Indicates if the unit has been booked by some Applicant

@@ -260,7 +260,7 @@ public interface ImportFiles {
      * @param allProjects List of all projects in the BTO system
      */
     static void readUnits(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
-        List<String[]> fileData = readFile("WithdrawalList.csv");
+        List<String[]> fileData = readFile("UnitList.csv");
         for (String[] value : fileData) {
             Applicant applicant = null;
             for (User user : allUsers.getUsers()) {
@@ -273,6 +273,9 @@ public interface ImportFiles {
                     for (Flat flat : project.getFlatType()) {
                         if (flat.getType().equals(value[1])) {
                             flat.getUnits().get(Integer.parseInt(value[3])-1).setBookedBy(applicant);
+                            flat.reserveUnit();
+                            assert applicant != null;
+                            applicant.setBookedUnit(flat.getUnits().get(Integer.parseInt(value[3])-1));
                         }
                     }
                 }
