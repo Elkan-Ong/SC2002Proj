@@ -120,6 +120,8 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         if (getUserFilter() != null) {
             filteredProjects = getUserFilter().applyFilter(filteredProjects, getUserFilter());
         }
+        filteredProjects.sort(Comparator.comparing(HDBProject::getName));
+
         switch (choice) {
             case 1:
                 if (project == null) {

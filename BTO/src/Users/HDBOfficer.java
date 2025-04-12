@@ -76,6 +76,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         if (getUserFilter() != null) {
             filteredProjects = getUserFilter().applyFilter(filteredProjects, getUserFilter());
         }
+        filteredProjects.sort(Comparator.comparing(HDBProject::getName));
 
         if (choice == 2) {
             applyForProjectOfficer(filteredProjects);

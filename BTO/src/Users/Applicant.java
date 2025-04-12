@@ -28,10 +28,6 @@ public class Applicant extends User implements Application, QueryInterface, Crea
      */
     private Unit bookedUnit = null;
     /**
-     * User's filter to filter projects they would like to view
-     */
-    private UserFilter filter = null;
-    /**
      * A list of all the queries the Applicant has submitted
      */
     private final List<Query> userQueries = new ArrayList<>();
@@ -334,9 +330,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     public void handleChoice(List<HDBProject> allProjects,
                              int choice) {
         List<HDBProject> filteredProjects = getVisibleProjects(new ArrayList<>(allProjects));
-        if (this.filter != null) {
-            filteredProjects = filter.applyFilter(filteredProjects, this.filter);
+        if (getUserFilter() != null) {
+            filteredProjects = getUserFilter().applyFilter(filteredProjects, getUserFilter());
         }
+        filteredProjects.sort(Comparator.comparing(HDBProject::getName));
 
         switch (choice) {
             case 1:
