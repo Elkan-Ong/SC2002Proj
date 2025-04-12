@@ -108,6 +108,7 @@ public interface ImportFiles {
                 }
             }
             HDBProject temp = new HDBProject(value, projectManager, projectOfficers);
+            temp.setVisible(Boolean.parseBoolean(value[13]));
             assert projectManager != null;
             projectManager.addOldProject(temp);
             Date date = new Date();

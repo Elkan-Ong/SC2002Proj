@@ -114,9 +114,11 @@ public class Account implements AccountDisplay, BasicValidation, AccountValidato
      */
     public User loginAndGetUser(String nric, String password, AllUsers allUsers) {
         for (User user : allUsers.getUsers()) {
-            if (user.getNric().equals(nric) &&
-                    user.getPassword().equals(password)) {
+            if (user.getNric().equals(nric) && user.getPassword().equals(password)) {
                 return user;
+            }
+            if (user.getNric().equals(nric)) {
+                System.out.println("Incorrect Password!");
             }
         }
         return null;

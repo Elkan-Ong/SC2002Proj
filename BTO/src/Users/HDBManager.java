@@ -105,7 +105,6 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         System.out.println("10) View enquiries");
         System.out.println("11) Toggle visibility of Current BTO Project");
         System.out.println("12) Create Filter For Projects");
-        System.out.println("13) Change password");
     }
 
     /**
@@ -121,7 +120,6 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
             filteredProjects = getUserFilter().applyFilter(filteredProjects, getUserFilter());
         }
         filteredProjects.sort(Comparator.comparing(HDBProject::getName));
-
         switch (choice) {
             case 1:
                 if (project == null) {
@@ -195,8 +193,6 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 break;
             case 12:
                 setUserFilter(createFilter(allProjects));
-            case 13:
-                changePassword(this);
             default:
                 System.out.println("Invalid choice");
                 break;
@@ -217,7 +213,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 choice = sc.nextInt();
                 sc.nextLine();
                 // choice to be edited if menu is expanded/shrunk
-                if (choice < 1 || choice > 13) {
+                if (choice < 1 || choice > 12) {
                     System.out.println("Invalid Selection");
                     continue;
                 }

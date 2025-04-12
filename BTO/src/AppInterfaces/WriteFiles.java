@@ -174,7 +174,7 @@ public interface WriteFiles {
         String fileName = "BTO/src/Files/ProjectList.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             // Write header row
-            writer.println("Project Name,Neighbourhood,Type 1,Number of units for Type 1,Selling price for Type 1,Type 2,Number of units for Type 2,Selling price for Type 2,Application opening date,Application closing date,Manager,Officer Slot,Officer");
+            writer.println("Project Name,Neighbourhood,Type 1,Number of units for Type 1,Selling price for Type 1,Type 2,Number of units for Type 2,Selling price for Type 2,Application opening date,Application closing date,Manager,Officer Slot,Officer, Visibility");
 
             // Write data rows
             for (HDBProject project : allProjects) {
@@ -203,7 +203,8 @@ public interface WriteFiles {
                         + formattedClosingDate + ","
                         + project.getManager().getNric() + ","
                         + project.getAvailableOfficerSlots() + ","
-                        + officers);
+                        + officers + ","
+                        + project.getVisibility());
             }
         } catch (IOException e) {
             System.out.println("Error writing to files");

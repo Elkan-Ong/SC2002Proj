@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import AccountHandler.Account;
 import AccountHandler.AccountDisplay;
+import AccountHandler.Validation.AccountValidator;
 import AppInterfaces.ImportFiles;
 import AppInterfaces.WriteFiles;
 import Project.HDBProject;
@@ -16,7 +17,7 @@ import java.util.Scanner;
 /**
  * Main class for executing the program
  */
-public class BTOApp implements ImportFiles, WriteFiles, BasicValidation {
+public class BTOApp implements ImportFiles, WriteFiles, BasicValidation, AccountValidator {
     /**
      * "Master" list of all users in the BTO system
      */
@@ -53,7 +54,7 @@ public class BTOApp implements ImportFiles, WriteFiles, BasicValidation {
                 try {
                     choice = sc.nextInt();
                     sc.nextLine();
-                    if (choice < 1 || choice > 2) {
+                    if (choice < 1 || choice > 3) {
                         System.out.println("Invalid selection");
                         continue;
                     }
@@ -71,12 +72,25 @@ public class BTOApp implements ImportFiles, WriteFiles, BasicValidation {
                 accountManager.createUser(allUsers);
                 continue;
             }
+            if (choice == 3) {
+                accountManager.changePassword(allUsers);
+                continue;
+            }
             boolean exitLogin = false;
             User loggedInUser = null;
             // User login
             while (true) {
                 System.out.println("Enter NRIC: (To cancel login: enter -1)");
-                String nric = sc.nextLine();
+                String nric;
+                while (true) {
+                    nric = sc.nextLine();
+                    if (!accountManager.isValid(nric) && !nric.equals("-1")) {
+                        System.out.println("Invalid NRIC format");
+                        continue;
+                    }
+                    break;
+                }
+
                 if (nric.equals("-1")) {
                     exitLogin = true;
                     break;
@@ -100,7 +114,7 @@ public class BTOApp implements ImportFiles, WriteFiles, BasicValidation {
                 if (userChoice == -1) {
                     break;
                 }
-                loggedInUser.handleChoice(allProjects, choice);
+                loggedInUser.handleChoice(allProjects, userChoice);
             }
             // After user is done, we go back to logging in
             System.out.println("Logging out...");

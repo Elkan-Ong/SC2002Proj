@@ -301,7 +301,6 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         if (application != null && application.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
             System.out.println("11) Book Flat");
         }
-        System.out.println("12) Change Password");
     }
 
     /**
@@ -314,7 +313,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         Date today = new Date();
         for (HDBProject project : projects) {
             // Ensure project is visible, must be in opening window
-            if (project.getVisibility() && project.getOpeningDate().before(today) && project.getClosingDate().after(today)) {
+            if (project.getVisibility() &&
+                    project.getOpeningDate().before(today) &&
+                    project.getClosingDate().after(today) &&
+                    (getMaritalStatus().equals("Married") && getAge() >= 21 || getMaritalStatus().equals("Single") && getAge() >= 35)) {
                 result.add(project);
             }
         }
@@ -388,9 +390,6 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 }
                 bookFlat();
                 break;
-            case 12:
-                changePassword(this);
-                break;
             default:
                 System.out.println("Invalid choice");
                 break;
@@ -405,7 +404,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
             try {
                 choice = sc.nextInt();
                 sc.nextLine();
-                if (choice < 1 || choice > 12) {
+                if (choice < 1 || choice > 11) {
                     System.out.println("Invalid Selection");
                     continue;
                 }

@@ -106,7 +106,7 @@ public class HDBProject implements HDBProjectDisplay {
         }
         this.manager = projectManager;
         this.assignedOfficers = projectOfficers;
-        this.availableOfficerSlots = Integer.parseInt(values[11]) - this.assignedOfficers.size();
+        this.availableOfficerSlots = Integer.parseInt(values[11]);
     }
 
     /**
@@ -261,6 +261,14 @@ public class HDBProject implements HDBProjectDisplay {
      * @return Visibility of the Project
      */
     public boolean getVisibility() { return visible; }
+
+    /**
+     * Changes visibility of Project
+     * @param
+     */
+    public void setVisible(boolean visibility) {
+        this.visible = visibility;
+    }
 
     /**
      * Gets a List of all the Applications made for this Project

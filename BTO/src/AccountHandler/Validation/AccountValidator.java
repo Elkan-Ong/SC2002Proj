@@ -28,6 +28,7 @@ public interface AccountValidator {
         // Check suffix is an alphabet letter
         return Character.isLetter(suffix);
     }
+
     // Check if a Nric is unique across all users
     default boolean isNricUnique(String nric, AllUsers allUsers) {
         for (User user : allUsers.getUsers()) {

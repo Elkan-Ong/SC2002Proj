@@ -56,11 +56,11 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
     @Override
     public void displayMenu() {
         super.displayMenu();
-        System.out.println("13) Register for Project");
-        System.out.println("14) View Registration Status");
-        System.out.println("15) View/Reply Enquiries");
-        System.out.println("16) View Project Details");
-        System.out.println("17) Flat Bookings");
+        System.out.println("12) Register for Project");
+        System.out.println("13) View Registration Status");
+        System.out.println("14) View/Reply Enquiries");
+        System.out.println("15) View Project Details");
+        System.out.println("16) Flat Bookings");
 
     }
 
@@ -82,37 +82,37 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
             applyForProjectOfficer(filteredProjects);
             return;
         }
-        if (choice < 13) {
+        if (choice < 12) {
             super.handleChoice(filteredProjects, choice);
             return;
         }
 
         switch (choice) {
-            case 14:
+            case 13:
                 applyForProjectAsHDBOfficer(filteredProjects);
                 break;
-            case 15:
+            case 14:
                 if (officerRegistration == null) {
                     System.out.println("No application available");
                 } else {
                     officerRegistration.displayApplication();
                 }
                 break;
-            case 16:
+            case 15:
                 if (assignedProject == null) {
                     System.out.println("You do not have an assigned project yet!");
                     break;
                 }
                 viewEnquiries();
                 break;
-            case 17:
+            case 16:
                 if (assignedProject == null) {
                     System.out.println("You do not have an assigned project yet!");
                     break;
                 }
                 assignedProject.displayProjectStaff();
                 break;
-            case 18:
+            case 17:
                 flatBooking();
                 break;
             default:
