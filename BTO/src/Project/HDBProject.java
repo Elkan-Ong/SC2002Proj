@@ -15,8 +15,6 @@ import java.text.SimpleDateFormat;
 /**
  * A BTO Project that was created by a Manager
  * Each Project will have 2 flat types (as of now 2-Room and 3-Room only)
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public class HDBProject implements HDBProjectDisplay {
     /**
@@ -277,6 +275,57 @@ public class HDBProject implements HDBProjectDisplay {
     public List<WithdrawApplication> getWithdrawals() { return withdrawals; }
 
     /**
+     * Adds an Application to the List of all Applications for this Project
+     * @param application Application to be added
+     */
+    public void addApplication(ProjectApplication application) {
+        projectApplications.add(application);
+    }
+
+    /**
+     * Gets the list of OfficerRegistrations made to this Project
+     * @return list of OfficerRegistrations made to this Project
+     */
+    public List<OfficerRegistration> getOfficerApplications() { return officerApplications; }
+
+    /**
+     * Adds an OfficerRegistration to the list of registrations made to this project
+     * @param registration registration to be added to the list
+     */
+    public void addOfficerRegistration(OfficerRegistration registration) {
+        officerApplications.add(registration);
+    }
+
+    /**
+     * Adds a Withdrawal to the List of all Withdrawals for this Project
+     * @param withdrawal Withdrawal to be added
+     */
+    public void addWithdrawal(WithdrawApplication withdrawal) {
+        withdrawals.add(withdrawal);
+    }
+
+    /**
+     * Gets the list of applications that require
+     * @return
+     */
+    public List<ProjectApplication> getAllApplicationsPendingBooking() { return applicationsPendingBooking; }
+
+    /**
+     * Adds an Application that has been approved to the list of applications that want to get a booking
+     * Request is made by Applicant after their application has been approved
+     * @param application Application that wants to get a booking
+     */
+    public void addApplicationPendingBooking(ProjectApplication application) { applicationsPendingBooking.add(application); }
+
+    /**
+     * Toggles the visibility of the project from visible to invisible vice versa
+     */
+    public void toggleVisibility() {
+        this.visible = !this.visible;
+        System.out.println("Project is now " + (this.visible ? "visible" : "invisible"));
+    }
+
+    /**
      * Displays information of the Project to be used by Applicants
      */
     @Override
@@ -308,37 +357,6 @@ public class HDBProject implements HDBProjectDisplay {
         System.out.println();
     }
 
-    /**
-     * Adds an Application to the List of all Applications for this Project
-     * @param application Application to be added
-     */
-    public void addApplication(ProjectApplication application) {
-        projectApplications.add(application);
-    }
 
-    public List<OfficerRegistration> getOfficerApplications() { return officerApplications; }
-    public void addOfficerRegistration(OfficerRegistration registration) {
-        officerApplications.add(registration);
-    }
-
-    /**
-     * Adds a Withdrawal to the List of all Withdrawals for this Project
-     * @param withdrawal Withdrawal to be added
-     */
-    public void addWithdrawal(WithdrawApplication withdrawal) {
-        withdrawals.add(withdrawal);
-    }
-
-    public List<ProjectApplication> getAllApplicationsPendingBooking() { return applicationsPendingBooking; }
-
-    public void addApplicationPendingBooking(ProjectApplication application) { applicationsPendingBooking.add(application); }
-
-    /**
-     * Toggles the visibility of the project from visible to invisible vice versa
-     */
-    public void toggleVisibility() {
-        this.visible = !this.visible;
-        System.out.println("Project is now " + (this.visible ? "visible" : "invisible"));
-    }
 
 }

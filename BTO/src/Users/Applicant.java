@@ -17,9 +17,6 @@ import java.util.*;
 
 /**
  * Represent a User who is an applicant who would want to apply for a BTO project
- * @author Elkan Ong Han'en
- * @since 2025-04-05
- *
  * */
 public class Applicant extends User implements Application, QueryInterface, CreateFilter, BasicValidation {
     /**
@@ -55,12 +52,31 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         super(name, nric, age, maritalStatus, password);
     }
 
+    /**
+     * Gets the Application of the Applicant
+     * @return Application of the Applicant
+     */
     public ProjectApplication getApplication() {
         return application;
     }
 
+    /**
+     * Gets the Unit booked by the Applicant
+     * @return Unit booked by the Applicant
+     */
     public Unit getBookedUnit() { return bookedUnit; }
 
+    /**
+     * Assigns a Unit to the Applicant
+     * @param unit Unit booked by the Applicant
+     */
+    public void setBookedUnit(Unit unit) {this.bookedUnit = unit;}
+
+    /**
+     * Displays all projects that have been filtered by the Applicant and is visible to them
+     * A Project is visible if the Project visibility is turned on, and it is during the application period
+     * @param filteredProjects list of projects the user can view
+     */
     @Override
     public void displayProjects(List<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
@@ -289,6 +305,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         if (application != null && application.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
             System.out.println("11) Book Flat");
         }
+        System.out.println("12) Change Password");
     }
 
     /**
@@ -316,7 +333,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     @Override
     public void handleChoice(List<HDBProject> allProjects,
                              int choice) {
-        List<HDBProject> filteredProjects = getVisibleProjects(allProjects);
+        List<HDBProject> filteredProjects = getVisibleProjects(new ArrayList<>(allProjects));
         if (this.filter != null) {
             filteredProjects = filter.applyFilter(filteredProjects, this.filter);
         }
@@ -366,13 +383,16 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 deleteQuery();
                 break; //done
             case 10:
-                setUserFilter(createFilter(allProjects));
+                setUserFilter(createFilter(getVisibleProjects(allProjects)));
                 break;
             case 11:
                 if (application == null || application.getApplicationStatus() != ApplicationStatus.SUCCESSFUL) {
                     System.out.println("Invalid choice");
                 }
                 bookFlat();
+                break;
+            case 12:
+                changePassword(this);
                 break;
             default:
                 System.out.println("Invalid choice");
@@ -388,7 +408,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
             try {
                 choice = sc.nextInt();
                 sc.nextLine();
-                if (choice < 1 || choice > 11) {
+                if (choice < 1 || choice > 12) {
                     System.out.println("Invalid Selection");
                     continue;
                 }
@@ -399,8 +419,4 @@ public class Applicant extends User implements Application, QueryInterface, Crea
             }
         }
     }
-
-
-    public void setBookedUnit(Unit unit) {this.bookedUnit = unit;}
-
 }

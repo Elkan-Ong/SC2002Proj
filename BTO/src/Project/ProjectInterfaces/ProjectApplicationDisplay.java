@@ -1,5 +1,8 @@
 package Project.ProjectInterfaces;
 
+/**
+ * Methods to display information about a ProjectApplication
+ */
 public interface ProjectApplicationDisplay {
     /**
      * Displays information of the Application

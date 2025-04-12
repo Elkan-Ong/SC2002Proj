@@ -2,8 +2,6 @@ package Users.UserInterfaces.ManagerInterfaces.ProjectHandler;
 
 /**
  * Menu of actions the Manager can do to edit their active project
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public interface ProjectDisplay {
     /**

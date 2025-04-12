@@ -11,8 +11,6 @@ import java.util.Scanner;
 
 /**
  * Methods for Manager to handle Applications to their Project
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public interface ManageProjectApplication {
     /**

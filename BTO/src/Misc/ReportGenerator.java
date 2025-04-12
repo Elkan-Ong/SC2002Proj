@@ -10,8 +10,6 @@ import java.util.Map;
 /**
  * Generates a report for Manager based on filters to display project Applicant information
  * Report will contain Project name, the flat types filtered, marital status of applicants filtered, average age of applicants
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public class ReportGenerator {
     /**

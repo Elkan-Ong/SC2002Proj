@@ -49,30 +49,30 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         this.assignedProject = project;
     }
 
-    @Override
-    public void viewProjects(List<HDBProject> allProjects) {
-        // Display all projects
-        for (int i = 0; i < allProjects.size(); i++) {
-            System.out.println((i + 1) + ") " + allProjects.get(i).getName());
-        }
-    }
-
+    /**
+     * Menu of options for HDB Officer
+     * Calls displayMenu() of Applicant as Officer also has all of Applicants capabilities
+     */
     @Override
     public void displayMenu() {
         super.displayMenu();
-        System.out.println("12) Register for Project");
-        System.out.println("13) View Registration Status");
-        System.out.println("14) View/Reply Enquiries");
-        System.out.println("15) View Project Details");
-        System.out.println("16) Flat Bookings");
+        System.out.println("13) Register for Project");
+        System.out.println("14) View Registration Status");
+        System.out.println("15) View/Reply Enquiries");
+        System.out.println("16) View Project Details");
+        System.out.println("17) Flat Bookings");
 
     }
 
-
+    /**
+     * Calls the respective methods of the action display in displayMenu() based on some choice made by the user through getChoice()
+     * @param allProjects List of allProjects
+     * @param choice Selected Applicant action (Refer to displayMenu for choice mapping)
+     */
     @Override
     public void handleChoice(List<HDBProject> allProjects,
                              int choice) {
-        List<HDBProject> filteredProjects = allProjects;
+        List<HDBProject> filteredProjects = new ArrayList<>(allProjects);
         if (getUserFilter() != null) {
             filteredProjects = getUserFilter().applyFilter(filteredProjects, getUserFilter());
         }
@@ -81,37 +81,37 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
             applyForProjectOfficer(filteredProjects);
             return;
         }
-        if (choice < 12) {
+        if (choice < 13) {
             super.handleChoice(filteredProjects, choice);
             return;
         }
 
         switch (choice) {
-            case 12:
+            case 14:
                 applyForProjectAsHDBOfficer(filteredProjects);
                 break;
-            case 13:
+            case 15:
                 if (officerRegistration == null) {
                     System.out.println("No application available");
                 } else {
                     officerRegistration.displayApplication();
                 }
                 break;
-            case 14:
+            case 16:
                 if (assignedProject == null) {
                     System.out.println("You do not have an assigned project yet!");
                     break;
                 }
                 viewEnquiries();
                 break;
-            case 15:
+            case 17:
                 if (assignedProject == null) {
                     System.out.println("You do not have an assigned project yet!");
                     break;
                 }
                 assignedProject.displayProjectStaff();
                 break;
-            case 16:
+            case 18:
                 flatBooking();
                 break;
             default:
@@ -120,6 +120,12 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         }
     }
 
+    /**
+     * Gets the Officer's selection for action to do based on displayMenu()
+     * The number of valid options is the number of Applicants capabilities + number of Officers capabilities
+     * Return's -1 if the input is not a number, indicating a log-out
+     * @return choice of the user
+     */
     @Override
     public int getChoice() {
         Scanner sc = new Scanner(System.in);
@@ -128,7 +134,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
             try {
                 choice = sc.nextInt();
                 sc.nextLine();
-                if (choice < 1 || choice > 7) {
+                if (choice < 1 || choice > 18) {
                     System.out.println("Invalid Selection");
                     continue;
                 }
@@ -140,12 +146,19 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         }
     }
 
-
+    /**
+     * Displays all projects in the list of filtered projects
+     * @param filteredProjects list of projects the user can view
+     */
     @Override
     public void displayProjects(List<HDBProject> filteredProjects) {
         HDBStaff.super.displayProjects(filteredProjects);
     }
 
+    /**
+     * Creates an application to be an Officer for some ongoing Project
+     * @param filteredProjects projects that have bene filtered
+     */
     public void applyForProjectAsHDBOfficer(List<HDBProject> filteredProjects) {
         // Check if is an existing applicant with an application
         if (this.getApplication() != null && this.getApplication().getApplicationStatus() != ApplicationStatus.UNSUCCESSFUL) {
@@ -167,7 +180,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
 
         Scanner sc = new Scanner(System.in);
 
-        viewProjects(filteredProjects);
+        displayProjects(filteredProjects);
 
         int choice;
 
@@ -197,7 +210,9 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         System.out.println("Application Successfully Created!");
     }
 
-
+    /**
+     * View Query's of the project the Officer is assigned to.
+     */
     @Override
     public void viewEnquiries() {
         if (assignedProject == null) {
@@ -215,6 +230,9 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         respondQuery(allQueries);
     }
 
+    /**
+     * Handles booking of Unit for successful Applicants to the Project the Officer is assigned to
+     */
     @Override
     public void flatBooking() {
         List<ProjectApplication> applications = assignedProject.getAllApplicationsPendingBooking();

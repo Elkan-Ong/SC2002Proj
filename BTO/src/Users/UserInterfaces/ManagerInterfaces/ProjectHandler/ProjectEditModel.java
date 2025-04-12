@@ -11,8 +11,6 @@ import java.util.List;
 
 /**
  * Model for when Manager wants to edit active Project
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
     /**
@@ -105,6 +103,7 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         int choice;
         while (true) {
             choice = getChoice(1, availableTypes.length);
+            assert otherFlat != null;
             if (availableTypes[choice-1].equals(otherFlat.getType())) {
                 System.out.println("Selected flat type cannot be the same as another existing flat type!");
                 continue;
@@ -148,7 +147,7 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         System.out.println("Enter new project name:");
         String name = sc.nextLine();
         boolean exit;
-        while (true) {
+        do {
             exit = true;
             for (HDBProject existingProject : allProjects) {
                 if (name.equals(existingProject.getName())) {
@@ -159,10 +158,7 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
                     break;
                 }
             }
-            if (exit) {
-                break;
-            }
-        }
+        } while (!exit);
         project.setName(name);
         System.out.println("Project name successfully updated!");
     }

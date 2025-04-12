@@ -10,8 +10,6 @@ import java.util.List;
 /**
  * A Flat in a Project
  * Contains Units to be booked by Applicants after a successful Application
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public class Flat implements AvailableFlatTypes, FlatDisplay, BookUnitHandler {
     /**
@@ -162,6 +160,10 @@ public class Flat implements AvailableFlatTypes, FlatDisplay, BookUnitHandler {
         }
     }
 
+    /**
+     * Gets the number of units that have not been booked
+     * @return number of units that have not been booked
+     */
     public int getNoOfUnitsAvailable() {
         return noOfUnits - bookedUnits;
     }

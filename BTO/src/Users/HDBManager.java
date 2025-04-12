@@ -88,15 +88,6 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
     }
 
     /**
-     *  Displays all the projects regardless of filter and who created the project
-     * @param allProjects master list of all the projects
-     */
-    @Override
-    public void viewProjects(List<HDBProject> allProjects) {
-        displayProjects(allProjects);
-    }
-
-    /**
      * Displays all the actions of the Manager
      */
     @Override
@@ -114,6 +105,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         System.out.println("10) View enquiries");
         System.out.println("11) Toggle visibility of Current BTO Project");
         System.out.println("12) Create Filter For Projects");
+        System.out.println("13) Change password");
     }
 
     /**
@@ -124,6 +116,10 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
     @Override
     public void handleChoice(List<HDBProject> allProjects,
                              int choice) {
+        List<HDBProject> filteredProjects = new ArrayList<>(allProjects);
+        if (getUserFilter() != null) {
+            filteredProjects = getUserFilter().applyFilter(filteredProjects, getUserFilter());
+        }
         switch (choice) {
             case 1:
                 if (project == null) {
@@ -155,7 +151,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 deleteProject(allProjects);
                 break;
             case 5:
-                displayProjects(allProjects);
+                displayProjects(filteredProjects);
                 break;
             case 6:
                 if (project == null) {
@@ -197,12 +193,19 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 break;
             case 12:
                 setUserFilter(createFilter(allProjects));
+            case 13:
+                changePassword(this);
             default:
                 System.out.println("Invalid choice");
                 break;
         }
     }
 
+    /**
+     * Gets the Manager's selection for action to do based on displayMenu()
+     * Return's -1 if the input is not a number, indicating a log-out
+     * @return choice of the user
+     */
     @Override
     public int getChoice() {
         Scanner sc = new Scanner(System.in);
@@ -212,7 +215,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 choice = sc.nextInt();
                 sc.nextLine();
                 // choice to be edited if menu is expanded/shrunk
-                if (choice < 1 || choice > 11) {
+                if (choice < 1 || choice > 13) {
                     System.out.println("Invalid Selection");
                     continue;
                 }
@@ -224,6 +227,10 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         }
     }
 
+    /**
+     * View all pending registrations of Officers that want to join the Project
+     * @param project Project the manager is managing
+     */
     @Override
     public void viewOfficerRegistration(HDBProject project) {
         List<OfficerRegistration> applications = new ArrayList<>();
@@ -290,6 +297,11 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         }
     }
 
+    /**
+     * Approves the registration of an Officer to a Project
+     * Assigns the Project to the Officer and adds them to the list of assignedOfficers
+     * @param registration the OfficerRegistration to be approved
+     */
     @Override
     public void approveRegistration(OfficerRegistration registration) {
         registration.setStatus(RegistrationStatus.SUCCESSFUL);
@@ -298,12 +310,20 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         System.out.println("Registration successfully Approved!");
     }
 
+    /**
+     * Rejects the registration of an Officer to a Project
+     * @param registration the OfficerRegistration to be rejected
+     */
     @Override
     public void rejectRegistration(OfficerRegistration registration) {
         registration.setStatus(RegistrationStatus.UNSUCCESSFUL);
         System.out.println("Registration successfully Rejected!");
     }
 
+    /**
+     * Displays all unanswered Query's of all the projects the manager has created
+     * Manager may select a Query to respond to
+     */
     @Override
     public void viewEnquiries() {
         if (allPastProjects.isEmpty()) {

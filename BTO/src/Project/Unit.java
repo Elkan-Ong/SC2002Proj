@@ -4,8 +4,6 @@ import Users.Applicant;
 
 /**
  * A unit in HDB Flat of a specific room type
- * @author Elkan Ong Han'en
- * @since 2025-4-5
  */
 public class Unit {
     /**
@@ -41,7 +39,7 @@ public class Unit {
     }
 
     /**
-     * Changes the booking status of the unit
+     * Changes the booking status of the unit to being occupied by some Applicant
      * @param applicant applicant that wants to book the unit
      */
     public void setBookedBy(Applicant applicant) {
@@ -49,6 +47,9 @@ public class Unit {
         this.bookedBy = applicant;
     }
 
+    /**
+     * Changes the booking status of the unit back to default
+     */
     public void returnUnit() {
         this.booked = false;
         this.bookedBy = null;

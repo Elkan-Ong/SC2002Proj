@@ -7,8 +7,6 @@ import Users.Applicant;
 
 /**
  * Applicant can request a WithdrawalApplication when they have applied for a project but no longer wish to
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public class WithdrawApplication implements WithdrawalDisplay {
     /**

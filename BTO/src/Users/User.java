@@ -1,5 +1,6 @@
 package Users;
 
+import AccountHandler.Password.PasswordManager;
 import Misc.Filter.UserFilter;
 import Users.UserInterfaces.UserAction;
 
@@ -9,7 +10,7 @@ import Users.UserInterfaces.UserAction;
  * Each user can have a filter to filter projects that they would be interested in
  *
  * */
-public abstract class User implements UserAction {
+public abstract class User implements UserAction, PasswordManager {
     /**
      * Name of the user (unique)
      * */

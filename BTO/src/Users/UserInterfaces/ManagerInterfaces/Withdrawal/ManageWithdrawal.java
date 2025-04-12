@@ -14,8 +14,6 @@ import java.util.Scanner;
 
 /**
  * Defines methods for Manager to handle withdrawal requests
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public interface ManageWithdrawal extends BasicValidation {
     /**

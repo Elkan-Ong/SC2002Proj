@@ -11,8 +11,6 @@ import java.util.Scanner;
 
 /**
  * Interface for when a Manager wants to create a brand-new project
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public interface ProjectCreation extends BasicValidation, FlatTypeSelection {
     Scanner sc = new Scanner(System.in);

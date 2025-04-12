@@ -12,20 +12,18 @@ import java.util.Scanner;
 /**
  * Selected information that a Manager would like to filter by to create a ProjectReport
  * Filters include: project, flat types, marital status, age of applicants
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public class ApplicantReportFilter implements BasicValidation {
-    private Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
     /**
      * List of filtered Flat types
      */
-    private List<String> filteredFlatTypes = new ArrayList<>();
+    private final List<String> filteredFlatTypes = new ArrayList<>();
 
     /**
      * List of filtered Project names
      */
-    private List<String> filteredProjectNames = new ArrayList<>();
+    private final List<String> filteredProjectNames = new ArrayList<>();
 
     /**
      * Maximum age of Applicants
@@ -40,7 +38,7 @@ public class ApplicantReportFilter implements BasicValidation {
     /**
      * List of marital statuses
      */
-    private List<String> filteredMaritalStatus = new ArrayList<>();
+    private final List<String> filteredMaritalStatus = new ArrayList<>();
 
     /**
      * Gets filtered flat types

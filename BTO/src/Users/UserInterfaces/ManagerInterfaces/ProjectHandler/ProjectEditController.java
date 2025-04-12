@@ -8,8 +8,6 @@ import java.util.Scanner;
 
 /**
  * Controller for Manager editing their active project
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public interface ProjectEditController extends ProjectDisplay, ProjectEditModel {
     Scanner sc = new Scanner(System.in);

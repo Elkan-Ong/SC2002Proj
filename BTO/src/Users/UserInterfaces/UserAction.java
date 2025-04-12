@@ -22,6 +22,16 @@ public interface UserAction {
      */
     void handleChoice(List<HDBProject> allProjects,
                       int choice) throws ParseException;
+
+    /**
+     * Prompt User for a choice that is valid based on the number of capabilities the User has
+     * @return choice selection of the User based on capabilities
+     */
     int getChoice();
+
+    /**
+     * Display projects visible to the User
+     * @param filteredProjects projects that have been filtered by the User using UserFilter
+     */
     void displayProjects(List<HDBProject> filteredProjects);
 }

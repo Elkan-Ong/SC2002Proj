@@ -9,7 +9,16 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Gets the user information to create the filter and generate the UserFilter object
+ */
 public interface CreateFilter extends BasicValidation, AvailableFlatTypes {
+    /**
+     * Asks user for what conditions they would like to filter the projects
+     * Calls the corresponding methods to add conditions to the filter
+     * @param allProjects list of all projects to be filtered
+     * @return UserFilter object created on the conditions selected
+     */
     default UserFilter createFilter(List<HDBProject> allProjects) {
         if (allProjects.isEmpty()) {
             System.out.println("No projects have been created yet!");
@@ -52,6 +61,11 @@ public interface CreateFilter extends BasicValidation, AvailableFlatTypes {
         }
     }
 
+    /**
+     * Prompts User with neighbourhoods that can be selected to be filtered
+     * @param allProjects list of projects to be filtered
+     * @param filter filter object to be updated
+     */
     default void filterNeighbourhoods(List<HDBProject> allProjects, UserFilter filter) {
         List<String> neighbourhoods = new ArrayList<>();
         for (HDBProject project : allProjects) {
@@ -85,6 +99,10 @@ public interface CreateFilter extends BasicValidation, AvailableFlatTypes {
         }
     }
 
+    /**
+     * Prompts User with Flat types that can be filtered
+     * @param filter filter object to be object
+     */
     default void filterFlatTypes(UserFilter filter) {
         int choice;
         while (true) {
@@ -111,6 +129,10 @@ public interface CreateFilter extends BasicValidation, AvailableFlatTypes {
         }
     }
 
+    /**
+     * Prompts User to enter minimum price of Units they are interested in
+     * @param filter filter object to be updated
+     */
     default void filterMinPrice(UserFilter filter) {
         System.out.println("Enter Min Price: ");
         long minPrice;
@@ -125,6 +147,10 @@ public interface CreateFilter extends BasicValidation, AvailableFlatTypes {
         filter.setMinPrice(minPrice);
     }
 
+    /**
+     * Prompts User to enter maximum price of Units they are interested in
+     * @param filter filter object to be updated
+     */
     default void filterMaxPrice(UserFilter filter) {
         System.out.println("Enter Max Price: ");
         long maxPrice;
@@ -139,6 +165,9 @@ public interface CreateFilter extends BasicValidation, AvailableFlatTypes {
         filter.setMaxPrice(maxPrice);
     }
 
+    /**
+     * Displays the menu for selection of different conditions to filter by
+     */
     default void filterMenu() {
         System.out.println("What would you like to filter? (enter non-digit to exit)");
         System.out.println("1) Neighbourhoods");

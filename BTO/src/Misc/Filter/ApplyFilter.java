@@ -5,7 +5,16 @@ import Project.HDBProject;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Contains the method to apply the filter to a list of projects
+ */
 public interface ApplyFilter {
+    /**
+     * Applies the filter to a list of projects by checking if a given project meets all the criteria of the filter
+     * @param projects List of projects to be filtered
+     * @param filter filter to be applied
+     * @return list of projects that have been filtered
+     */
     default List<HDBProject> applyFilter(List<HDBProject> projects, UserFilter filter) {
         return projects.stream()
                 .filter(project -> {

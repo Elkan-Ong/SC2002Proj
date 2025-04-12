@@ -1,9 +1,7 @@
 package AccountHandler;
 
-import AccountHandler.Login.LoginHandler;
-import AccountHandler.Registration.RegistrationHandler;
 import AccountHandler.Password.PasswordManager;
-import AccountHandler.Validation.NRICValidator;
+import AccountHandler.Validation.AccountValidator;
 import Users.AllUsers;
 import Users.Applicant;
 import Users.HDBOfficer;
@@ -11,16 +9,15 @@ import Users.HDBManager;
 import Users.User;
 import Validation.BasicValidation;
 
-import java.util.Locale;
-
-public class Account implements AccountDisplay, BasicValidation, NRICValidator, PasswordManager, RegistrationHandler, LoginHandler {
-    public void displayCreationMenu() {
-        System.out.println("What kind of user are you?");
-        System.out.println("1) Applicant");
-        System.out.println("2) HDB Officer");
-        System.out.println("3) HDB Manager");
-    }
-
+/**
+ * Manages the handling of accounts in the BTO system
+ * Users can create or login to their account
+ */
+public class Account implements AccountDisplay, BasicValidation, AccountValidator, PasswordManager {
+    /**
+     * Creates a new User in the BTO system
+     * @param allUsers AllUser object which stores all the Users in the BTO System
+     */
     public void createUser(AllUsers allUsers) {
         System.out.println(allUsers.getUsers());
         displayCreationMenu();
@@ -68,15 +65,60 @@ public class Account implements AccountDisplay, BasicValidation, NRICValidator, 
         System.out.println("You have successfully created an account!");
     }
 
+    /**
+     * Creates a new applicant
+     * @param name name of user
+     * @param nric nric of user
+     * @param age age of user
+     * @param maritalStatus marital status of user (single/married)
+     * @param password password of user
+     * @return Applicant object created
+     */
     private Applicant createApplicant(String name, String nric, int age, String maritalStatus, String password) {
         return new Applicant(name, nric, age, maritalStatus, password);
     }
 
+    /**
+     * Creates a new Officer
+     * @param name name of user
+     * @param nric nric of user
+     * @param age age of user
+     * @param maritalStatus marital status of user (single/married)
+     * @param password password of user
+     * @return Officer object created
+     */
     private HDBOfficer createOfficer(String name, String nric, int age, String maritalStatus, String password) {
         return new HDBOfficer(name, nric, age, maritalStatus, password);
     }
 
+    /**
+     * Creates a new Manager
+     * @param name name of user
+     * @param nric nric of user
+     * @param age age of user
+     * @param maritalStatus marital status of user (single/married)
+     * @param password password of user
+     * @return Manager object created
+     */
     private HDBManager createManager(String name, String nric, int age, String maritalStatus, String password) {
         return new HDBManager(name, nric, age, maritalStatus, password);
+    }
+
+    /**
+     * Checks the user's login information with the information in the BTO system
+     * If the information matches, return the User object to log them in
+     * @param nric nric of the User
+     * @param password password of the User
+     * @param allUsers AllUsers object containing all users in the BTO system
+     * @return User logged in
+     */
+    public User loginAndGetUser(String nric, String password, AllUsers allUsers) {
+        for (User user : allUsers.getUsers()) {
+            if (user.getNric().equals(nric) &&
+                    user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        return null;
     }
 }

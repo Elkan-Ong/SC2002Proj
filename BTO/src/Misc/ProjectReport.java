@@ -2,8 +2,6 @@ package Misc;
 
 /**
  * Contains information about a project such as the number of applicants, the number of single and married applicants
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public class ProjectReport {
     /**

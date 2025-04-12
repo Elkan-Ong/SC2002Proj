@@ -16,10 +16,12 @@ import java.io.PrintWriter;
 
 /**
  * Defines methods to write to important objects to preserve to respective csv files
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public interface WriteFiles {
+    /**
+     * writes OfficerRegistration information into RegistrationList.csv
+     * @param allProjects all projects created
+     */
     static void writeRegistration(List<HDBProject> allProjects) {
         String fileName = "BTO/src/Files/RegistrationList.csv";
 
@@ -266,6 +268,11 @@ public interface WriteFiles {
         }
     }
 
+    /**
+     * Main method to call to write all the files
+     * @param allProjects all projects created in the BTO system
+     * @param allUsers all users in the BTO system
+     */
     static void writeAllFiles(List<HDBProject> allProjects, AllUsers allUsers) {
         writeRegistration(allProjects);
         writeUnit(allProjects);

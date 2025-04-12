@@ -11,8 +11,6 @@ import java.util.Objects;
 
 /**
  * A Query an Applicant submits when they want to enquire about a Project
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public class Query implements QueryDisplay {
     /**
@@ -38,7 +36,7 @@ public class Query implements QueryDisplay {
     /**
      * Project the Query was submitted enquiring about
      */
-    private HDBProject project;
+    private final HDBProject project;
 
     /**
      * Date the Query was created on
@@ -69,7 +67,6 @@ public class Query implements QueryDisplay {
      * @param title title of the Enquiry
      * @param query query the Applicant has on the Project
      * @param timestamp Date the Query was created on
-     * @throws ParseException
      */
     public Query(Applicant applicant, HDBProject project, String title, String query, String timestamp) throws ParseException {
         this.applicant = applicant;
@@ -131,6 +128,14 @@ public class Query implements QueryDisplay {
     public Date getTimestamp() { return timestamp; }
 
     /**
+     * Gets the Project that a Query was submitted to
+     * @return the Project that a Query was submitted to
+     */
+    public HDBProject getProject() {
+        return project;
+    }
+
+    /**
      * Displays information about the Query
      */
     @Override
@@ -140,13 +145,5 @@ public class Query implements QueryDisplay {
         System.out.print("Reply: ");
         System.out.println(Objects.requireNonNullElse(this.reply, "No reply made yet."));
         System.out.println("Created on: " + timestamp);
-    }
-
-    public HDBProject getProject() {
-        return project;
-    }
-
-    public void setProject(HDBProject project) {
-        this.project = project;
     }
 }

@@ -20,8 +20,6 @@ import java.util.List;
 
 /**
  * Read all the files and creates the objects to store all the data
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public interface ImportFiles {
     /**
@@ -271,6 +269,11 @@ public interface ImportFiles {
         }
     }
 
+    /**
+     * Reads all the OfficerRegistrations in OfficerRegistrationList.csv
+     * @param allUsers AllUsers object containing all the users in the BTO system
+     * @param allProjects List of all projects in the BTO system
+     */
     static void readRegistrations(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
         List<String[]> fileData = readFile("OfficerRegistrationList.csv");
         for (String[] value : fileData) {
@@ -305,6 +308,11 @@ public interface ImportFiles {
         }
     }
 
+    /**
+     * Main function to read all the files of the BTO system
+     * @param allUsers AllUsers object storing all the Users in the BTO system
+     * @param allProjects List containing all projects in the BTO System
+     */
     static void readAllFiles(AllUsers allUsers, List<HDBProject> allProjects) {
         try {
             ImportFiles.readUsers(allUsers,"ApplicantList.csv", Applicant::new);

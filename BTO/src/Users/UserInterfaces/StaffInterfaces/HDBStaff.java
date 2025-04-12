@@ -10,8 +10,6 @@ import java.util.Scanner;
 
 /**
  * Actions that all HDB Staff (Officers and Managers) have access to
- * @author Elkan Ong Han'en
- * @since 2025-4-5
  */
 public interface HDBStaff extends BasicValidation {
     /**
@@ -20,11 +18,9 @@ public interface HDBStaff extends BasicValidation {
     void viewEnquiries();
 
     /**
-     * displays all the projects passed in allProjects
-     * @param allProjects list of all projects
+     * Displays all the projects and allow HDBStaff to select a project to view its full details
+     * @param filteredProjects list of Projects filtered by the Staff with UserFilter
      */
-    void viewProjects(List<HDBProject> allProjects);
-
     default void displayProjects(List<HDBProject> filteredProjects)  {
         Scanner sc = new Scanner(System.in);
         if (filteredProjects.isEmpty()) {
@@ -53,6 +49,10 @@ public interface HDBStaff extends BasicValidation {
         }
     }
 
+    /**
+     * Staff can view and respond to queries that have not been responded to
+     * @param allQueries list of queries that have yet to be responded to
+     */
     default void respondQuery(List<Query> allQueries) {
         int choice;
         int respondChoice;

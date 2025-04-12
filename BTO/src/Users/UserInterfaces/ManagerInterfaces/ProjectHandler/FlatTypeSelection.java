@@ -6,8 +6,6 @@ import java.util.Scanner;
 
 /**
  * Menu to select which flat type a User has interest in
- * @author Elkan Ong Han'en
- * @since 2025-4-6
  */
 public interface FlatTypeSelection extends AvailableFlatTypes {
     Scanner sc = new Scanner(System.in);

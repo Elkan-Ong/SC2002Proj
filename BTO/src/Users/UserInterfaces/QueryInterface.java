@@ -7,8 +7,6 @@ import java.util.List;
 
 /**
  * Defines the methods required for interacting and creating Query objects
- * @author Elkan Ong Han'en
- * @since 2025-4-5
  */
 public interface QueryInterface {
     /**
