@@ -63,7 +63,6 @@ public interface ManageWithdrawal extends BasicValidation {
      * @param application the withdrawal to be approved/rejected
      */
     default void manageWithdrawal(WithdrawApplication application, List<WithdrawApplication> withdrawApplications) {
-        Scanner sc = new Scanner(System.in);
         System.out.println("Would you like to approve or reject this withdrawal? (enter non-number to exit)");
         System.out.println("1) Approve");
         System.out.println("2) Reject");

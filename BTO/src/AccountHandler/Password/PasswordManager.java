@@ -1,13 +1,21 @@
 package AccountHandler.Password;
 
-import AccountHandler.AccountDisplay;
 import AccountHandler.Validation.AccountValidator;
 import Users.AllUsers;
 import Users.User;
 
 import java.util.Scanner;
 
+/**
+ * Contains methods that handle passwords
+ */
 public interface PasswordManager extends AccountValidator {
+    /**
+     * Changes password of a User.
+     * A User will be asked to enter their NRIC as verification
+     * They will then enter their old password, followed by their new password
+     * @param allUsers all users in the BTO system
+     */
     default void changePassword(AllUsers allUsers) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter your NRIC: (to cancel changing of password enter -1)");

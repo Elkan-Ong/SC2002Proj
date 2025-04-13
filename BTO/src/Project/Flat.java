@@ -168,6 +168,10 @@ public class Flat implements AvailableFlatTypes, FlatDisplay, BookUnitHandler {
         return noOfUnits - bookedUnits;
     }
 
+    /**
+     * Displays information about the flat
+     * Information: Total no. of units, price per unit, number of available units
+     */
     @Override
     public void displayFlat() {
         System.out.println(type + " Flat information:");

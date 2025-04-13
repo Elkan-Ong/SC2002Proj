@@ -8,7 +8,6 @@ import Users.UserInterfaces.UserAction;
  *
  * Represents the basic details of a user in the BTO system
  * Each user can have a filter to filter projects that they would be interested in
- *
  * */
 public abstract class User implements UserAction, PasswordManager {
     /**
@@ -28,9 +27,9 @@ public abstract class User implements UserAction, PasswordManager {
      * */
     private final String maritalStatus;
     /**
-     * Password to log in to the user's account (by default set to "password"
+     * Password to log in to the user's account (by default set to "password")
      * */
-    private String password = "password";
+    private String password;
     /**
      * Filter to store the projects that the user will be interested in
      * */

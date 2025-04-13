@@ -6,8 +6,6 @@ import java.util.List;
 
 /**
  * Represents a master list of all user types
- * @author Elkan Ong Han'en
- * @since 2025-04-05
  */
 public class AllUsers {
     /**

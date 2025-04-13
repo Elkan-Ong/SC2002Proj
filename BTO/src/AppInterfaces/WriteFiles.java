@@ -19,7 +19,10 @@ import java.io.PrintWriter;
  * Defines methods to write to important objects to preserve to respective csv files
  */
 public interface WriteFiles {
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    /**
+     * Formatter for Date objects, for this system we use dd/MM/yy
+     */
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
 
     static void writeBooking(List<HDBProject> allProjects) {
         String fileName = "BTO/src/Files/BookingList.csv";

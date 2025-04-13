@@ -453,6 +453,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         }
     }
 
+    /**
+     * Gets Applicant's choice of what action to do based on displayMenu options
+     * @return choice of the Applicant
+     */
     @Override
     public int getChoice() {
         Scanner sc = new Scanner(System.in);

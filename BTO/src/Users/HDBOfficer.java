@@ -304,6 +304,10 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         assignedProject.displayProjectApplicant();
     }
 
+    /**
+     * Allows Officer to apply for projects like Applicant, but with the exclusion of the projec they are assigned to/registered for
+     * @param filteredProjects projects filtered by user filter
+     */
     @Override
     public void applyForProjectOfficer(List<HDBProject> filteredProjects) {
         // copy the list of filtered projects to prevent modification later

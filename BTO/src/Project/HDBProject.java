@@ -4,7 +4,6 @@ import Misc.Query;
 import Misc.OfficerRegistration;
 import Misc.WithdrawApplication;
 import Project.ProjectInterfaces.HDBProjectDisplay;
-import Users.Applicant;
 import Users.HDBManager;
 import Users.HDBOfficer;
 
@@ -261,7 +260,7 @@ public class HDBProject implements HDBProjectDisplay {
 
     /**
      * Changes visibility of Project
-     * @param
+     * @param visibility to set the Project to
      */
     public void setVisible(boolean visibility) {
         this.visible = visibility;
@@ -310,8 +309,8 @@ public class HDBProject implements HDBProjectDisplay {
     }
 
     /**
-     * Gets the list of applications that require
-     * @return
+     * Gets the list of applications that pending booking
+     * @return list of applications that are pending booking
      */
     public List<ProjectApplication> getAllApplicationsPendingBooking() { return applicationsPendingBooking; }
 

@@ -43,6 +43,10 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         System.out.println();
     }
 
+    /**
+     * Edits the price of a Flat
+     * @param selectedFlat Flat to change price
+     */
     default void editFlatPrice(Flat selectedFlat) {
         System.out.println("Enter new price: ");
         long newPrice = validatePrice();

@@ -10,12 +10,12 @@ public class UserFilter implements CreateFilter, ApplyFilter {
     /**
      * Neighbourhoods of interest
      */
-    private List<String> neighbourhoods = null;
+    private final List<String> neighbourhoods;
 
     /**
      * Flat types of interest
      */
-    private List<String> types = null;
+    private final List<String> types ;
 
     /**
      * Maximum price of units that User is interested in
