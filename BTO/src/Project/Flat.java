@@ -170,9 +170,9 @@ public class Flat implements AvailableFlatTypes, FlatDisplay, BookUnitHandler {
 
     @Override
     public void displayFlat() {
-        System.out.println(type + " Flat information;");
+        System.out.println(type + " Flat information:");
         System.out.println("Total no. of units: " + units.size());
         System.out.println("Price of unit: " + price);
-        System.out.println("Current no. of available units: " + noOfUnits);
+        System.out.println("Current no. of available units: " + getNoOfUnitsAvailable());
     }
 }

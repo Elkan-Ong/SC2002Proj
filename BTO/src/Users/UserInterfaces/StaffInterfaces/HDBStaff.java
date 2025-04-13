@@ -26,6 +26,10 @@ public interface HDBStaff extends BasicValidation {
         int respondChoice;
         Scanner sc = new Scanner(System.in);
         while (true) {
+            if (allQueries.isEmpty()) {
+                System.out.println("No queries to reply to at this time!");
+                return;
+            }
             System.out.println("Select query to view: (enter non-digit to exit)");
             for (int i=0; i < allQueries.size(); i++) {
                 System.out.println((i+1) + ") " + allQueries.get(i).getTitle());
@@ -47,11 +51,14 @@ public interface HDBStaff extends BasicValidation {
             System.out.println("1) Yes");
             System.out.println("2) No");
             respondChoice = getChoice(1, 2);
+            sc.nextLine();
             if (respondChoice == 2) {
                 continue;
             }
             System.out.println("Enter reply");
-            selectedQuery.setReply(sc.nextLine());
+            String reply = sc.nextLine();
+            selectedQuery.setReply(reply);
+            allQueries.remove(selectedQuery);
             System.out.println("Successfully replied to query!");
             selectedQuery.displayQuery();
             // whitespace

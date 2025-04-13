@@ -19,9 +19,8 @@ public interface ProjectCreation extends BasicValidation, FlatTypeSelection {
      * Gathers the details of the Project to be created
      * @param manager Manager creating the project
      * @param allProjects all the projects created
-     * @return HDB Project created
      */
-    default HDBProject getProjectDetailsAndCreate(HDBManager manager, List<HDBProject> allProjects) {
+    default void getProjectDetailsAndCreate(HDBManager manager, List<HDBProject> allProjects) {
         String projectName = getProjectName(allProjects);
         String neighbourhood = getNeighbourhood();
 
@@ -75,10 +74,9 @@ public interface ProjectCreation extends BasicValidation, FlatTypeSelection {
                 type2, units2, price2,
                 openingDate, closingDate,
                 manager, officerSlots);
-
+        manager.setProject(newProject);
         manager.addOldProject(newProject);
-
-        return newProject;
+        allProjects.add(newProject);
     }
 
     /**
@@ -90,8 +88,10 @@ public interface ProjectCreation extends BasicValidation, FlatTypeSelection {
     default String getProjectName(List<HDBProject> allProjects) {
         System.out.println("Enter project name:");
         String name;
-        boolean sameName = false;
+
+        boolean sameName;
         do {
+            sameName = false;
             name = sc.nextLine();
             for (HDBProject project : allProjects) {
                 if (name.equals(project.getName())) {

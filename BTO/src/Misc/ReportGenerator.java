@@ -25,6 +25,7 @@ public class ReportGenerator {
         // Go through applications and populate the map accordingly
         for (ProjectApplication app : applications) {
             // Apply filters
+            if (app.getApplicant().getBookedUnit() == null) continue;
             if (!filter.getFilteredProjectNames().contains(app.getAppliedProject().getName())) continue;
             if (!filter.getFilteredFlatTypes().contains(app.getSelectedType().getType())) continue;
             if (!filter.getFilteredMaritalStatus().contains(app.getApplicant().getMaritalStatus())) continue;

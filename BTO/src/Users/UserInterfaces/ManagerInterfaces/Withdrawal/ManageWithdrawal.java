@@ -32,7 +32,11 @@ public interface ManageWithdrawal extends BasicValidation {
         }
         int choice;
         while (true) {
-            System.out.println("Select Project Application for " + project.getName() + " to view: (input non-number to exit");
+            if (withdrawApplications.isEmpty()) {
+                System.out.println("No more withdrawals are pending!");
+                return;
+            }
+            System.out.println("Select Project Application for " + project.getName() + " to view: (input non-number to exit)");
             for (int i=0; i<withdrawApplications.size(); i++) {
                 System.out.println((i+1) + ") " + withdrawApplications.get(i).getApplicant().getName() + "'s Withdrawal");
             }
@@ -49,7 +53,7 @@ public interface ManageWithdrawal extends BasicValidation {
             System.out.println("Selected Withdrawal Information:");
             WithdrawApplication selectedWithdrawal = withdrawApplications.get(choice-1);
             selectedWithdrawal.displayWithdrawal();
-            manageWithdrawal(selectedWithdrawal);
+            manageWithdrawal(selectedWithdrawal, withdrawApplications);
         }
 
     }
@@ -58,13 +62,12 @@ public interface ManageWithdrawal extends BasicValidation {
      * Manager decides if they would like to approve or reject the withdrawal request
      * @param application the withdrawal to be approved/rejected
      */
-    default void manageWithdrawal(WithdrawApplication application) {
+    default void manageWithdrawal(WithdrawApplication application, List<WithdrawApplication> withdrawApplications) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Would you like to approve or reject this withdrawal? (enter non-number to exit)");
         System.out.println("1) Approve");
         System.out.println("2) Reject");
         int choice = getChoice(1, 2);
-        sc.nextLine();
         if (choice == 1) {
             approveApplication(application);
             System.out.println("Application successfully approved");
@@ -72,6 +75,7 @@ public interface ManageWithdrawal extends BasicValidation {
             rejectApplication(application);
             System.out.println("Application successfully rejected.");
         }
+        withdrawApplications.remove(application);
     }
 
     /**

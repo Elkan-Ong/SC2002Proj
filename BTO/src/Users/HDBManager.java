@@ -143,6 +143,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
             filteredProjects = getUserFilter().applyFilter(filteredProjects, getUserFilter());
         }
         filteredProjects.sort(Comparator.comparing(HDBProject::getName));
+
         switch (choice) {
             case 1:
                 if (project == null) {
@@ -154,7 +155,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
             case 2:
                 Date date = new Date();
                 if (project == null || project.getClosingDate().before(date)) {
-                    allPastProjects.add(getProjectDetailsAndCreate(this, allProjects));
+                    getProjectDetailsAndCreate(this, allProjects);
                 } else {
                     System.out.println("You are currently managing a project and the closing date has not passed.");
                 }
@@ -216,6 +217,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 break;
             case 12:
                 setUserFilter(createFilter(allProjects));
+                break;
             default:
                 System.out.println("Invalid choice");
                 break;
@@ -313,7 +315,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                     approveRegistration(selectedRegistration);
                 } else {
                     System.out.println("All officer slots have been filled for your project!");
-                    return;
+                    rejectRegistration(selectedRegistration);
                 }
             } else {
                 rejectRegistration(selectedRegistration);

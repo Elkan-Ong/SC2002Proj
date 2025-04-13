@@ -129,6 +129,6 @@ public class ProjectApplication implements ProjectApplicationDisplay {
      */
     @Override
     public String getApplicationInfo() {
-        return applicant.getName() + " " + selectedType;
+        return applicant.getName() + " " + selectedType.getType();
     }
 }

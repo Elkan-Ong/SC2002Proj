@@ -8,5 +8,5 @@ public interface AvailableFlatTypes {
     /**
      * Array of all available Flat types
      */
-    String[] availableTypes = { "2-Room", "3-Room", "4-Room", "5-Room" };
+    String[] availableTypes = { "2-Room", "3-Room" };
 }

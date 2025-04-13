@@ -249,7 +249,8 @@ public interface ImportFiles {
                         }
                     }
                     WithdrawApplication withdrawal = new WithdrawApplication(applicant, userApplication);
-
+                    assert applicant != null;
+                    applicant.setWithdrawApplication(withdrawal);
                     project.addWithdrawal(withdrawal);
                 }
             }

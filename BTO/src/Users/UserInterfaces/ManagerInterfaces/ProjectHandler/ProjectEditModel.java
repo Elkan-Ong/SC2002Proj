@@ -27,13 +27,8 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         System.out.println("Do you want to edit flat type or price or the number of units?");
         System.out.println("1) Flat Type");
         System.out.println("2) Flat Price");
-        System.out.println("2) Units");
+        System.out.println("3) Units");
         choice = getChoice(1, 3);
-        if (choice == 1) {
-            editFlatType(project, selectedFlat);
-        } else {
-            editUnits(selectedFlat);
-        }
         switch (choice) {
             case 1:
                 editFlatType(project, selectedFlat);
@@ -71,7 +66,7 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
                 break;
             }
         }
-        System.out.println("Note: " + minUnits + " th unit has been booked, you may not reduce the number of units below this number");
+        System.out.println("Note: You may not edit the number of units below " + minUnits + " units");
         int newUnits = getChoice(minUnits, Integer.MAX_VALUE);
         if (newUnits > flat.getNoOfUnits()) {
             flat.addUnits(newUnits - flat.getNoOfUnits());
@@ -134,7 +129,7 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
         if (!project.getAssignedOfficers().isEmpty()) {
             System.out.println("Note: No. of slots cannot be less than " + project.getAssignedOfficers().size() + " without unassigning officers first.");
         }
-        int newSlots = getChoice(project.getAssignedOfficers().size(), Integer.MAX_VALUE);
+        int newSlots = getChoice(project.getAssignedOfficers().size(), 10);
         project.setAvailableOfficerSlots(newSlots);
     }
 

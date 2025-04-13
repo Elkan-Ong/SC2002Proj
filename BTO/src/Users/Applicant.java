@@ -1,6 +1,7 @@
 package Users;
 
 import Enums.ApplicationStatus;
+import Enums.RegistrationStatus;
 import Misc.Query;
 import Misc.WithdrawApplication;
 import Project.Flat;
@@ -82,6 +83,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
      * @param unit Unit booked by the Applicant
      */
     public void setBookedUnit(Unit unit) {this.bookedUnit = unit;}
+
+    public void setWithdrawApplication(WithdrawApplication withdrawApplication) {
+        this.withdrawApplication = withdrawApplication;
+    }
 
     /**
      * Displays all projects that have been filtered by the Applicant and is visible to them
@@ -390,6 +395,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
             case 4:
                 if (application == null) {
                     System.out.println("You have not applied for any project!");
+                    break;
+                }
+                if (withdrawApplication != null && withdrawApplication.getStatus() != RegistrationStatus.UNSUCCESSFUL) {
+                    System.out.println("You have a pending withdrawal!");
                     break;
                 }
                 requestWithdrawal();

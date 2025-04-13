@@ -30,7 +30,11 @@ public interface ManageProjectApplication {
 
         int choice;
         while (true) {
-            System.out.println("Select Project Application for " + project.getName() + " to view: (input non-number to exit");
+            if (projectApplications.isEmpty()) {
+                System.out.println("No applications pending at this moment!");
+                return;
+            }
+            System.out.println("Select Project Application for " + project.getName() + " to view: (input non-number to exit)");
             for (int i=0; i<projectApplications.size(); i++) {
                 System.out.println((i+1) + ") " + projectApplications.get(i).getApplicationInfo());
             }
@@ -46,7 +50,7 @@ public interface ManageProjectApplication {
             System.out.println("Selected Application Information:");
             ProjectApplication selectedApplication = projectApplications.get(choice-1);
             selectedApplication.displayApplication();
-            manageApplication(selectedApplication);
+            manageApplication(selectedApplication, projectApplications);
         }
     }
 
@@ -54,7 +58,7 @@ public interface ManageProjectApplication {
      * Manager can approve or reject an application
      * @param application application to be rejected or approve
      */
-    default void manageApplication(ProjectApplication application) {
+    default void manageApplication(ProjectApplication application, List<ProjectApplication> projectApplications) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Would you like to approve or reject this application? (enter non-number to exit)");
         System.out.println("1) Approve");
@@ -81,6 +85,7 @@ public interface ManageProjectApplication {
             rejectApplication(application);
             System.out.println("Application successfully rejected.");
         }
+        projectApplications.remove(application);
     }
 
     /**

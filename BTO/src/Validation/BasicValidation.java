@@ -13,7 +13,7 @@ public interface BasicValidation {
     /**
      * Date format for reading in dates
      */
-    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
 
     /**
      * Scanner object to read inputs

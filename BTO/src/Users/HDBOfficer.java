@@ -180,7 +180,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
             return;
         }
 
-        if (assignedProject != null && assignedProject.getClosingDate().before(new Date())) {
+        if (assignedProject != null && assignedProject.getClosingDate().after(new Date())) {
             System.out.println("You are currently assigned to a project and the project has not closed!");
             return;
         }
