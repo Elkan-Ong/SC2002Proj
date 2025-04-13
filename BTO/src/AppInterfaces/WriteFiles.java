@@ -20,6 +20,24 @@ import java.io.PrintWriter;
  */
 public interface WriteFiles {
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+    static void writeBooking(List<HDBProject> allProjects) {
+        String fileName = "BTO/src/Files/BookingList.csv";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            // Write header row
+            writer.println("applicant, project");
+
+            // Write data rows
+            for (HDBProject project : allProjects) {
+                for (ProjectApplication booking : project.getAllApplicationsPendingBooking()) {
+                    writer.println(booking.getApplicant().getNric() + "," + booking.getAppliedProject().getName());
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to files");
+        }
+    }
+
     /**
      * writes OfficerRegistration information into RegistrationList.csv
      * @param allProjects all projects created
@@ -281,6 +299,7 @@ public interface WriteFiles {
      * @param allUsers all users in the BTO system
      */
     static void writeAllFiles(List<HDBProject> allProjects, AllUsers allUsers) {
+        writeBooking(allProjects);
         writeRegistration(allProjects);
         writeUnit(allProjects);
         writeApplications(allProjects);

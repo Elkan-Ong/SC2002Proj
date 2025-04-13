@@ -217,6 +217,8 @@ public interface ImportFiles {
                     if (!value[2].isEmpty()) {
                         query.setReply(value[2]);
                     }
+                    assert applicant != null;
+                    applicant.addQuery(query);
                     project.addQuery(query);
                 }
             }
@@ -319,6 +321,31 @@ public interface ImportFiles {
             }
             assert registerProject != null;
             registerProject.addOfficerRegistration(registration);
+            assert officer != null;
+            officer.setOfficerRegistration(registration);
+        }
+    }
+
+    static void readBookings(AllUsers allUsers, List<HDBProject> allProjects) throws IOException {
+        List<String[]> fileData = readFile("BookingList.csv");
+        for (String[] value : fileData) {
+            Applicant applicant = null;
+            HDBProject project = null;
+            for (User user : allUsers.getUsers()) {
+                if (user.getNric().equals(value[0])) {
+                    applicant = (Applicant) user;
+                    break;
+                }
+            }
+            for (HDBProject proj : allProjects) {
+                if (proj.getName().equals(value[1])) {
+                    project = proj;
+                    break;
+                }
+            }
+            assert project != null;
+            assert applicant != null;
+            project.addApplicationPendingBooking(applicant.getApplication());
         }
     }
 
@@ -338,8 +365,8 @@ public interface ImportFiles {
             ImportFiles.readWithdrawal(allUsers, allProjects);
             ImportFiles.readUnits(allUsers, allProjects);
             ImportFiles.readRegistrations(allUsers, allProjects);
+            ImportFiles.readBookings(allUsers, allProjects);
         } catch (Exception e) {
-            System.out.println(e);
             System.out.println("An error has occurred while reading files, please ensure provided files are used");
         }
     }

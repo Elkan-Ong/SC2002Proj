@@ -50,6 +50,14 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
     }
 
     /**
+     * Sets the registration of the officer when registering to some project
+     * @param registration registration to set
+     */
+    public void setOfficerRegistration(OfficerRegistration registration) {
+        this.officerRegistration = registration;
+    }
+
+    /**
      * Menu of options for HDB Officer
      * Calls displayMenu() of Applicant as Officer also has all Applicants capabilities
      */
@@ -79,11 +87,14 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         filteredProjects.sort(Comparator.comparing(HDBProject::getName));
 
         if (choice == 2) {
+            if (assignedProject != null && assignedProject.getClosingDate().after(new Date())) {
+                System.out.println("You cannot apply for a project while you are assigned to a project!");
+            }
             applyForProjectOfficer(filteredProjects);
             return;
         }
         if (choice < 12) {
-            super.handleChoice(filteredProjects, choice);
+            super.handleChoice(allProjects, choice);
             return;
         }
 
@@ -156,11 +167,11 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
      * @param filteredProjects projects that have bene filtered
      */
     public void applyForProjectAsHDBOfficer(List<HDBProject> filteredProjects) {
-        // Check if is an existing applicant with an application
-        if (this.getApplication() != null && this.getApplication().getApplicationStatus() != ApplicationStatus.UNSUCCESSFUL) {
-            System.out.println("You have an ongoing application or your current application has already been approved");
-            return;
-        }
+//        // Check if is an existing applicant with an application
+//        if (this.getApplication() != null && this.getApplication().getApplicationStatus() != ApplicationStatus.UNSUCCESSFUL) {
+//            System.out.println("You have an ongoing application or your current application has already been approved");
+//            return;
+//        }
 
         // Check if already applying for another project as officer
         if (officerRegistration != null && officerRegistration.getApplicationStatus() != RegistrationStatus.UNSUCCESSFUL) {
@@ -175,30 +186,44 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         }
 
         Scanner sc = new Scanner(System.in);
+        List<HDBProject> displayableProjects = new ArrayList<>();
+        Date today = new Date();
+        for (HDBProject project : filteredProjects) {
+            if (project.getVisibility() &&
+                    project.getOpeningDate().before(today) &&
+                    project.getClosingDate().after(today) &&
+                    (this.getApplication() == null || !this.getApplication().getAppliedProject().getName().equals(project.getName()))) {
+                displayableProjects.add(project);
+            }
+        }
+        if (displayableProjects.isEmpty()) {
+            System.out.println("There are no projects for you to register for!");
+            return;
+        }
 
-        displayProjects(filteredProjects);
+        displayProjects(displayableProjects);
 
         int choice;
-
+        System.out.println("Select project to register for: (enter non-digit to exit)");
         while (true) {
             try {
                 choice = sc.nextInt();
-                System.out.println(choice);
-                if (choice >= 1 && choice <= filteredProjects.size()) {
-                    //filteredProjects.get(choice - 1).displayProjectApplicant();
+                sc.nextLine();
+                if (choice >= 1 && choice <= displayableProjects.size()) {
                     break;
                 }
                 System.out.println("Invalid Selection!");
 
             } catch (InputMismatchException e) {
-                System.out.println("Invalid Selection!");
+                sc.nextLine();
+                return;
             }
         }
 
-        HDBProject selectedProject = filteredProjects.get(choice - 1);
+        HDBProject selectedProject = displayableProjects.get(choice - 1);
 
 
-        officerRegistration = new OfficerRegistration(this, selectedProject);
+        setOfficerRegistration(new OfficerRegistration(this, selectedProject));
         officerRegistration.displayApplication();
         selectedProject.addOfficerRegistration(officerRegistration);
 
@@ -231,14 +256,15 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
      */
     @Override
     public void flatBooking() {
-        List<ProjectApplication> applications = assignedProject.getAllApplicationsPendingBooking();
-        if (applications.isEmpty()) {
+        if (assignedProject.getAllApplicationsPendingBooking().isEmpty()) {
             System.out.println("No Booking Requests have been made yet!");
             return;
         }
-
-        // Check if any applications which are successful but have not booked a flat yet
-        for (ProjectApplication application : applications) {
+        // Check if any applications which are successful but have not booked a flat yet.
+        // We need to use an iterator because we want to remove applications that are successfully booked as we loop
+        Iterator<ProjectApplication> iterator = assignedProject.getAllApplicationsPendingBooking().iterator();
+        while (iterator.hasNext()) {
+            ProjectApplication application = iterator.next();
             // Book flat for applicant
 
             // 1. Update number of units in selected flat type
@@ -251,6 +277,8 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
                 application.getSelectedType().reserveUnit();
                 // Assign unit to applicant
                 application.getSelectedType().assignUnit(application.getApplicant());
+                // Remove the application from the list of pending bookings
+                iterator.remove();
             }
 
             // 2. Retrieve applicants BTO application with NRIC
@@ -270,9 +298,10 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
             System.out.println("Age: " + application.getApplicant().getAge());
             System.out.println("Marital Status: " + application.getApplicant().getMaritalStatus());
             System.out.println("Flat type booked: " + application.getSelectedType().getType() + "\n");
-            System.out.println("Project Details:");
-            assignedProject.displayProjectApplicant();
+
         }
+        System.out.println("Project Details:");
+        assignedProject.displayProjectApplicant();
     }
 
     @Override
@@ -283,8 +312,16 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         if (assignedProject != null) {
             applicableProjects.remove(assignedProject);
         }
+        // Remove the project they are applying for from the pool of projects they can apply for
+        if (officerRegistration != null && officerRegistration.getApplicationStatus() != RegistrationStatus.UNSUCCESSFUL) {
+            applicableProjects.remove(officerRegistration.getAppliedProject());
+        }
         // We need to apply same rules for applying, must be visible and open for application then we can apply as per normal
         applicableProjects = getVisibleProjects(applicableProjects);
+        if (applicableProjects.isEmpty()) {
+            System.out.println("There are no projects that you can apply for!");
+            return;
+        }
         super.applyForProject(applicableProjects);
     }
 }

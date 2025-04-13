@@ -12,9 +12,8 @@ public interface QueryInterface {
     /**
      * Creates a new Query for some specific project
      * @param filteredProjects a list of projects
-     * @return Created Query object based on title, query, date created
      */
-    Query createQuery(List<HDBProject> filteredProjects);
+    void createQuery(List<HDBProject> filteredProjects);
 
     /**
      * Display all the queries that have been submitted

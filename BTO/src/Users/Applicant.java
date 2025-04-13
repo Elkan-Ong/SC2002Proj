@@ -1,7 +1,6 @@
 package Users;
 
 import Enums.ApplicationStatus;
-import Misc.Filter.UserFilter;
 import Misc.Query;
 import Misc.WithdrawApplication;
 import Project.Flat;
@@ -65,6 +64,14 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     /**
+     * Adds a new query to the list of user Queries
+     * @param query query to be added
+     */
+    public void addQuery(Query query) {
+        userQueries.add(query);
+    }
+
+    /**
      * Gets the Unit booked by the Applicant
      * @return Unit booked by the Applicant
      */
@@ -124,11 +131,12 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         }
         Scanner sc = new Scanner(System.in);
         displayProjects(filteredProjects);
-        System.out.println("Select Project to apply for:");
+        System.out.println("Select Project to apply for: (enter non-digit to exit)");
         int choice;
         while (true) {
             try {
                 choice = sc.nextInt();
+                sc.nextLine();
                 if (choice >= 1 && choice <= filteredProjects.size()) {
                     filteredProjects.get(choice-1).displayProjectApplicant();
                     break;
@@ -136,10 +144,10 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 System.out.println("Invalid Selection!");
 
             } catch (InputMismatchException e) {
-                System.out.println("Invalid Selection!");
+                sc.nextLine();
+                return;
             }
         }
-        sc.nextLine();
         HDBProject selectedProject = filteredProjects.get(choice - 1);
         Flat selectedType = selectAvailableFlats(selectedProject, this);
         if (selectedType == null) {
@@ -185,6 +193,12 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         if (application.getApplicationStatus() == ApplicationStatus.BOOKED) {
             System.out.println("You have already booked a flat.");
         }
+        for (ProjectApplication projectApplication : application.getAppliedProject().getAllApplicationsPendingBooking()) {
+            if (projectApplication.getApplicant().getNric().equals(application.getApplicant().getNric())) {
+                System.out.println("You are currently pending a booking please wait for an Officer to assign you a unit!");
+                return;
+            }
+        }
         application.getAppliedProject().addApplicationPendingBooking(application);
         System.out.println("Your request for a booking has been submitted!");
     }
@@ -207,23 +221,23 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     /**
      * Creates a Query on a specific project the Applicant would like to inquire about
      * @param filteredProjects list of projects the Applicant is interested in
-     * @return Query that was created
      */
     @Override
-    public Query createQuery(List<HDBProject> filteredProjects) {
+    public void createQuery(List<HDBProject> filteredProjects) {
         Scanner sc = new Scanner(System.in);
+        if (filteredProjects.isEmpty()) {
+            System.out.println("No projects to query!");
+            return;
+        }
         HDBProject project = selectProjectForQuery(filteredProjects);
         System.out.println("Enter query title:");
         String title = sc.nextLine();
         System.out.println("Enter your query:");
         String query = sc.nextLine();
         Query newQuery = new Query(this, project, title, query);
-        userQueries.add(newQuery);
+        this.addQuery(newQuery);
         project.addQuery(newQuery);
         System.out.println("Query Submitted!");
-        // need to return so the program can remember the query
-        // we still need officers/managers to be able to view and reply
-        return newQuery;
     }
 
     /**
@@ -251,7 +265,8 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         System.out.println("\nQuery:");
         System.out.println(userQueries.get(choice - 1).getQuery());
         System.out.println("\nResponse:");
-        System.out.println(userQueries.get(choice - 1).getReply());
+        String response = userQueries.get(choice - 1).getReply();
+        System.out.println(response == null ? "No response has been made" : response);
     }
 
     /**
@@ -263,7 +278,9 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         displayQueries();
         int choice = getChoice(1, userQueries.size());
         if (userQueries.get(choice-1).getReply() == null) {
-            userQueries.remove(choice - 1);
+            Query queryToRemove = userQueries.get(choice - 1);
+            userQueries.remove(queryToRemove);
+            queryToRemove.getProject().getQueries().remove(queryToRemove);
             System.out.println("Query removed!");
         } else {
             System.out.println("Your query has been answered. It can no longer be deleted!");
@@ -365,15 +382,23 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 break; //done
             case 3:
                 if (application == null) {
-                    System.out.println("You have not applied for any projects!");
+                    System.out.println("You have not applied for any project!");
                     break;
                 }
                 application.displayApplication();
                 break; //done
             case 4:
+                if (application == null) {
+                    System.out.println("You have not applied for any project!");
+                    break;
+                }
                 requestWithdrawal();
                 break; //done
             case 5:
+                if (withdrawApplication == null) {
+                    System.out.println("You have not made a withdrawal request!");
+                    break;
+                }
                 withdrawApplication.displayWithdrawal();
                 break; //done
             case 6:
@@ -384,12 +409,24 @@ public class Applicant extends User implements Application, QueryInterface, Crea
                 createQuery(filteredProjects);
                 break; //done
             case 7:
+                if (userQueries.isEmpty()) {
+                    System.out.println("You have not made any enquiries!");
+                    break;
+                }
                 viewQuery();
                 break; //done
             case 8:
+                if (userQueries.isEmpty()) {
+                    System.out.println("You have not made any enquiries!");
+                    break;
+                }
                 editQuery();
                 break; //done
             case 9:
+                if (userQueries.isEmpty()) {
+                    System.out.println("You have not made any enquiries!");
+                    break;
+                }
                 deleteQuery();
                 break; //done
             case 10:

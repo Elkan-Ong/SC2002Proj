@@ -265,6 +265,10 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
             return;
         }
         while (true) {
+            if (applications.isEmpty()) {
+                System.out.println("No registrations to approve/reject!");
+                return;
+            }
             System.out.println("Select which Officer Registration you would like to view: (enter non-digit to exit)");
             for (int i=0; i < applications.size(); i++) {
                 System.out.println((i+1) + ") " + applications.get(i).getApplicant().getName() + "'s Application");
