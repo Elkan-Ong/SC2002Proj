@@ -199,6 +199,10 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
                 viewBTOWithdrawal(project);
                 break;
             case 9:
+                if (allPastProjects.isEmpty()) {
+                    System.out.println("You do not have managed any projects!");
+                    break;
+                }
                 getApplicantReport(allPastProjects);
                 break;
             case 10:
