@@ -59,7 +59,9 @@ It defines the common attributes and behaviors shared across all user types, whi
 
 ## Run
 Either:
-Run the jar file with the following command when in the repository:
-```java -jar ./out/artifacts/SC2002Proj_jar/SC2002Proj.jar```
+Run the jar file with the following command when in the repository: <br>
+```bash
+java -jar ./out/artifacts/SC2002Proj_jar/SC2002Proj.jar
+```
 Or you can use JetBrains IntelliJ IDEA to run the project using the `BTOApp.java`
 
