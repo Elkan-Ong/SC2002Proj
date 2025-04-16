@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SC2002Proj:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SC2002Proj_jar</output-path>
+    <root id="archive" name="SC2002Proj.jar">
+      <element id="module-output" name="BTO" />
+    </root>
+  </artifact>
+</component>
