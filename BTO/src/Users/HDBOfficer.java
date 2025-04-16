@@ -17,6 +17,7 @@ import java.util.*;
  * Officer for HDB
  * Is an Applicant with the ability to assist with HDB Projects that they are interested in
  * An Officer may only assist with one project at a time and may not be an applicant for that project
+ * Officers assist in helping the manager answer queries and booking of units for successful applicants
  */
 public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, FlatBookingHandler, OfficerAsApplicant {
     /**

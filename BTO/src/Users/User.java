@@ -5,8 +5,8 @@ import Misc.Filter.UserFilter;
 import Users.UserInterfaces.UserAction;
 
 /**
- *
  * Represents the basic details of a user in the BTO system
+ * All users of this system has this class as its base class
  * Each user can have a filter to filter projects that they would be interested in
  * */
 public abstract class User implements UserAction, PasswordManager {

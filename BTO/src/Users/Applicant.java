@@ -17,6 +17,10 @@ import java.util.*;
 
 /**
  * Represent a User who is an applicant who would want to apply for a BTO project
+ * Applicants can apply for a project that is open for application if they are interested in it
+ * Applicants can only apply for projects they are eligible for
+ * Applicants who are Single and over the age of 35 may apply for 2-Room flats
+ * Applicants who are Married and over the age of 21 may apply for 2-Room and 3-Room flats
  * */
 public class Applicant extends User implements Application, QueryInterface, CreateFilter, BasicValidation {
     /**

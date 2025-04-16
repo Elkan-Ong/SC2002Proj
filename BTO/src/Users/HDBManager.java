@@ -16,6 +16,9 @@ import java.util.*;
 /**
  * Represents a Manager for HDB
  * A Manager can manage only 1 project at a time but has a collection of all their past projects
+ * Managers are able to create and manage projects
+ * They are responsible for managing Applications made to their project and can assign officers to their project
+ * Managers can also approve/reject withdrawals of Applicants if they choose to no longer want to apply for the project
  */
 public class HDBManager extends User implements HDBStaff, ManagerProject, ApplicantReport, ManageProjectApplication, ManageWithdrawal, OfficerRegistrationHandler, CreateFilter {
     /**
