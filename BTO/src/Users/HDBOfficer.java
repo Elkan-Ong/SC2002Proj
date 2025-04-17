@@ -12,6 +12,7 @@ import Users.UserInterfaces.QueryInterface;
 import Users.UserInterfaces.StaffInterfaces.HDBStaff;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Officer for HDB
@@ -69,6 +70,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         System.out.println("14) View/Reply Enquiries");
         System.out.println("15) View Assigned Project Details");
         System.out.println("16) Flat Bookings");
+        System.out.println("17) Flat Booking by NRIC");
 
     }
 
@@ -130,6 +132,16 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
                 }
                 flatBooking();
                 break;
+
+            case 17:
+                if (assignedProject == null) {
+                    System.out.println("You do not have an assigned project yet!");
+                    break;
+                }
+
+
+                break;
+
             default:
                 System.out.println("Invalid choice");
                 break;
@@ -175,7 +187,6 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
 
         // Check if already applying for another project as officer
         if (officerRegistration != null && officerRegistration.getApplicationStatus() != RegistrationStatus.UNSUCCESSFUL) {
-            // TODO: Implement check for application period
             System.out.println("You have an ongoing officer application or your current officer application has already been approved");
             return;
         }
@@ -265,43 +276,52 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         Iterator<ProjectApplication> iterator = assignedProject.getAllApplicationsPendingBooking().iterator();
         while (iterator.hasNext()) {
             ProjectApplication application = iterator.next();
-            // Book flat for applicant
 
-            // 1. Update number of units in selected flat type
-            // Check if sufficient units available for selected flat type
-            if (application.getSelectedType().getNoOfUnitsAvailable() == 0) {
-                System.out.println("Insufficient units for applicants");
-                continue;
-            } else {
-                // Update units available
-                application.getSelectedType().reserveUnit();
-                // Assign unit to applicant
-                application.getSelectedType().assignUnit(application.getApplicant());
+            // Book flat for applicant
+            boolean isSuccessful = bookFlat(application);
+
+            if (isSuccessful) {
                 // Remove the application from the list of pending bookings
                 iterator.remove();
             }
 
-            // 2. Retrieve applicants BTO application with NRIC
-            // TODO: Not sure if this is needed/mark-able requirement
-
-            // 3. Update applicant's application status from successful to booked
-            application.setStatus(ApplicationStatus.BOOKED);
-
-            // 4. Update applicants profile with type of flat booked (Done in Flat assignUnit() )
-
-
-            // Generate receipt
-            System.out.println("Flat booked successfully!\n");
-            System.out.println("Here are the booking details:");
-            System.out.println("Applicant Name: " + application.getApplicant().getName());
-            System.out.println("NRIC: " + application.getApplicant().getNric());
-            System.out.println("Age: " + application.getApplicant().getAge());
-            System.out.println("Marital Status: " + application.getApplicant().getMaritalStatus());
-            System.out.println("Flat type booked: " + application.getSelectedType().getType() + "\n");
-
         }
         System.out.println("Project Details:");
         assignedProject.displayProjectApplicant();
+    }
+
+    /**
+     * Handles booking of Unit for successful Applicant to the Project the Officer is assigned to.
+     * Searches for Applicant with NRIC
+     * @param NRIC NRIC of Applicant
+     */
+    @Override
+    public void flatBookingByNRIC(String NRIC) {
+        if (assignedProject.getAllApplicationsPendingBooking().isEmpty()) {
+            System.out.println("No Booking Requests have been made yet!");
+            return;
+        }
+
+        List<ProjectApplication> result = assignedProject.getAllApplicationsPendingBooking().stream()
+                .filter(application -> application.getApplicant().getNric().equals(NRIC))
+                .collect(Collectors.toList());
+
+        if (result.size() == 0) {
+            System.out.println("No matching application to NRIC " + NRIC + " found!");
+            return;
+        }
+
+        ProjectApplication application = result.get(0);
+
+        // Book flat for applicant
+        boolean isSuccessful = bookFlat(application);
+
+        if (isSuccessful) {
+            // Remove the application from the list of pending bookings
+            assignedProject.getAllApplicationsPendingBooking().remove(application);
+        }
+
+
     }
 
     /**
@@ -328,4 +348,40 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         }
         super.applyForProject(applicableProjects);
     }
+
+    /**
+     * Utility function to book a flat for application passed in
+     */
+    private boolean bookFlat(ProjectApplication application) {
+        // Book flat for applicant
+
+        // 1. Update number of units in selected flat type
+        // Check if sufficient units available for selected flat type
+        if (application.getSelectedType().getNoOfUnitsAvailable() == 0) {
+            System.out.println("Insufficient units for applicants");
+            return false;
+        } else {
+            // Update units available
+            application.getSelectedType().reserveUnit();
+            // Assign unit to applicant
+            application.getSelectedType().assignUnit(application.getApplicant());
+        }
+
+        // 2. Update applicant's application status from successful to booked
+        application.setStatus(ApplicationStatus.BOOKED);
+
+        // 3. Update applicants profile with type of flat booked (Done in Flat assignUnit())
+
+        // Generate receipt
+        System.out.println("Flat booked successfully!\n");
+        System.out.println("Here are the booking details:");
+        System.out.println("Applicant Name: " + application.getApplicant().getName());
+        System.out.println("NRIC: " + application.getApplicant().getNric());
+        System.out.println("Age: " + application.getApplicant().getAge());
+        System.out.println("Marital Status: " + application.getApplicant().getMaritalStatus());
+        System.out.println("Flat type booked: " + application.getSelectedType().getType() + "\n");
+
+        return true;
+    }
+
 }
