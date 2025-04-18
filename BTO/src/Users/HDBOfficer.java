@@ -1,5 +1,7 @@
 package Users;
 
+import AccountHandler.Account;
+import AccountHandler.Validation.AccountValidator;
 import Enums.ApplicationStatus;
 import Enums.RegistrationStatus;
 import Misc.OfficerRegistration;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
  * An Officer may only assist with one project at a time and may not be an applicant for that project
  * Officers assist in helping the manager answer queries and booking of units for successful applicants
  */
-public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, FlatBookingHandler, OfficerAsApplicant {
+public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, FlatBookingHandler, OfficerAsApplicant, AccountValidator {
     /**
      * Registration of the Officer for some project they are interested in
      */
@@ -139,8 +141,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
                     System.out.println("You do not have an assigned project yet!");
                     break;
                 }
-
-
+                flatBookingByNRIC();
                 break;
 
             default:
@@ -163,7 +164,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
             try {
                 choice = sc.nextInt();
                 sc.nextLine();
-                if (choice < 1 || choice > 16) {
+                if (choice < 1 || choice > 17) {
                     System.out.println("Invalid Selection");
                     continue;
                 }
@@ -294,25 +295,38 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
     /**
      * Handles booking of Unit for successful Applicant to the Project the Officer is assigned to.
      * Searches for Applicant with NRIC
-     * @param NRIC NRIC of Applicant
      */
     @Override
-    public void flatBookingByNRIC(String NRIC) {
+    public void flatBookingByNRIC() {
         if (assignedProject.getAllApplicationsPendingBooking().isEmpty()) {
             System.out.println("No Booking Requests have been made yet!");
             return;
         }
 
-        List<ProjectApplication> result = assignedProject.getAllApplicationsPendingBooking().stream()
-                .filter(application -> application.getApplicant().getNric().equals(NRIC))
-                .collect(Collectors.toList());
+        System.out.println("Enter NRIC of Applicant: (enter -1 to cancel)");
+        String NRIC = "";
+        while (true) {
+            NRIC = sc.nextLine();
+            if (isValid(NRIC)) {
+                break;
+            }
+            if (NRIC.equals("-1")) {
+                return;
+            }
+            System.out.println("Invalid NRIC format");
+        }
 
-        if (result.size() == 0) {
+        String finalNRIC = NRIC;
+        List<ProjectApplication> result = assignedProject.getAllApplicationsPendingBooking().stream()
+                .filter(application -> application.getApplicant().getNric().equals(finalNRIC))
+                .toList();
+
+        if (result.isEmpty()) {
             System.out.println("No matching application to NRIC " + NRIC + " found!");
             return;
         }
 
-        ProjectApplication application = result.get(0);
+        ProjectApplication application = result.getFirst();
 
         // Book flat for applicant
         boolean isSuccessful = bookFlat(application);
