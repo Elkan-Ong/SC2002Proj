@@ -181,12 +181,6 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
      * @param filteredProjects projects that have bene filtered
      */
     public void applyForProjectAsHDBOfficer(List<HDBProject> filteredProjects) {
-//        // Check if is an existing applicant with an application
-//        if (this.getApplication() != null && this.getApplication().getApplicationStatus() != ApplicationStatus.UNSUCCESSFUL) {
-//            System.out.println("You have an ongoing application or your current application has already been approved");
-//            return;
-//        }
-
         // Check if already applying for another project as officer
         if (officerRegistration != null && officerRegistration.getApplicationStatus() != RegistrationStatus.UNSUCCESSFUL) {
             System.out.println("You have an ongoing officer application or your current officer application has already been approved");
