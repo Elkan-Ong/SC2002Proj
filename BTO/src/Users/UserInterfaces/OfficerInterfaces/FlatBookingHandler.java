@@ -8,4 +8,5 @@ public interface FlatBookingHandler {
      * Books a flat for an Applicant that has a successful application
      */
     void flatBooking();
+    void flatBookingByNRIC(String NRIC);
 }
