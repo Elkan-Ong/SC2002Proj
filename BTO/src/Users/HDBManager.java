@@ -48,6 +48,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
      * Displays all the projects and allow HDBStaff to select a project to view its full details
      * @param filteredProjects list of Projects filtered by the Staff with UserFilter
      */
+    @Override
     public void displayProjects(List<HDBProject> filteredProjects)  {
         Scanner sc = new Scanner(System.in);
         if (filteredProjects.isEmpty()) {
