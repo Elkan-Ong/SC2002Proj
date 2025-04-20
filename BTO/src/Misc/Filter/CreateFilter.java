@@ -107,7 +107,7 @@ public interface CreateFilter extends BasicValidation, AvailableFlatTypes {
         int choice;
         while (true) {
             try {
-                System.out.println("Select Flat Types: (enter non-digit to exit");
+                System.out.println("Select Flat Types: (enter non-digit to exit)");
                 for (int i=0; i < availableTypes.length; i++) {
                     System.out.println((i+1) + ") " + availableTypes[i]);
                 }

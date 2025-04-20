@@ -2,3 +2,10 @@ Name,NRIC,Age,Marital Status,Password
 Michael,T8765432F,36,Single,password
 Jessica,S5678901G,26,Married,password
 TestCreate,S0987654A,47,Single,password
+DemoManager1,T9999999A,35,Married,password
+DemoManager2,T9999999B,35,Married,password
+DemoManager3,T9999999C,35,Married,password
+DemoManager4,T9999999D,35,Married,password
+DemoManager5,T9999999E,35,Married,password
+DemoManager6,T9999999F,35,Married,password
+DemoManager7,T9999999G,35,Married,password
