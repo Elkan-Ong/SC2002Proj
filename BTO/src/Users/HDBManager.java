@@ -112,6 +112,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
         allProjects.remove(project);
         allPastProjects.remove(project);
         this.project = null;
+        System.out.println("Project successfully deleted!");
     }
 
     /**
