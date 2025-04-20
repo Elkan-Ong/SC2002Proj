@@ -34,12 +34,12 @@ public class Query implements QueryDisplay {
     private final Applicant applicant;
 
     /**
-     * Project the Query was submitted enquiring about
+     * The Project Query was submitted enquiring about
      */
     private final HDBProject project;
 
     /**
-     * Date the Query was created on
+     * The Date the Query was created on
      */
     private final Date timestamp;
 
@@ -47,7 +47,7 @@ public class Query implements QueryDisplay {
      * Creates a new Query
      * Called from Applicant creating a new query
      * @param applicant Applicant who submitted the query
-     * @param project Project the Applicant is enquiring about
+     * @param project The Project Applicant is enquiring about
      * @param title title of the Enquiry
      * @param query query the Applicant has on the Project
      */
@@ -61,12 +61,12 @@ public class Query implements QueryDisplay {
 
     /**
      * Creates a new Query
-     * Called from reading QueryList csv file
+     * Called from reading the QueryList csv file
      * @param applicant Applicant who submitted the query
-     * @param project Project the Applicant is enquiring about
+     * @param project The Project Applicant is enquiring about
      * @param title title of the Enquiry
      * @param query query the Applicant has on the Project
-     * @param timestamp Date the Query was created on
+     * @param timestamp The Date the Query was created on
      */
     public Query(Applicant applicant, HDBProject project, String title, String query, String timestamp) throws ParseException {
         this.applicant = applicant;
@@ -123,7 +123,7 @@ public class Query implements QueryDisplay {
 
     /**
      * Gets the Date the Query was created on
-     * @return Date the Query was created on
+     * @return The Date the Query was created on
      */
     public Date getTimestamp() { return timestamp; }
 

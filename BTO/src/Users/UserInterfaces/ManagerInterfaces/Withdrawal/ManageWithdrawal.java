@@ -18,7 +18,7 @@ import java.util.Scanner;
 public interface ManageWithdrawal extends BasicValidation {
     /**
      * Displays withdrawal information and gets selection for which withdrawal the manager would like to approve/reject to
-     * @param project project the Manager is handling
+     * @param project the project the Manager is handling
      */
     default void viewBTOWithdrawal(HDBProject project) {
         Scanner sc = new Scanner(System.in);

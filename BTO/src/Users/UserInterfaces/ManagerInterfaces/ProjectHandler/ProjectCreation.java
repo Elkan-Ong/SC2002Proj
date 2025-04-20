@@ -80,7 +80,7 @@ public interface ProjectCreation extends BasicValidation, FlatTypeSelection {
 
     /**
      * Gets and checks the project name against all existing project
-     * name must be unique
+     * names must be unique
      * @param allProjects all projects created
      * @return name of the project
      */

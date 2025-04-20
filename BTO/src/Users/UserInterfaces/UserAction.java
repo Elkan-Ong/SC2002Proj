@@ -15,10 +15,9 @@ public interface UserAction {
     void displayMenu();
 
     /**
-     * Controller to call methods of action that User has selected
+     * Controller to call methods of action that the User has selected
      * @param allProjects master list of all the projects created
      * @param choice User's input of the action they have selected to do in reference to the list displayMenu produces
-     * @throws ParseException
      */
     void handleChoice(List<HDBProject> allProjects,
                       int choice) throws ParseException;

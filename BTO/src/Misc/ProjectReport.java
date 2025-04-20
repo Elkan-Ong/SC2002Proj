@@ -44,12 +44,6 @@ public class ProjectReport {
     public int getMarriedCount() { return marriedCount; }
 
     /**
-     * Gets total age of Applicants
-     * @return total age of Applicants
-     */
-    public int getTotalAge() { return totalAge; }
-
-    /**
      * Updates counters based on the marital status and age of an Applicant for a project
      * @param maritalStatus marital status of Applicant
      * @param age age of Applicant

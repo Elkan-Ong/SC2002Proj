@@ -14,8 +14,8 @@ public class AllUsers {
     private final List<User> users = new ArrayList<>();
 
     /**
-     * Adds user to users list
-     * @param user User to be inserted into list
+     * Adds user to users' list
+     * @param user User to be inserted into the list
      */
     public void addUser(User user) {
         this.users.add(user);

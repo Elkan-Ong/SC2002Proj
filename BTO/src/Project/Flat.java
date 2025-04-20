@@ -23,7 +23,7 @@ public class Flat implements AvailableFlatTypes, FlatDisplay, BookUnitHandler {
     private long price;
 
     /**
-     * Type of Flat e.g. 2-Room, 3-Room
+     * Type of Flat e.g., 2-Room, 3-Room
      */
     private String type;
 
@@ -149,11 +149,11 @@ public class Flat implements AvailableFlatTypes, FlatDisplay, BookUnitHandler {
      */
     @Override
     public void assignUnit(Applicant applicant) {
-        // Get first available unit
+        // Get the first available unit
         for (Unit unit : units) {
             if (!unit.getBooked()) {
                 unit.setBookedBy(applicant);
-                // Update applicants profile with type of flat booked
+                // Update applicant profile with the type of flat booked
                 applicant.setBookedUnit(unit);
                 break;
             }

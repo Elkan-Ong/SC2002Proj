@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Main interface for creating a report on the Applicants of the Projects a Manager has created
+ * The main interface for creating a report on the Applicants of the Projects a Manager has created
  * Includes creating a filter, filtering the Applicants, and generating the report
  */
 public interface ApplicantReport extends ReportValidation {

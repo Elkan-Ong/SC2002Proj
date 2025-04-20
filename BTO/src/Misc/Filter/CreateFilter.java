@@ -130,7 +130,7 @@ public interface CreateFilter extends BasicValidation, AvailableFlatTypes {
     }
 
     /**
-     * Prompts User to enter minimum price of Units they are interested in
+     * Prompts User to enter the minimum price of Units they are interested in
      * @param filter filter object to be updated
      */
     default void filterMinPrice(UserFilter filter) {
@@ -148,7 +148,7 @@ public interface CreateFilter extends BasicValidation, AvailableFlatTypes {
     }
 
     /**
-     * Prompts User to enter maximum price of Units they are interested in
+     * Prompts User to enter the maximum price of Units they are interested in
      * @param filter filter object to be updated
      */
     default void filterMaxPrice(UserFilter filter) {

@@ -46,7 +46,7 @@ public interface ImportFiles {
     }
 
     /**
-     * Used to obtain values in one cell but separated by commas
+     * Used to get values in one cell but separated by commas
      * @param line line of data being split
      * @return split line of data
      */
@@ -88,7 +88,7 @@ public interface ImportFiles {
             List<HDBOfficer> projectOfficers = new ArrayList<>();
             HDBManager projectManager = null;
 
-            // Identify the manager object that is managing the project
+            // Identify the manager object managing the project
             for (User manager : allUsers.getUsers()) {
                 if (manager.getNric().compareTo(value[10]) == 0) {
                     projectManager = (HDBManager) manager;
@@ -102,7 +102,8 @@ public interface ImportFiles {
             for (User officer : allUsers.getUsers()) {
                 for (String assigned : officerNames) {
                     if (officer.getNric().compareTo(assigned) == 0) {
-                        // If the officer in officers list is the name of the office assigned, we add them to the list of assigned officers
+                        // If the officer in the officer's list is the name of the office assigned,
+                        // we add them to the list of assigned officers
                         projectOfficers.add((HDBOfficer) officer);
                     }
                 }
@@ -184,7 +185,7 @@ public interface ImportFiles {
                     project.addApplication(application);
                     assert applicant != null;
                     // We need to decide which application the applicant will be assigned
-                    // if they don't have any application yet, just assign the first one seen
+                    // if they don't have any application yet, assign the first one seen
                     // otherwise we assign the one that was created at a later date
                     if (applicant.getApplication() == null) {
                         applicant.setApplication(application);

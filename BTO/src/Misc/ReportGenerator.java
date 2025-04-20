@@ -17,7 +17,7 @@ public class ReportGenerator {
      * @param filter ApplicantReportFilter object which has all the filters the Manager selected
      */
     public static void generateReport(List<ProjectApplication> applications, ApplicantReportFilter filter) {
-        // we will use a hash map to store the data
+        // we will use a hash map to store the data,
         // the key will be the project name, and it will have a value of a hash map with key value of Flat Type and a ProjectReport Object
         Map<String, Map<String, ProjectReport>> reportData = new HashMap<>();
 
@@ -45,7 +45,7 @@ public class ReportGenerator {
             Map<String, ProjectReport> flatStats = reportData.get(project);
             // iterate through the selected flat types
             for (String flatType : flatStats.keySet()) {
-                // get the value of the
+                // get the value of the stats for each flat
                 ProjectReport stats = flatStats.get(flatType);
                 System.out.printf("  Flat Type: %s\n    Total: %d\n    Single: %d\n    Married: %d\n    Avg Age: %.2f\n",
                         flatType, stats.getTotalApplicants(), stats.getSingleCount(), stats.getMarriedCount(), stats.getAverageAge());

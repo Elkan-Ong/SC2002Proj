@@ -67,7 +67,7 @@ public class BTOApp implements ImportFiles, WriteFiles, BasicValidation, Account
             if (exitApp) {
                 break;
             }
-            // User create account
+            // User creates account
             if (choice == 2) {
                 accountManager.createUser(allUsers);
                 continue;

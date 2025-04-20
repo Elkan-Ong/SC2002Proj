@@ -21,7 +21,7 @@ public class Account implements AccountDisplay, BasicValidation, AccountValidato
     public void createUser(AllUsers allUsers) {
         System.out.println(allUsers.getUsers());
         displayCreationMenu();
-        User newUser = null;
+        User newUser;
         int choice = getChoice(1, 3);
         System.out.println("Enter Name: ");
         String name = sc.nextLine();

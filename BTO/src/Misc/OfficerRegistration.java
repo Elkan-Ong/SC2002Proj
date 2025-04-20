@@ -6,8 +6,9 @@ import Project.HDBProject;
 import Users.HDBOfficer;
 
 /**
- * A Registration made by an Officer when they want to be assigned to assist with a Project
- * They will indicate their interest to a Project and the Manager will be able to view and approve/reject their registration
+ * A Registration made by an Officer when they want to be assigned to help with a Project
+ * They will indicate their interest to a Project,
+ * and the Manager will be able to view and approve/reject their registration
  */
 public class OfficerRegistration implements OfficerRegistrationDisplay {
     /**
@@ -27,7 +28,7 @@ public class OfficerRegistration implements OfficerRegistrationDisplay {
     private final HDBProject appliedProject;
 
     /**
-     * Creates an OfficerRegistration based on the Officer registering and the Project they are registering for
+     * Creates an OfficerRegistration based on the Officer registering, and the Project they are registering for
      * Default status is set to Pending
      * @param applicant Officer registering for the Project
      * @param project Project the Officer is registering for

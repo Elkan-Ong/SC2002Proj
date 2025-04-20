@@ -78,7 +78,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
 
     /**
      * Sets the active project the manager is managing
-     * @param project project the manager is managing
+     * @param project the project manager is managing
      */
     public void setProject(HDBProject project) { this.project = project; }
 
@@ -134,7 +134,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
     }
 
     /**
-     * Controller to call methods of action that Manager has selected
+     * Controller to call methods of action that the Manager has selected
      * @param allProjects master list of all the projects created
      * @param choice Selected Applicant action (Refer to displayMenu for choice mapping)
      */
@@ -244,7 +244,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
             try {
                 choice = sc.nextInt();
                 sc.nextLine();
-                // choice to be edited if menu is expanded/shrunk
+                // choice to be edited if the menu is expanded/shrunk
                 if (choice < 1 || choice > 12) {
                     System.out.println("Invalid Selection");
                     continue;
@@ -259,7 +259,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
 
     /**
      * View all pending registrations of Officers that want to join the Project
-     * @param project Project the manager is managing
+     * @param project The Project manager is managing
      */
     @Override
     public void viewOfficerRegistration(HDBProject project) {
@@ -332,7 +332,7 @@ public class HDBManager extends User implements HDBStaff, ManagerProject, Applic
     }
 
     /**
-     * Approves the registration of an Officer to a Project
+     * Approves the registration of an Officer to a Project,
      * Assigns the Project to the Officer and adds them to the list of assignedOfficers
      * @param registration the OfficerRegistration to be approved
      */

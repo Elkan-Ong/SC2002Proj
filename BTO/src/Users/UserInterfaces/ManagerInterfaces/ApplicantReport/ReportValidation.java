@@ -8,7 +8,7 @@ import Project.ProjectApplication;
  */
 public interface ReportValidation {
     /**
-     * checks if applicant applied for the flat type the Manager wants to get a report on
+     * checks if applicant applied for the flat type, the Manager wants to get a report on
      * @param application Application submitted by an applicant
      * @param applicantFilter filter which contains the filtering information
      * @return whether the Application was for the corresponding flat type selected in the filter
@@ -41,10 +41,10 @@ public interface ReportValidation {
     }
 
     /**
-     * checks if applicant meets the age range the Manager wants to get a report on
+     * checks if applicant meets the age range, the Manager wants to get a report on
      * @param application Application submitted by an applicant
      * @param applicantFilter filter which contains the filtering information
-     * @return whether the is in the age range selected in the filter
+     * @return whether the age of an applicant is in the age range selected in the filter
      */
     default boolean passesAgeFilter(ProjectApplication application, ApplicantReportFilter applicantFilter) {
         int age = application.getApplicant().getAge();

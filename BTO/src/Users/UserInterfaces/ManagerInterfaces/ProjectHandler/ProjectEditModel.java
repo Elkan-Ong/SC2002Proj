@@ -56,8 +56,8 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
 
     /**
      * Edits the number of Units in the flat
-     * Minimum number of units is determined by the highest number of units booked at the time of editing
-     * e.g. if the 15th unit has been booked, minimally must maintain 15 units
+     * Minimum number of units is determined by the highest number of units booked at the time of editing,
+     * e.g., if the 15th unit has been booked, minimally must maintain 15 units
      * @param flat flat to have units edited
      */
     default void editUnits(Flat flat) {
@@ -83,8 +83,8 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
     }
 
     /**
-     * Edits the Flat's type (e.g. from 2-Room to 3-Room)
-     * new Flat type cannot be same as the other Flat type
+     * Edits the Flat's type (e.g., from 2-Room to 3-Room)
+     * new Flat type cannot be the same as the other Flat type
      * @param flat flat type to be changed
      */
     default void editFlatType(HDBProject project, Flat flat) {
@@ -139,7 +139,7 @@ public interface ProjectEditModel extends BasicValidation, AvailableFlatTypes {
 
     /**
      * Edits the name of the Project
-     * Project name cannot be same as an existing project
+     * Project name cannot be the same as an existing project
      * @param project project to be edited
      */
     default void editProjectName(List<HDBProject> allProjects, HDBProject project) {

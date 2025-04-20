@@ -28,7 +28,7 @@ public class ProjectApplication implements ProjectApplicationDisplay {
     private final HDBProject appliedProject;
 
     /**
-     * The type of flat that the Applicant wants e.g. 2-Room, 3-Room
+     * The type of flat that the Applicant wants e.g., 2-Room, 3-Room
      */
     private final Flat selectedType;
 
@@ -40,7 +40,7 @@ public class ProjectApplication implements ProjectApplicationDisplay {
     /**
      * Creates an Application with the Applicant, Project, and selected type of flat
      * @param applicant Applicant that submits the application
-     * @param project Project the Applicant would like to apply for
+     * @param project The Project the Applicant would like to apply for
      * @param selectedType Type of flat the user wants
      */
     public ProjectApplication(Applicant applicant, HDBProject project, Flat selectedType) {
@@ -54,7 +54,7 @@ public class ProjectApplication implements ProjectApplicationDisplay {
     /**
      * Creates an Application with the Applicant, Project, selected type of flat, and date
      * @param applicant Applicant that submits the application
-     * @param project Project the Applicant would like to apply for
+     * @param project The Project the Applicant would like to apply for
      * @param selectedType Type of flat the user wants
      * @param date Date the Application was created
      */

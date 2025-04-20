@@ -21,8 +21,8 @@ public interface Application {
 
     /**
      * Provides a menu for Applicant to select the type of Flat they are interested in
-     * @param applicant
-     * @return
+     * @param applicant Applicant applying for the Project
+     * @return Flat selected by the Applicant
      */
     default Flat selectAvailableFlats(HDBProject project, Applicant applicant) {
         Scanner sc = new Scanner(System.in);

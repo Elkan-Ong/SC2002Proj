@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 /**
  * Selected information that a Manager would like to filter by to create a ProjectReport
- * Filters include: project, flat types, marital status, age of applicants
+ * Filters include: a project, flat types, marital status, age of applicants
  */
 public class ApplicantReportFilter implements BasicValidation {
     private final Scanner sc = new Scanner(System.in);

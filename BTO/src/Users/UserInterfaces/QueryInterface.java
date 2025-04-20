@@ -1,6 +1,5 @@
 package Users.UserInterfaces;
 
-import Misc.Query;
 import Project.HDBProject;
 
 import java.util.List;

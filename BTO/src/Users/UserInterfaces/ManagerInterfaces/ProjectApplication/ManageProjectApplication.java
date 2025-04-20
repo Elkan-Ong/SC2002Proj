@@ -15,7 +15,7 @@ import java.util.Scanner;
 public interface ManageProjectApplication {
     /**
      * View all pending Applications
-     * @param project current Project the Manager is managing
+     * @param project the current Project Manager is managing
      */
     default void viewBTOApplication(HDBProject project) {
         Scanner sc = new Scanner(System.in);

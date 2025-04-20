@@ -108,7 +108,7 @@ public class HDBProject implements HDBProjectDisplay {
     /**
      * Creates a new HDB Project after Manager fills in project form
      * @param projectName Name of the Project
-     * @param neighbourhood Neighbourhood the Project is in
+     * @param neighbourhood The Neighbourhood the Project is in
      * @param type1 First type of Flat
      * @param units1 No. of units in the first Flat type
      * @param price1 Price of the first Flat type
@@ -153,7 +153,7 @@ public class HDBProject implements HDBProjectDisplay {
 
 
     /**
-     * Gets list of Officers that have been assigned to this Project
+     * Gets a list of Officers that have been assigned to this Project
      * @return list of Officers that have been assigned to this Project
      */
     public List<HDBOfficer> getAssignedOfficers() {

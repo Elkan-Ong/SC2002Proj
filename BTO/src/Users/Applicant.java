@@ -16,15 +16,15 @@ import Validation.BasicValidation;
 import java.util.*;
 
 /**
- * Represent a User who is an applicant who would want to apply for a BTO project
- * Applicants can apply for a project that is open for application if they are interested in it
+ * Represent a User who is an applicant who would want to apply for a BTO project,
+ * Applicants can apply for a project that is open for application if they are interested in it,
  * Applicants can only apply for projects they are eligible for
  * Applicants who are Single and over the age of 35 may apply for 2-Room flats
  * Applicants who are Married and over the age of 21 may apply for 2-Room and 3-Room flats
  * */
 public class Applicant extends User implements Application, QueryInterface, CreateFilter, BasicValidation {
     /**
-     * An application that the user has submitted, null if user has no previous application
+     * An application that the user has submitted, null if the user has no previous application
      */
     private ProjectApplication application = null;
     /**
@@ -349,7 +349,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
         List<HDBProject> result = new ArrayList<>();
         Date today = new Date();
         for (HDBProject project : projects) {
-            // Ensure project is visible, must be in opening window
+            // Ensure a project is visible, must be in an opening window
             if (project.getVisibility() &&
                     project.getOpeningDate().before(today) &&
                     project.getClosingDate().after(today) &&
@@ -361,7 +361,7 @@ public class Applicant extends User implements Application, QueryInterface, Crea
     }
 
     /**
-     * Controller to call methods of action that Applicant has selected
+     * Controller to call methods of action that the Applicant has selected
      * @param allProjects List of allProjects
      * @param choice Selected Applicant action (Refer to displayMenu for choice mapping)
      */

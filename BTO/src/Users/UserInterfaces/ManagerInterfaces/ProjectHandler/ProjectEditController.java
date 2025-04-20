@@ -15,7 +15,7 @@ public interface ProjectEditController extends ProjectDisplay, ProjectEditModel 
     /**
      * Handles calling of respective method based on Manager's selected choice of what to edit
      * @param allProjects all projects created
-     * @param project project the manager is managing
+     * @param project the project the manager is managing
      */
     default void editProject(List<HDBProject> allProjects, HDBProject project) {
         editMenu();

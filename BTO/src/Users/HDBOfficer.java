@@ -1,6 +1,5 @@
 package Users;
 
-import AccountHandler.Account;
 import AccountHandler.Validation.AccountValidator;
 import Enums.ApplicationStatus;
 import Enums.RegistrationStatus;
@@ -14,11 +13,10 @@ import Users.UserInterfaces.QueryInterface;
 import Users.UserInterfaces.StaffInterfaces.HDBStaff;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Officer for HDB
- * Is an Applicant with the ability to assist with HDB Projects that they are interested in
+ * Is an Applicant with the ability to help with HDB Projects that they are interested in
  * An Officer may only assist with one project at a time and may not be an applicant for that project
  * Officers assist in helping the manager answer queries and booking of units for successful applicants
  */
@@ -181,7 +179,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
      * @param filteredProjects projects that have bene filtered
      */
     public void applyForProjectAsHDBOfficer(List<HDBProject> filteredProjects) {
-        // Check if already applying for another project as officer
+        // Check if already applying for another project as an officer
         if (officerRegistration != null && officerRegistration.getApplicationStatus() != RegistrationStatus.UNSUCCESSFUL) {
             System.out.println("You have an ongoing officer application or your current officer application has already been approved");
             return;
@@ -298,7 +296,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         }
 
         System.out.println("Enter NRIC of Applicant: (enter -1 to cancel)");
-        String NRIC = "";
+        String NRIC;
         while (true) {
             NRIC = sc.nextLine();
             if (isValid(NRIC)) {
@@ -334,14 +332,15 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
     }
 
     /**
-     * Allows Officer to apply for projects like Applicant, but with the exclusion of the projec they are assigned to/registered for
+     * Allows Officer to apply for projects like Applicant,
+     * but with the exclusion of the project they are assigned to/registered for
      * @param filteredProjects projects filtered by user filter
      */
     @Override
     public void applyForProjectOfficer(List<HDBProject> filteredProjects) {
         // copy the list of filtered projects to prevent modification later
         List<HDBProject> applicableProjects = new ArrayList<>(filteredProjects);
-        // If the officer has an assigned project we need to remove it from the list of projects they can apply for
+        // If the officer has an assigned project, we need to remove it from the list of projects they can apply for
         if (assignedProject != null) {
             applicableProjects.remove(assignedProject);
         }
@@ -349,7 +348,8 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         if (officerRegistration != null && officerRegistration.getApplicationStatus() != RegistrationStatus.UNSUCCESSFUL) {
             applicableProjects.remove(officerRegistration.getAppliedProject());
         }
-        // We need to apply same rules for applying, must be visible and open for application then we can apply as per normal
+        // We need to apply the same rules for applying,
+        // must be visible and open for application then we can apply as per normal
         applicableProjects = getVisibleProjects(applicableProjects);
         if (applicableProjects.isEmpty()) {
             System.out.println("There are no projects that you can apply for!");
@@ -379,7 +379,7 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
         // 2. Update applicant's application status from successful to booked
         application.setStatus(ApplicationStatus.BOOKED);
 
-        // 3. Update applicants profile with type of flat booked (Done in Flat assignUnit())
+        // 3. Update applicant profile with the type of flat booked (Done in Flat assignUnit())
 
         // Generate receipt
         System.out.println("Flat booked successfully!\n");
