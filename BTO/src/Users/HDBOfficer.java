@@ -361,7 +361,8 @@ public class HDBOfficer extends Applicant implements HDBStaff, QueryInterface, F
     /**
      * Utility function to book a flat for application passed in
      */
-    private boolean bookFlat(ProjectApplication application) {
+    @Override
+    public boolean bookFlat(ProjectApplication application) {
         // Book flat for applicant
 
         // 1. Update number of units in selected flat type
